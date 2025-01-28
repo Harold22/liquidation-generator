@@ -14,9 +14,9 @@ class FileDataService
      * @param array $data
      * @return FileData
      */
-    public function create(array $data): FileData
+    public function create(array $data): void
     {
-        return FileData::create($data);
+        FileData::insert($data);
     }
 
     /**
