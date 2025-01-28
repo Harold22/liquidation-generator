@@ -1,0 +1,69 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Cash Advances List') }}
+        </h2>
+    </x-slot>
+    <div x-data="cashAdvances()" class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <div class="max-w-full">
+                        @include('cash-advances.forms.list-cash-advance-form')
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</x-app-layout>
+
+<script>
+    function cashAdvances() {
+        return {
+            updateCashAdvanceModal: false,
+            deleteCashAdvanceModal: false,
+            cashAdvancesList: [],
+            currentPage: 1,
+            totalPages: 1,
+            loading: true,
+
+            getCashAdvancesList(page = 1) {
+                axios.get(`/cash-advance/show/?page=${page}`)
+                    .then(response => {
+                        const data = response.data;
+                        this.cashAdvancesList = data.data;
+                        this.currentPage = data.current_page;
+                        this.totalPages = data.last_page; 
+                    })
+                    .catch(error => console.error("Error fetching cash advances:", error))
+                    .finally(() => {
+                        this.loading = false;
+                    });
+
+            },
+
+            changePage(page) {
+                if (page < 1 || page > this.totalPages) return;
+                this.getCashAdvancesList(page); 
+            },
+
+            selectedList: {},
+            updateModalData(list) {
+                this.selectedList = list;
+                this.updateCashAdvanceModal = true;
+            },
+            
+            toDeleteSelectedList: {},
+            deleteModalData(list) {
+                this.toDeleteSelectedList = list;
+                this.deleteCashAdvanceModal = true;
+            },
+
+            init() {
+                this.getCashAdvancesList();
+            }
+        }
+    }
+</script>
+

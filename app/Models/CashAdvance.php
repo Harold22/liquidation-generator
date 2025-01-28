@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+
+class CashAdvance extends Model
+{
+    use HasFactory, SoftDeletes, LogsActivity;
+
+    protected $fillable = [
+        'special_disbursing_officer',
+        'position',
+        'station',
+        'cash_advance_amount',
+        'cash_advance_date',
+        'dv_number',
+        'ors_burs_number',
+        'responsibility_code',
+        'uacs_code',
+        'status',
+    ];
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logFillable();
+
+    }
+}
