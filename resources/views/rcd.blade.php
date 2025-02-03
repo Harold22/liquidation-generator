@@ -111,13 +111,26 @@
                                         </tr>
                                     </template>
                                 </template>
+                                <tr>
+                                    <td class="border border-black px-2 py-2 text-center" x-text="new Date(date_refunded).toLocaleDateString('en-US')"></td>
+                                    <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.dv_number"></td>
+                                    <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.ors_burs_number"></td>
+                                    <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.responsibility_code"></td>
+                                    <td class="border border-black px-2 py-2 text-center">Bureau of Treasury</td>
+                                    <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.uacs_code"></td>
+                                    <td class="border border-black px-2 py-2 text-center">REFUND</td>
+                                    <td class="border border-black px-4 py-2 text-center" x-text="parseInt(amount_refunded).toLocaleString()"></td>
+                                </tr>
                             </tbody>
 
                             <tfoot>
                                 <tr>
                                     <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
                                     <td class="border border-black px-4 py-2 text-center font-semibold" 
-                                        x-text="Object.values(file_data).reduce((total, fileList) => total + fileList.reduce((sum, file) => sum + file.amount, 0), 0).toLocaleString()">
+                                        x-text="(
+                                            (Object.values(file_data).reduce((total, fileList) => total + fileList.reduce((sum, file) => sum + file.amount, 0), 0) 
+                                            + parseInt(amount_refunded)
+                                        ).toLocaleString()) + '.00'">
                                     </td>
                                 </tr>
                             </tfoot>
@@ -218,7 +231,6 @@
                 try {
                     const response = await axios.get(`/files/rcd/${this.cash_advance_id}`);
                     this.file_list = response.data; 
-                    console.log("File List", this.file_list);
                     
                     await this.getFileData(this.file_list);
                 } catch (error) {
@@ -259,10 +271,44 @@
                 console.log('2nd:' + this.lastDate);
             },
 
+            refund_id: null,
+            amount_refunded: null,
+            date_refunded: null,
+            official_receipt: null,
+
+            async getRefundList() {
+                if (!this.cash_advance_id) {
+                    this.refund_id = null;
+                    this.amount_refunded = null;
+                    this.date_refunded = null;
+                    this.official_receipt = null;
+                    return;
+                }
+                try {
+                    const response = await axios.get(`/refund/show/${this.cash_advance_id}`);
+                    
+                    if (Array.isArray(response.data) && response.data.length > 0) {
+                        const refund = response.data[0]; 
+                        this.refund_id = refund.id;
+                        this.amount_refunded = refund.amount_refunded;
+                        this.date_refunded = refund.date_refunded;
+                        this.official_receipt = refund.official_receipt;
+                    } else {
+                        this.refund_id = null;
+                        this.amount_refunded = null;
+                        this.date_refunded = null;
+                        this.official_receipt = null;
+                    }
+                } catch (error) {
+                    console.error('Error fetching Refund Data:', error);
+                }
+            },
+
             init() {
                 this.getUrlId();  
                 this.getFileList();  
                 this.getCashAdvanceDetails();
+                this.getRefundList();
             }
         };
     }
