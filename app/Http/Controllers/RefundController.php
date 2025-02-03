@@ -62,7 +62,6 @@ class RefundController extends Controller
 
         if ($isUpdate) {
             $rules['refund_id'] = 'required|exists:refunds,id';
-            $rules['cash_advance_id'] = 'required|exists:cash_advances,id|unique:refunds,cash_advance_id,' . $request->refund_id . ',id';
         } else {
             $rules['cash_advance_id'] = [
                 'required',

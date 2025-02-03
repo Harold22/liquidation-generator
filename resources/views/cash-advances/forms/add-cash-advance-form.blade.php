@@ -14,7 +14,7 @@
                 <x-input-label for="special_disbursing_officer">
                     {{ __('Special Disbursing Officer') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <x-text-input id="special_disbursing_officer" name="special_disbursing_officer" type="text" class="mt-1 block w-full capitalize" required />
+                <x-text-input id="special_disbursing_officer" name="special_disbursing_officer" type="text" class="mt-1 block w-full " required />
             </div>
 
             <!-- Position -->
@@ -22,7 +22,7 @@
                 <x-input-label for="position">
                     {{ __('Position') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <x-text-input id="position" name="position" type="text" class="mt-1 block w-full capitalize" required />
+                <x-text-input id="position" name="position" type="text" class="mt-1 block w-full " required />
             </div>
 
             <!-- Station -->
@@ -30,7 +30,7 @@
                 <x-input-label for="station">
                     {{ __('Station') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <x-text-input id="station" name="station" type="text" class="mt-1 block w-full capitalize" required />
+                <x-text-input id="station" name="station" type="text" class="mt-1 block w-full " required />
             </div>
 
             <!-- Cash Advance Amount -->
@@ -38,7 +38,7 @@
                 <x-input-label for="cash_advance_amount">
                     {{ __('Cash Advance Amount') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <x-text-input id="cash_advance_amount" name="cash_advance_amount" type="number" class="mt-1 block w-full capitalize" required />
+                <x-text-input id="cash_advance_amount" name="cash_advance_amount" type="number" class="mt-1 block w-full " required />
             </div>
 
             <!-- Cash Advance Date -->
@@ -54,7 +54,7 @@
                 <x-input-label for="dv_number">
                     {{ __('DV Number') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <x-text-input id="dv_number" name="dv_number" type="text" class="mt-1 block w-full" required />
+                <x-text-input id="dv_number" name="dv_number" type="text" class="mt-1 block w-full " required />
             </div>
 
             <!-- ORS/BURS Number -->
@@ -62,7 +62,7 @@
                 <x-input-label for="ors_burs_number">
                     {{ __('ORS/BURS Number') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <x-text-input id="ors_burs_number" name="ors_burs_number" type="text" class="mt-1 block w-full" required />
+                <x-text-input id="ors_burs_number" name="ors_burs_number" type="text" class="mt-1 block w-full " required />
             </div>
 
             <!-- Responsibility Code -->
@@ -70,7 +70,7 @@
                 <x-input-label for="responsibility_code">
                     {{ __('Responsibility Code') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <x-text-input id="responsibility_code" name="responsibility_code" type="text" class="mt-1 block w-full" required />
+                <x-text-input id="responsibility_code" name="responsibility_code" type="text" class="mt-1 block w-full " required />
             </div>
 
             <!-- UACS Object Code -->
@@ -78,7 +78,7 @@
                 <x-input-label for="uacs_code">
                     {{ __('UACS Object Code') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <x-text-input id="uacs_code" name="uacs_code" type="text" class="mt-1 block w-full" required />
+                <x-text-input id="uacs_code" name="uacs_code" type="text" class="mt-1 block w-full " required />
             </div>
         </div>
 

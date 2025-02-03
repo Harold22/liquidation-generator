@@ -215,6 +215,7 @@
                         this.loading = false;
                         return;
                     }
+                    
                     try {
                         const response = await axios.get(`/files/show/${selectedSdo}/?page=${page}`);
                         this.file_list = [];

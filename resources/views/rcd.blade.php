@@ -40,134 +40,174 @@
         </style>
     </head>
     <body class="font-sans antialiased">
-        <div x-data="rcd()" class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            <div x-show="loading" class="w-full mt-4 flex justify-center items-center">
-                <div class="w-16 h-16 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
-            </div>
+        <div x-data="rcd()" class="min-h-screen dark:bg-gray-900">
             <div class="p-6 text-sm">
                 <div class="max-w-4xl mx-auto">
-                    <div class="flex justify-center">
-                        <h1 class="text-xl font-bold">REPORT OF CASH DISBURSEMENTS</h1>
-                    </div>
-                    <div class="flex justify-center">
-                        <h1 class="text-md font-bold">
-                            Period Covered: 
-                            <span class="font-semibold" 
-                                x-text="firstDate === lastDate ? firstDate : firstDate + ' to ' + lastDate">
-                            </span>
-                        </h1>
-                    </div>
-                    <div class="mt-7">
-                        <div class="flex justify-between items-center">
-                            <div class="flex w-3/4">
-                                <label for="entity_name">Entity Name: DSWD Field Office XI</label>
+                    <!-- filter -->
+                    <div class="w-full no-print border border-gray-200 p-6 rounded-lg shadow-sm bg-white">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <!-- Liquidation Type -->
+                            <div class="w-full md:w-1/6">
+                                <label for="liquidationType" class="block text-sm font-medium text-gray-700 mb-1">Liquidation Type</label>
+                                <select id="liquidationType" name="liquidationType" x-model="liquidationType" class="mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                    <option value="Full">Full</option>
+                                    <option value="Partial">Partial</option>
+                                </select>
                             </div>
-                            <div class="flex w-1/4">
-                                <label for="sheet_no">Report No.:</label>
-                                <span class="text-sm ml-2"></span>
-                            </div>
-                        </div>
 
-                        <div class="flex justify-between items-center">
-                            <div class="flex w-3/4">
-                                <label for="fund_cluster">Fund Cluster: AICS (FUND 101)</label>
+                            <!-- Liquidation Mode -->
+                            <div class="w-full md:w-1/4">
+                                <label for="liquidationMode" class="block text-sm font-medium text-gray-700 mb-1">Liquidation Mode</label>
+                                <select id="liquidationMode" name="liquidationMode" x-model="liquidationMode" class="mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                    <option value="Overall">Overall</option>
+                                    <option value="Bundle">Per Bundle</option>
+                                </select>
                             </div>
-                            <div class="flex w-1/4">
-                                <label for="sheet_no">Sheet No.:</label>
-                                <span class="text-sm ml-2">1</span>
-                            </div>
+
+                            <!-- Conditional Inputs for Bundle Mode -->
+                            <template x-if="liquidationMode === 'Bundle'">
+                                <div class="w-full md:w-1/4">
+                                    <label for="nameFrom" class="block text-sm font-medium text-gray-700 mb-1">From (Names) <span class="text-red-500">*</span></label>
+                                    <input required id="nameFrom" name="nameFrom" x-model="nameFrom" class="mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" aria-required="true">
+                                </div>
+                            </template>
+
+                            <template x-if="liquidationMode === 'Bundle'">
+                                <div class="w-full md:w-1/4">
+                                    <label for="nameTo" class="block text-sm font-medium text-gray-700 mb-1">To (Names) <span class="text-red-500">*</span></label>
+                                    <input required id="nameTo" name="nameTo" x-model="nameTo" class="mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" aria-required="true">
+                                </div>
+                            </template>
                         </div>
                     </div>
-                    <div x-show="loading == false" class="pb-5 overflow-auto max-w-full">
-                        <table class="bg-white border border-gray-200 border-collapse mt-1 max-w-full">
-                            <thead class="text-center">
-                                <tr>
-                                    <th class="border border-black" colspan="1">Date</th>
-                                    <th class="border border-black" colspan="1">ADA/Check/DV/
-                                        Payroll/Reference No.</th>
-                                    <th class="border border-black" colspan="1">ORS/BURS No.</th>
-                                    <th class="border border-black" colspan="1">Responsibility Center Code</th>
-                                    <th class="border border-black" colspan="1">Payee</th>
-                                    <th class="border border-black" colspan="1">UACS Object Code</th>
-                                    <th class="border border-black" colspan="1">Nature of Payment</th>
-                                    <th class="border border-black" colspan="1">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <template x-for="(fileList, fileId) in file_data" :key="fileId">
-                                    <template x-for="file in fileList" :key="file.id">
+
+                    <div x-show="loading" class="w-full mt-4 flex justify-center items-center">
+                        <div class="w-16 h-16 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
+                    </div>
+
+                    <!-- start sa rcd -->
+                    <div class="border rounded p-4 overflow-hidden border-black mt-4">
+                        <div class="flex justify-center mt-2">
+                            <h1 class="text-xl font-bold">REPORT OF CASH DISBURSEMENTS</h1>
+                        </div>
+                        <div class="flex justify-center">
+                            <h1 class="text-md font-bold">
+                                Period Covered: 
+                                <span class="font-semibold" 
+                                    x-text="firstDate === lastDate ? firstDate : firstDate + ' to ' + lastDate">
+                                </span>
+                            </h1>
+                        </div>
+                        <div class="mt-7">
+                            <div class="flex justify-between items-center">
+                                <div class="flex w-3/4">
+                                    <label for="entity_name">Entity Name: DSWD Field Office XI</label>
+                                </div>
+                                <div class="flex w-1/4">
+                                    <label for="sheet_no">Report No.:</label>
+                                    <span class="text-sm ml-2"></span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <div class="flex w-3/4">
+                                    <label for="fund_cluster">Fund Cluster: AICS (FUND 101)</label>
+                                </div>
+                                <div class="flex w-1/4">
+                                    <label for="sheet_no">Sheet No.:</label>
+                                    <span class="text-sm ml-2">1</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div x-show="loading == false" class="pb-5 overflow-auto max-w-full">
+                            <table class="bg-white border border-gray-200 border-collapse mt-1 max-w-full text-xs">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th class="border border-black" colspan="1">Date</th>
+                                        <th class="border border-black" colspan="1">ADA/Check/DV/
+                                            Payroll/Reference No.</th>
+                                        <th class="border border-black" colspan="1">ORS/BURS No.</th>
+                                        <th class="border border-black" colspan="1">Responsibility Center Code</th>
+                                        <th class="border border-black" colspan="1">Payee</th>
+                                        <th class="border border-black" colspan="1">UACS Object Code</th>
+                                        <th class="border border-black" colspan="1">Nature of Payment</th>
+                                        <th class="border border-black" colspan="1">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template x-for="(file, fileId) in file_data" :key="fileId">
                                         <tr>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="new Date(file.date_time_claimed).toLocaleDateString('en-US')"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.dv_number"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.ors_burs_number"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.responsibility_code"></td>
-                                            <td class="border border-black px-2 py-2 text-center">
+                                            <td class="border border-black px-1 py-1 text-center" x-text="new Date(file.date_time_claimed).toLocaleDateString('en-US')"></td>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.dv_number"></td>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.ors_burs_number"></td>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.responsibility_code"></td>
+                                            <td class="border border-black px-1 py-1 text-center">
                                                 <span x-text="`${file.lastname || ''}, ${file.firstname || ''} ${file.middlename || ''} ${file.extension_name || ''}`.trim().replace(/\s+/g, ' ').replace(/\?/g, 'Ñ')"></span>
                                             </td>
 
-                                            <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.uacs_code"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="file.assistance_type"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="file.amount.toLocaleString()"></td>
-                                        </tr>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.uacs_code"></td>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="file.assistance_type"></td>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="file.amount.toLocaleString()"></td>
+                                        </tr> 
                                     </template>
-                                </template>
-                                <tr>
-                                    <td class="border border-black px-2 py-2 text-center" x-text="new Date(date_refunded).toLocaleDateString('en-US')"></td>
-                                    <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.dv_number"></td>
-                                    <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.ors_burs_number"></td>
-                                    <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.responsibility_code"></td>
-                                    <td class="border border-black px-2 py-2 text-center">Bureau of Treasury</td>
-                                    <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.uacs_code"></td>
-                                    <td class="border border-black px-2 py-2 text-center">REFUND</td>
-                                    <td class="border border-black px-4 py-2 text-center" x-text="parseInt(amount_refunded).toLocaleString()"></td>
-                                </tr>
-                            </tbody>
+                                    <tr>
+                                        <td class="border border-black px-1 py-1 text-center" x-text="new Date(date_refunded).toLocaleDateString('en-US')"></td>
+                                        <td class="border border-black px-1 py-1 text-center uppercase" x-text="official_receipt"></td>
+                                        <td class="border border-black px-1 py-1 text-center"></td>
+                                        <td class="border border-black px-1 py-1 text-center"></td>
+                                        <td class="border border-black px-1 py-1 text-center">BUREAU OF TREASURY</td>
+                                        <td class="border border-black px-1 py-1 text-center"></td>
+                                        <td class="border border-black px-1 py-1 text-center">REFUND</td>
+                                        <td class="border border-black px-1 py-1 text-center" x-text="parseInt(amount_refunded).toLocaleString()"></td>
+                                    </tr>
+                                </tbody>
 
-                            <tfoot>
-                                <tr>
-                                    <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
-                                    <td class="border border-black px-4 py-2 text-center font-semibold" 
-                                        x-text="(
-                                            (Object.values(file_data).reduce((total, fileList) => total + fileList.reduce((sum, file) => sum + file.amount, 0), 0) 
-                                            + parseInt(amount_refunded)
-                                        ).toLocaleString()) + '.00'">
-                                    </td>
-                                </tr>
-                            </tfoot>
+                                <tfoot>
+                                    <tr>
+                                        <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
+                                        <td class="border border-black px-4 py-2 text-center font-semibold" 
+                                            x-text="(
+                                                Object.values(file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
+                                                + parseInt(amount_refunded)
+                                            ).toLocaleString() + '.00'">
+                                        </td>
+                                    </tr>
+                                </tfoot>
 
-                        </table>
-                    </div>
-                    <div class="mt-8 text-center px-20">
-                        <p class="text-lg font-bold">CERTIFICATION</p>
-                        <p class="mt-4">
-                            I hereby certify on my official oath that this Report of Cash Disbursements in ___sheet(s)
-                            is a full, true and correct statement of all cash disbursements during the period stated
-                            above actually made by me in payment for obligations shown in pertinent disbursement
-                            vouchers/payroll.
-                        </p>
-                    </div>
-                    <div class="mt-10 text-center px-5">
-                        <span class="uppercase font-semibold" x-text="mapped_cash_advance_details.special_disbursing_officer"></span>
-                        <div class="mt-2 border-t border-black w-1/2 mx-auto"></div> 
-                        <p>Name and Signature of Disbursing Officer/Cashier</p>
-                    </div>
-                    <div class="flex mt-10 justify-between text-center px-18 mx-40">
-                        <div class="w-1/3">
-                            <span class="uppercase font-semibold" x-text="mapped_cash_advance_details.position"></span>
-                            <div class="mt-2 border-t border-black w-full mx-auto"></div>
-                            <p>Official Designation</p>
+                            </table>
                         </div>
-                        <div class="w-1/3">
-                            <span class="uppercase font-semibold">{{ now()->format('F j, Y') }}</span>
-                            <div class="mt-2 border-t border-black w-full mx-auto"></div> 
-                            <p>Date</p>
+                        <div class="mt-8 text-center px-20">
+                            <p class="text-lg font-bold">CERTIFICATION</p>
+                            <p class="mt-4">
+                                I hereby certify on my official oath that this Report of Cash Disbursements in ___sheet(s)
+                                is a <span x-text="liquidationType"></span>, true and correct statement of all cash disbursements during the period stated
+                                above actually made by me in payment for obligations shown in pertinent disbursement
+                                vouchers/payroll.
+                            </p>
                         </div>
-                    </div>
-                    <div class="flex justify-between mt-3">
-                        <button onclick="window.print()" class="print:hidden">
-                            <span class="fas fa-print mr-2"></span>
-                            Print
-                        </button>
+                        <div class="mt-10 text-center px-5">
+                            <span class="uppercase font-semibold" x-text="mapped_cash_advance_details.special_disbursing_officer"></span>
+                            <div class="mt-2 border-t border-black w-1/2 mx-auto"></div> 
+                            <p>Name and Signature of Disbursing Officer/Cashier</p>
+                        </div>
+                        <div class="flex mt-10 justify-between text-center px-18 mx-40">
+                            <div class="w-1/3">
+                                <span class="uppercase font-semibold" x-text="mapped_cash_advance_details.position"></span>
+                                <div class="mt-2 border-t border-black w-full mx-auto"></div>
+                                <p>Official Designation</p>
+                            </div>
+                            <div class="w-1/3">
+                                <span class="uppercase font-semibold">{{ now()->format('F j, Y') }}</span>
+                                <div class="mt-2 border-t border-black w-full mx-auto"></div> 
+                                <p>Date</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between mt-3">
+                            <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 print:hidden">
+                                <span class="fas fa-print mr-2"></span>
+                                Print
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -177,6 +217,10 @@
 <script>
     function rcd() {
         return {
+            liquidationType: 'Full',
+            liquidationMode: 'Overall',
+            nameFrom: '',
+            nameTo: '',
             cash_advance_id: null,
             file_list: [],
             file_data: [],
@@ -231,6 +275,7 @@
                 try {
                     const response = await axios.get(`/files/rcd/${this.cash_advance_id}`);
                     this.file_list = response.data; 
+                    console.log("mao ni list",this.file_list);
                     
                     await this.getFileData(this.file_list);
                 } catch (error) {
@@ -238,6 +283,21 @@
                 }
             },
 
+            // async getFileData(fileIds) {
+            //     if (!fileIds || fileIds.length === 0) {
+            //         console.log('No file IDs to fetch data for.');
+            //         return;
+            //     }
+            //     try {
+            //         const response = await axios.get(`/files/data/${fileIds.join(',')}`);
+            //         this.file_data = response.data; 
+            //         this.getDates();
+            //         this.loading = false;
+            //         console.log("File Data", this.file_data);
+            //     } catch (error) {
+            //         console.error('Error fetching file data:', error);
+            //     }
+            // },
             async getFileData(fileIds) {
                 if (!fileIds || fileIds.length === 0) {
                     console.log('No file IDs to fetch data for.');
@@ -245,14 +305,25 @@
                 }
                 try {
                     const response = await axios.get(`/files/data/${fileIds.join(',')}`);
-                    this.file_data = response.data; 
+                    this.file_data = response.data;
+                    const combinedData = Object.values(this.file_data).flat();
+
+                    const sortedData = combinedData.sort((a, b) => {
+                        const dateA = new Date(a.date_time_claimed);
+                        const dateB = new Date(b.date_time_claimed);
+                        return dateA - dateB; 
+                    });
+
+                    this.file_data = sortedData;
+
                     this.getDates();
                     this.loading = false;
-                    console.log("File Data", this.file_data);
+                    console.log("Sorted File Data", this.file_data);
                 } catch (error) {
                     console.error('Error fetching file data:', error);
                 }
             },
+
             firstDate: '',
             lastDate: '',
 

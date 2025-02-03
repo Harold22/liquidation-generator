@@ -99,20 +99,49 @@
                 }
             },
 
-            async deleteRefund(){
+            async deleteRefund() {
                 if (!this.refund_id) {
                     Swal.fire("No Refund on this Cash Advance!");
                     return;
                 }
-                try {
-                    const response = await axios.post(`/refund/delete/${this.refund_id}`);
-                    this.refundCashAdvanceModal = false;
-                    Swal.fire("Deleted Successfully!");
-                    
-                } catch (error) {
-                    console.error('Error fetching Refund Data:', error);
+
+                // Show confirmation dialog
+                const result = await Swal.fire({
+                    title: "Are you sure?",
+                    text: "This action cannot be undone.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "Cancel",
+                    reverseButtons: true
+                });
+
+                // If user confirms, proceed with deletion
+                if (result.isConfirmed) {
+                    try {
+                        const response = await axios.post(`/refund/delete/${this.refund_id}`);
+                        this.refundCashAdvanceModal = false;
+
+                        // Show success message
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "The refund has been deleted successfully.",
+                            icon: "success"
+                        });
+
+                    } catch (error) {
+                        console.error('Error fetching Refund Data:', error);
+                        
+                        // Show error message
+                        Swal.fire({
+                            title: "Error",
+                            text: "Something went wrong while deleting the refund.",
+                            icon: "error"
+                        });
+                    }
                 }
             },
+
 
             init() {
                 this.getCashAdvancesList();
