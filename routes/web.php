@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
 
     require __DIR__.'/cash_advance.php';
     require __DIR__.'/files.php';
+    require __DIR__.'/refund.php';
 });
 
 require __DIR__.'/auth.php';

@@ -21,12 +21,14 @@
 <script>
     function cashAdvances() {
         return {
-            updateCashAdvanceModal: false,
-            deleteCashAdvanceModal: false,
+            updateCashAdvanceModal: false, deleteCashAdvanceModal: false, refundCashAdvanceModal: false,
             cashAdvancesList: [],
             currentPage: 1,
             totalPages: 1,
             loading: true,
+            amount_refunded: null,
+            date_refunded: null,
+            official_receipt: null,
 
             getCashAdvancesList(page = 1) {
                 axios.get(`/cash-advance/show/?page=${page}`)
@@ -58,6 +60,42 @@
             deleteModalData(list) {
                 this.toDeleteSelectedList = list;
                 this.deleteCashAdvanceModal = true;
+            },
+            refundList: {},
+            refundModalData(list) {
+                this.refundList = list;
+                this.refundCashAdvanceModal = true;
+                this.getRefundData(this.refundList.id);
+
+            },
+            async getRefundData(cash_advance_id) {
+                if (!cash_advance_id) {
+                    this.refund_id = null;
+                    this.amount_refunded = null;
+                    this.date_refunded = null;
+                    this.official_receipt = null;
+                    return;
+                }
+                try {
+                    const response = await axios.get(`/refund/show/${cash_advance_id}`);
+                    
+                    if (Array.isArray(response.data) && response.data.length > 0) {
+                        const refund = response.data[0]; 
+                        this.refund_id = refund.id;
+                        this.amount_refunded = refund.amount_refunded;
+                        this.date_refunded = refund.date_refunded;
+                        this.official_receipt = refund.official_receipt;
+                        this.loading = false;
+                    } else {
+                        this.refund_id = null;
+                        this.amount_refunded = null;
+                        this.date_refunded = null;
+                        this.official_receipt = null;
+                        this.loading = false;
+                    }
+                } catch (error) {
+                    console.error('Error fetching Refund Data:', error);
+                }
             },
 
             init() {

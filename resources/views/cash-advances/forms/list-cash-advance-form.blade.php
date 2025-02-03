@@ -53,13 +53,10 @@
                             <div class="flex space-x-2">
                                 <div x-data="{ open: false }" class="relative inline-block text-left">
                                     <!-- Main Button -->
-                                    <button @click="open = !open" type="button" class="z-50 inline-flex items-center px-3 py-2 text-xs font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded-md">
-                                        <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
-                                            <path d="M19 11l-7 7-7-7M12 4v14" />
-                                        </svg>
-                                        Liquidation
+                                    <button @click="open = !open" 
+                                        class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 ease-in-out">
+                                        Liquidate
                                     </button>
-
                                     <!-- Dropdown Menu -->
                                     <div x-show="open" @mouseover="open = true" @mouseleave="open = false" class="z-10 mt-2 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 absolute transition ease-in-out duration-300">
                                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
@@ -76,14 +73,27 @@
                                         </ul>
                                     </div>
                                 </div>
-
-
                             
+                                <!-- Refund Button -->
+                                <button @click="refundModalData(list), loading = true" class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out">
+                                    Refund  
+                                </button>
+                                <div x-show="refundCashAdvanceModal && loading == false" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-20">
+                                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                                        <header class="flex justify-between items-center">
+                                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cash Advance Refund</h2>
+                                            <button @click="refundCashAdvanceModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                                                    <path d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </header>
+                                        @include('cash-advances.forms.refund-cash-advance-form')
+                                    </div>
+                                </div>
                                 <!-- Update Button -->
-                                <button @click="updateModalData(list)" class="inline-flex items-center px-3 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md">
-                                    <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
-                                        <path d="M12 4v16m8-8H4" />
-                                    </svg>
+                                <button @click="updateModalData(list)" 
+                                    class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-yellow-500 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 transition duration-200 ease-in-out">
                                     Update
                                 </button>
                                 <div x-show="updateCashAdvanceModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-20">
@@ -102,10 +112,7 @@
                             
                                 <!-- Delete Button -->
                                 <button @click="deleteModalData(list)" 
-                                    class="inline-flex items-center px-3 py-2 text-xs font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-md">
-                                    <svg class="w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
-                                        <path d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
+                                    class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-200 ease-in-out">
                                     Delete
                                 </button>
 

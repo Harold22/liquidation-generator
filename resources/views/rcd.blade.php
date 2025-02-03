@@ -57,12 +57,34 @@
                             </span>
                         </h1>
                     </div>
+                    <div class="mt-7">
+                        <div class="flex justify-between items-center">
+                            <div class="flex w-3/4">
+                                <label for="entity_name">Entity Name: DSWD Field Office XI</label>
+                            </div>
+                            <div class="flex w-1/4">
+                                <label for="sheet_no">Report No.:</label>
+                                <span class="text-sm ml-2"></span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <div class="flex w-3/4">
+                                <label for="fund_cluster">Fund Cluster: AICS (FUND 101)</label>
+                            </div>
+                            <div class="flex w-1/4">
+                                <label for="sheet_no">Sheet No.:</label>
+                                <span class="text-sm ml-2">1</span>
+                            </div>
+                        </div>
+                    </div>
                     <div x-show="loading == false" class="pb-5 overflow-auto max-w-full">
                         <table class="bg-white border border-gray-200 border-collapse mt-1 max-w-full">
                             <thead class="text-center">
                                 <tr>
                                     <th class="border border-black" colspan="1">Date</th>
-                                    <th class="border border-black" colspan="1">DV/Payroll No.</th>
+                                    <th class="border border-black" colspan="1">ADA/Check/DV/
+                                        Payroll/Reference No.</th>
                                     <th class="border border-black" colspan="1">ORS/BURS No.</th>
                                     <th class="border border-black" colspan="1">Responsibility Center Code</th>
                                     <th class="border border-black" colspan="1">Payee</th>
@@ -105,7 +127,7 @@
                     <div class="mt-8 text-center px-20">
                         <p class="text-lg font-bold">CERTIFICATION</p>
                         <p class="mt-4">
-                            I hereby certify on my official oath that this Report of Cash Disbursements in sheet(s)
+                            I hereby certify on my official oath that this Report of Cash Disbursements in ___sheet(s)
                             is a full, true and correct statement of all cash disbursements during the period stated
                             above actually made by me in payment for obligations shown in pertinent disbursement
                             vouchers/payroll.

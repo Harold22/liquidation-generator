@@ -14,7 +14,7 @@
                 <x-input-label for="special_disbursing_officer">
                     {{ __('Special Disbursing Officer') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <x-text-input id="special_disbursing_officer" name="special_disbursing_officer" type="text" class="mt-1 block w-full" required />
+                <x-text-input id="special_disbursing_officer" name="special_disbursing_officer" type="text" class="mt-1 block w-full capitalize" required />
             </div>
 
             <!-- Position -->
@@ -22,7 +22,7 @@
                 <x-input-label for="position">
                     {{ __('Position') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <x-text-input id="position" name="position" type="text" class="mt-1 block w-full" required />
+                <x-text-input id="position" name="position" type="text" class="mt-1 block w-full capitalize" required />
             </div>
 
             <!-- Station -->
@@ -30,7 +30,7 @@
                 <x-input-label for="station">
                     {{ __('Station') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <x-text-input id="station" name="station" type="text" class="mt-1 block w-full" required />
+                <x-text-input id="station" name="station" type="text" class="mt-1 block w-full capitalize" required />
             </div>
 
             <!-- Cash Advance Amount -->
@@ -38,7 +38,7 @@
                 <x-input-label for="cash_advance_amount">
                     {{ __('Cash Advance Amount') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <x-text-input id="cash_advance_amount" name="cash_advance_amount" type="number" class="mt-1 block w-full" required />
+                <x-text-input id="cash_advance_amount" name="cash_advance_amount" type="number" class="mt-1 block w-full capitalize" required />
             </div>
 
             <!-- Cash Advance Date -->

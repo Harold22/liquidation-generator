@@ -16,10 +16,10 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     <x-nav-link :href="route('cash-advance.add')" :active="request()->routeIs('cash-advance.add')">
-                        {{ __('Add Cash Advances') }}
+                        {{ __('Add Cash Advance') }}
                     </x-nav-link>
                     <x-nav-link :href="route('cash-advance.list')" :active="request()->routeIs('cash-advance.list')">
-                        {{ __('List of Cash Advances') }}
+                        {{ __('List of Cash Advance') }}
                     </x-nav-link>
                     <x-nav-link :href="route('import-files')" :active="request()->routeIs('import-files')">
                         {{ __('Import Files') }}

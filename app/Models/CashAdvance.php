@@ -29,4 +29,17 @@ class CashAdvance extends Model
         return LogOptions::defaults()->logFillable();
 
     }
+    public function setCashAdvanceAmountAttribute($value)
+    {
+        $this->attributes['cash_advance_amount'] = (int) str_replace(',', '', $value);
+    }
+
+    public function refund()
+    {
+        return $this->hasOne(Refund::class);
+    }
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
 }

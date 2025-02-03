@@ -51,13 +51,13 @@
 
                         <div class="flex justify-between items-center">
                             <div class="flex w-3/4">
-                                <label for="fund_cluster">Fund Cluster: ECT-QRF CMF (FUND 101)</label>
+                                <label for="fund_cluster">Fund Cluster: AICS (FUND 101)</label>
                             </div>
                             <div class="flex w-1/4">
                                 <label for="sheet_no">Sheet No.:</label>
                                 <span class="text-sm ml-2">1</span>
                             </div>
-                    </div>
+                        </div>
                     </div>
                     <div x-show="loading == false" class="pb-5 overflow-auto max-w-full">
                         <table class="bg-white border border-gray-200 border-collapse mt-1 max-w-full">
@@ -65,7 +65,7 @@
                                 <tr class="border-black border-t border-x">
                                     <th class="items-center border-r border-black" colspan="3"><span class="uppercase underline" x-text="mapped_cash_advance_details.special_disbursing_officer"></span></th>
                                     <th class="border-r border-black" colspan="3"><span class="uppercase underline" x-text="mapped_cash_advance_details.position"></span></th>
-                                    <th colspan="2"><span class="uppercase underline">Station</span></th>
+                                    <th colspan="2"><span class="uppercase underline" x-text="mapped_cash_advance_details.station"></span></th>
                                 </tr>
                                 <tr class="border-x border-black ">
                                     <th class="items-center border-r border-black" colspan="3">Accountable Officer</th>
@@ -82,6 +82,16 @@
                                     <th class="border border-black" colspan="1">Disbursements</th>
                                     <th class="border border-black" colspan="1">Cash Advance Balance    </th>
                                 </tr>
+                                <tr>
+                                    <th class="border border-black py-2" colspan="1" x-text="mapped_cash_advance_details.cash_advance_date"></th>
+                                    <th class="border border-black py-2" colspan="1" x-text="mapped_cash_advance_details.ors_burs_number"></th>
+                                    <th class="border border-black py-2" colspan="1" x-text="mapped_cash_advance_details.special_disbursing_officer"></th>
+                                    <th class="border border-black py-2" colspan="1" x-text="mapped_cash_advance_details.uacs_code"></th>
+                                    <th class="border border-black py-2" colspan="1"></th>
+                                    <th class="border border-black py-2" colspan="1" x-text="(Number(mapped_cash_advance_details.cash_advance_amount) || 0).toLocaleString()"></th>
+                                    <th class="border border-black py-2" colspan="1"></th>
+                                    <th class="border border-black py-2" colspan="1" x-text="(Number(mapped_cash_advance_details.cash_advance_amount) || 0).toLocaleString()"></th>
+                                </tr>
                             </thead>
                             <tbody>
                                 <template x-for="(fileList, fileId) in file_data" :key="fileId">
@@ -93,21 +103,14 @@
                                                 <span x-text="`${file.lastname || ''}, ${file.firstname || ''} ${file.middlename || ''} ${file.extension_name || ''}`.trim().replace(/\s+/g, ' ').replace(/\?/g, 'Ñ')"></span>
                                             </td>
                                             <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.uacs_code"></td>
-                                            <td class="border border-black px-2 py-2 text-center">Food Assistance</td>
+                                            <td class="border border-black px-2 py-2 text-center uppercase" x-text="file.assistance_type"></td>
                                             <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.ors_burs_number"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.responsibility_code"></td>
                                             <td class="border border-black px-2 py-2 text-center" x-text="file.amount"></td>
+                                            <td class="border border-black px-2 py-2 text-center" x-text="file.remaining_balance"></td>
                                         </tr>
                                     </template>
                                 </template>
                             </tbody>
-
-                            <tfoot>
-                                <tr>
-                                    <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
-                                    <td class="border border-black px-4 py-2 text-center">909090</td>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                     <div class="mt-8 text-center px-20">
@@ -179,6 +182,7 @@
                         this.mapped_cash_advance_details = {
                             special_disbursing_officer: details.special_disbursing_officer,
                             position: details.position,
+                            station: details.station,
                             cash_advance_amount: parseFloat(details.cash_advance_amount).toFixed(2),
                             cash_advance_date: details.cash_advance_date,
                             dv_number: details.dv_number,
@@ -212,18 +216,69 @@
                 }
             },
 
+            // async getFileData(fileIds) {
+            //     if (!fileIds || fileIds.length === 0) {
+            //         console.log('No file IDs to fetch data for.');
+            //         return;
+            //     }
+            //     try {
+            //         const response = await axios.get(`/files/data/${fileIds.join(',')}`);
+            //         this.file_data = response.data; 
+            //         this.loading = false;
+            //         console.log("File Data", this.file_data);
+            //     } catch (error) {
+            //         console.error('Error fetching file data:', error);
+            //     }
+            // },
             async getFileData(fileIds) {
                 if (!fileIds || fileIds.length === 0) {
                     console.log('No file IDs to fetch data for.');
                     return;
                 }
+
                 try {
                     const response = await axios.get(`/files/data/${fileIds.join(',')}`);
-                    this.file_data = response.data; 
+                    console.log("Raw API Response:", response);
+
+                    const fileData = Array.isArray(response.data)
+                        ? response.data
+                        : Object.values(response.data || {});
+
+                    console.log("File Data Before Transformation:", fileData);
+
+                    if (!fileData.length) {
+                        console.log("No file data found.");
+                        this.file_data = [];
+                        return;
+                    }
+
+                    const cashAdvanceAmount = parseFloat(this.mapped_cash_advance_details.cash_advance_amount);
+
+                    if (isNaN(cashAdvanceAmount)) {
+                        console.error("Cash advance amount is missing or invalid.");
+                        return;
+                    }
+
+                    let runningBalance = cashAdvanceAmount;
+
+                    const transformedData = fileData.map(record => {
+                        const amount = parseFloat(record.amount) || 0; 
+                        const remainingBalance = runningBalance - amount; 
+                        runningBalance = remainingBalance; 
+
+                        return {
+                            ...record,
+                            remaining_balance: runningBalance,
+                        };
+                    });
+
+                    this.file_data = transformedData;
+                    console.log("Processed File Data with Remaining Balance:", this.file_data);
+
                     this.loading = false;
-                    console.log("File Data", this.file_data);
                 } catch (error) {
                     console.error('Error fetching file data:', error);
+                    this.file_data = []; 
                 }
             },
 

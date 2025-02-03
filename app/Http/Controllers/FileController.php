@@ -61,7 +61,7 @@ class FileController extends Controller
 
                     $validatedRecord = $this->validateRecord($record);
 
-                    $formattedDateTimeClaimed = $this->formatDateTimeClaimed($record['TIME_CLAIMED'] ?? null);
+                    $formattedDateTimeClaimed = $this->formatDateTimeClaimed($record['TIME_CLAIMED']);
 
                     $data = [
                         'file_id' => $storedFile->id,
@@ -124,6 +124,7 @@ class FileController extends Controller
             'EXT_NAME' => 'nullable|string|max:50',
             'BIRTHDATE' => 'nullable',
             'STATUS' => 'required|string|max:50',
+            'TIME_CLAIMED' => 'required|regex:/^\d{1,2}\/\d{1,2}\/\d{4} \d{2}:\d{2}$/',
             'REMARKS' => 'nullable|string|max:500',
             'AMOUNT' => 'required|numeric|min:0',
             'TYPE OF ASSISTANCE' => 'required|string|max:255',
@@ -136,26 +137,16 @@ class FileController extends Controller
         return $record;
     }
 
-    private function validateFile()
+    private function formatDateTimeClaimed(string $dateTime): string
     {
-
-    }
-    private function formatDateTimeClaimed(?string $dateTime): string
-    {
-        if (!empty($dateTime)) {
-            try {
-                return Carbon::createFromFormat('m/d/Y h:i:s A', $dateTime)->format('Y-m-d H:i:s');
-            } catch (\Exception $e) {
-                try {
-                    return Carbon::createFromFormat('m/d/Y H:i:s', $dateTime)->format('Y-m-d H:i:s');
-                } catch (\Exception $innerException) {
-                    return now()->format('Y-m-d H:i:s');
-                }
-            }
+        try {
+            return Carbon::createFromFormat('m/d/Y H:i', $dateTime)
+                ->format('Y-m-d H:i:00');
+        } catch (\Exception $e) {
+            throw new \Exception("Invalid date format for TIME_CLAIMED: $dateTime");
         }
-
-        return now()->format('Y-m-d H:i:s');
     }
+
 
     private function updateFileTotals(File $file)
     {
