@@ -6,6 +6,7 @@ use App\Models\Refund;
 use Illuminate\Http\Request;
 use App\Services\RefundService;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rule;
 
 class RefundController extends Controller
 {
@@ -58,24 +59,34 @@ class RefundController extends Controller
             'date_refunded' => 'required|date',
             'official_receipt' => 'required|string',
         ];
-    
+
         if ($isUpdate) {
             $rules['refund_id'] = 'required|exists:refunds,id';
-    
-            $rules['cash_advance_id'] = 'required|exists:cash_advances,id|unique:refunds,cash_advance_id,' . $request->refund_id;
+            $rules['cash_advance_id'] = 'required|exists:cash_advances,id|unique:refunds,cash_advance_id,' . $request->refund_id . ',id';
         } else {
-
-            $rules['cash_advance_id'] = 'required|exists:cash_advances,id|unique:refunds,cash_advance_id';
+            $rules['cash_advance_id'] = [
+                'required',
+                'exists:cash_advances,id',
+                Rule::unique('refunds', 'cash_advance_id')->whereNull('deleted_at'), 
+            ];
         }
-    
+
         return $request->validate($rules);
     }
+
     
     public function show($id)
     {
         $refund = refund::where('cash_advance_id', $id)->get();
 
         return response()->json($refund);
+    }
+    
+    public function destroy($refund_id)
+    {
+        $this->refundService->delete($refund_id);
+    
+        return redirect()->back()->with('info', 'Refund deleted successfully.');
     }
 
    

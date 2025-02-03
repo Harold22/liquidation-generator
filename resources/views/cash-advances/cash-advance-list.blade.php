@@ -26,6 +26,7 @@
             currentPage: 1,
             totalPages: 1,
             loading: true,
+            refund_id: null,
             amount_refunded: null,
             date_refunded: null,
             official_receipt: null,
@@ -93,6 +94,21 @@
                         this.official_receipt = null;
                         this.loading = false;
                     }
+                } catch (error) {
+                    console.error('Error fetching Refund Data:', error);
+                }
+            },
+
+            async deleteRefund(){
+                if (!this.refund_id) {
+                    Swal.fire("No Refund on this Cash Advance!");
+                    return;
+                }
+                try {
+                    const response = await axios.post(`/refund/delete/${this.refund_id}`);
+                    this.refundCashAdvanceModal = false;
+                    Swal.fire("Deleted Successfully!");
+                    
                 } catch (error) {
                     console.error('Error fetching Refund Data:', error);
                 }

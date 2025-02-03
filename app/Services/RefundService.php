@@ -20,4 +20,9 @@ class RefundService
         return $refund;
     }
 
+    public function delete($id)
+    {
+        return Refund::findOrFail($id)->delete();
+    }
+
 }

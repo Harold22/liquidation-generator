@@ -76,8 +76,13 @@
         </div>
         
         <!-- Submit Button -->
-        <div class="flex items-center gap-4">
-            <x-primary-button class="text-sm px-4 py-2">{{ __('Save') }}</x-primary-button>
+        <div class="flex item-center justify-between">
+            <div class="flex items-center gap-4">
+                <x-primary-button class="text-sm px-4 py-2">{{ __('Save') }}</x-primary-button>
+            </div>
+            <div show="refund_id" class="flex items-center gap-4">
+                <x-delete-button type="button" @click="deleteRefund()" class="text-sm px-4 py-2 bg-red-600">{{ __('Delete') }}</x-delete-button>
+            </div>
         </div>
     </div>
 </form>
