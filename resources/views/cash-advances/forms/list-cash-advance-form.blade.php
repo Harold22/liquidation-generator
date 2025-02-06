@@ -66,9 +66,9 @@
                                             <li>
                                                 <a x-bind:href="'{{ route('rcd', ['id' => ':id']) }}'.replace(':id', list.id)" target="_blank"  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Report Cash Disbursements</a>
                                             </li>
-                                            <li>
+                                            <!-- <li>
                                                 <a x-bind:href="'{{ route('cdr', ['id' => ':id']) }}'.replace(':id', list.id)" target="_blank"  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cash Disbursement Record</a>
-                                            </li>
+                                            </li> -->
                                             
                                         </ul>
                                     </div>

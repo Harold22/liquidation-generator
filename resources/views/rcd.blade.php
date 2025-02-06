@@ -49,7 +49,7 @@
                             <!-- Liquidation Type -->
                             <div class="w-full md:w-1/6">
                                 <label for="liquidationType" class="block text-sm font-medium text-gray-700 mb-1">Liquidation Type</label>
-                                <select id="liquidationType" name="liquidationType" x-model="liquidationType" class="mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                <select id="liquidationType" name="liquidationType" x-model="liquidationType" class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                                     <option value="Full">Full</option>
                                     <option value="Partial">Partial</option>
                                 </select>
@@ -58,7 +58,7 @@
                             <!-- Liquidation Mode -->
                             <div class="w-full md:w-1/4">
                                 <label for="liquidationMode" class="block text-sm font-medium text-gray-700 mb-1">Liquidation Mode</label>
-                                <select id="liquidationMode" name="liquidationMode" x-model="liquidationMode" class="mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                <select id="liquidationMode" name="liquidationMode" x-model="liquidationMode" class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                                     <option value="Overall">Overall</option>
                                     <option value="Bundle">Per Bundle</option>
                                 </select>
@@ -68,14 +68,28 @@
                             <template x-if="liquidationMode === 'Bundle'">
                                 <div class="w-full md:w-1/4">
                                     <label for="nameFrom" class="block text-sm font-medium text-gray-700 mb-1">From (Names) <span class="text-red-500">*</span></label>
-                                    <input required id="nameFrom" name="nameFrom" x-model="nameFrom" class="mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" aria-required="true">
+                                    <select @click="filteredData()" required id="nameFrom" name="nameFrom" x-model="nameFrom" class="text-sm  mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" aria-required="true">
+                                        <option value="">Select Name</option>
+                                        <template x-for="(file, fileId) in file_data" :key="fileId">
+                                            <option :value="file.id" 
+                                                    x-text="file.lastname + ',' + (file.firstname ? ' ' + file.firstname : '') + (file.middlename ? ' ' + file.middlename : '') + (file.extension_name ? ' ' + file.extension_name : '')">
+                                            </option>
+                                        </template>
+                                    </select>
                                 </div>
                             </template>
 
                             <template x-if="liquidationMode === 'Bundle'">
                                 <div class="w-full md:w-1/4">
                                     <label for="nameTo" class="block text-sm font-medium text-gray-700 mb-1">To (Names) <span class="text-red-500">*</span></label>
-                                    <input required id="nameTo" name="nameTo" x-model="nameTo" class="mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" aria-required="true">
+                                    <select @click="filteredData()" required id="nameTo" name="nameTo" x-model="nameTo" class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" aria-required="true">
+                                    <option value="">Select Name</option>
+                                        <template x-for="(file, fileId) in file_data" :key="fileId">
+                                            <option :value="file.id" 
+                                                    x-text="file.lastname + ',' + (file.firstname ? ' ' + file.firstname : '') + (file.middlename ? ' ' + file.middlename : '') + (file.extension_name ? ' ' + file.extension_name : '')">
+                                            </option>
+                                        </template>
+                                    </select>                              
                                 </div>
                             </template>
                         </div>
@@ -135,7 +149,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template x-for="(file, fileId) in file_data" :key="fileId">
+                                    <template  x-for="file in filtered_file_data" :key="file.id">
                                         <tr>
                                             <td class="border border-black px-1 py-1 text-center" x-text="new Date(file.date_time_claimed).toLocaleDateString('en-US')"></td>
                                             <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.dv_number"></td>
@@ -275,7 +289,6 @@
                 try {
                     const response = await axios.get(`/files/rcd/${this.cash_advance_id}`);
                     this.file_list = response.data; 
-                    console.log("mao ni list",this.file_list);
                     
                     await this.getFileData(this.file_list);
                 } catch (error) {
@@ -283,21 +296,6 @@
                 }
             },
 
-            // async getFileData(fileIds) {
-            //     if (!fileIds || fileIds.length === 0) {
-            //         console.log('No file IDs to fetch data for.');
-            //         return;
-            //     }
-            //     try {
-            //         const response = await axios.get(`/files/data/${fileIds.join(',')}`);
-            //         this.file_data = response.data; 
-            //         this.getDates();
-            //         this.loading = false;
-            //         console.log("File Data", this.file_data);
-            //     } catch (error) {
-            //         console.error('Error fetching file data:', error);
-            //     }
-            // },
             async getFileData(fileIds) {
                 if (!fileIds || fileIds.length === 0) {
                     console.log('No file IDs to fetch data for.');
@@ -315,7 +313,7 @@
                     });
 
                     this.file_data = sortedData;
-
+                    this.filteredData();
                     this.getDates();
                     this.loading = false;
                     console.log("Sorted File Data", this.file_data);
@@ -324,6 +322,37 @@
                 }
             },
 
+            filtered_file_data: [],
+
+            filteredData() {
+                if (!this.nameFrom && !this.nameTo) {
+                    this.filtered_file_data = this.file_data;
+                    return;
+                }
+
+                let fromIndex = -1;
+                let toIndex = -1;
+
+                const nameFromLower = this.nameFrom ? this.nameFrom.toLowerCase() : '';
+                const nameToLower = this.nameTo ? this.nameTo.toLowerCase() : '';
+
+                this.file_data.forEach((file, index) => {
+                    const fullName = `${file.lastname} ${file.firstname} ${file.middlename || ''} ${file.extension_name || ''}`.trim().toLowerCase();
+                    if (fromIndex === -1 && fullName.includes(nameFromLower)) {
+                        fromIndex = index;
+                    }
+                    if (toIndex === -1 && fullName.includes(nameToLower)) {
+                        toIndex = index;
+                    }
+                });
+
+                if (fromIndex !== -1 && toIndex !== -1 && fromIndex <= toIndex) {
+                    this.filtered_file_data = this.file_data.slice(fromIndex, toIndex + 1);
+                } else {
+                    this.filtered_file_data = [];
+                }
+            },
+        
             firstDate: '',
             lastDate: '',
 
@@ -338,8 +367,6 @@
                 this.firstDate = dates[0].toLocaleDateString('en-US', options);
                 this.lastDate = dates[dates.length - 1].toLocaleDateString('en-US', options);
 
-                console.log('1st:' + this.firstDate);
-                console.log('2nd:' + this.lastDate);
             },
 
             refund_id: null,
