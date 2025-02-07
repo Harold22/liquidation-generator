@@ -25,51 +25,11 @@ class FileDataController extends Controller
         return response()->json($grouped_data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getIndividualList($fileId)
     {
-        //
-    }
+        $file_data = FileData::where('file_id', $fileId)->get();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return response()->json($file_data);
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(FileData $fileData)
-    {
-      
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(FileData $fileData)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, FileData $fileData)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(FileData $fileData)
-    {
-        //
-    }
+ 
 }

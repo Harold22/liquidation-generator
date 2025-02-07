@@ -57,8 +57,8 @@
 
                             <!-- Liquidation Mode -->
                             <div class="w-full md:w-1/4">
-                                <label for="liquidationMode" class="block text-sm font-medium text-gray-700 mb-1">Liquidation Mode</label>
-                                <select id="liquidationMode" name="liquidationMode" x-model="liquidationMode" class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                <label for="liquidation_mode" class="block text-sm font-medium text-gray-700 mb-1">Liquidation Mode</label>
+                                <select id="liquidationMode" name="liquidationMode" x-model="liquidationMode" @click="filteredData()" class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                                     <option value="Overall">Overall</option>
                                     <option value="Bundle">Per Bundle</option>
                                 </select>
@@ -129,7 +129,7 @@
                                 </div>
                                 <div class="flex w-1/4">
                                     <label for="sheet_no">Sheet No.:</label>
-                                    <span class="text-sm ml-2">1</span>
+                                    <span class="text-sm ml-2"></span>
                                 </div>
                             </div>
                         </div>
@@ -164,7 +164,7 @@
                                             <td class="border border-black px-1 py-1 text-center" x-text="file.amount.toLocaleString()"></td>
                                         </tr> 
                                     </template>
-                                    <tr>
+                                    <tr x-show="liquidationMode === 'Overall' && amount_refunded != 0">
                                         <td class="border border-black px-1 py-1 text-center" x-text="new Date(date_refunded).toLocaleDateString('en-US')"></td>
                                         <td class="border border-black px-1 py-1 text-center uppercase" x-text="official_receipt"></td>
                                         <td class="border border-black px-1 py-1 text-center"></td>
@@ -175,18 +175,27 @@
                                         <td class="border border-black px-1 py-1 text-center" x-text="parseInt(amount_refunded).toLocaleString()"></td>
                                     </tr>
                                 </tbody>
-
+                         
                                 <tfoot>
-                                    <tr>
+                                    <tr x-show="liquidationMode === 'Bundle'">
                                         <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
                                         <td class="border border-black px-4 py-2 text-center font-semibold" 
                                             x-text="(
-                                                Object.values(file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
+                                                Object.values(filtered_file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
+                                            ).toLocaleString() + '.00'">
+                                        </td>
+                                    </tr>
+                    
+                                    <tr x-show="liquidationMode === 'Overall'">
+                                        <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
+                                        <td class="border border-black px-4 py-2 text-center font-semibold" 
+                                            x-text="(
+                                                Object.values(filtered_file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
                                                 + parseInt(amount_refunded)
                                             ).toLocaleString() + '.00'">
                                         </td>
                                     </tr>
-                                </tfoot>
+                            </tfoot>
 
                             </table>
                         </div>
@@ -249,7 +258,7 @@
                     this.cash_advance_id = id;
                 } else {
                     console.log('ID not found in the URL path');
-                }
+                }       
             },
 
             async getCashAdvanceDetails() {
@@ -313,10 +322,10 @@
                     });
 
                     this.file_data = sortedData;
+                    console.log(this.file_data);
                     this.filteredData();
                     this.getDates();
                     this.loading = false;
-                    console.log("Sorted File Data", this.file_data);
                 } catch (error) {
                     console.error('Error fetching file data:', error);
                 }
@@ -325,7 +334,18 @@
             filtered_file_data: [],
 
             filteredData() {
+                if(this.liquidationMode === 'Overall'){
+                    this.filtered_file_data = this.file_data;
+                    return;
+                }
+
+                if (!this.file_data || this.file_data.length === 0) {
+                    console.log('No file data available for filtering.');
+                    return;
+                }
+
                 if (!this.nameFrom && !this.nameTo) {
+                    console.log('Showing all data since nameFrom or nameTo is empty.');
                     this.filtered_file_data = this.file_data;
                     return;
                 }
@@ -333,17 +353,12 @@
                 let fromIndex = -1;
                 let toIndex = -1;
 
-                const nameFromLower = this.nameFrom ? this.nameFrom.toLowerCase() : '';
-                const nameToLower = this.nameTo ? this.nameTo.toLowerCase() : '';
+                const nameFromId = parseInt(this.nameFrom);
+                const nameToId = parseInt(this.nameTo);
 
                 this.file_data.forEach((file, index) => {
-                    const fullName = `${file.lastname} ${file.firstname} ${file.middlename || ''} ${file.extension_name || ''}`.trim().toLowerCase();
-                    if (fromIndex === -1 && fullName.includes(nameFromLower)) {
-                        fromIndex = index;
-                    }
-                    if (toIndex === -1 && fullName.includes(nameToLower)) {
-                        toIndex = index;
-                    }
+                    if (file.id === nameFromId) fromIndex = index;
+                    if (file.id === nameToId) toIndex = index;
                 });
 
                 if (fromIndex !== -1 && toIndex !== -1 && fromIndex <= toIndex) {
@@ -351,6 +366,8 @@
                 } else {
                     this.filtered_file_data = [];
                 }
+
+                console.log('Filtered data:', this.filtered_file_data);
             },
         
             firstDate: '',
@@ -370,14 +387,14 @@
             },
 
             refund_id: null,
-            amount_refunded: null,
+            amount_refunded: 0,
             date_refunded: null,
             official_receipt: null,
 
             async getRefundList() {
                 if (!this.cash_advance_id) {
                     this.refund_id = null;
-                    this.amount_refunded = null;
+                    this.amount_refunded = 0;
                     this.date_refunded = null;
                     this.official_receipt = null;
                     return;
@@ -393,7 +410,7 @@
                         this.official_receipt = refund.official_receipt;
                     } else {
                         this.refund_id = null;
-                        this.amount_refunded = null;
+                        this.amount_refunded = 0;
                         this.date_refunded = null;
                         this.official_receipt = null;
                     }

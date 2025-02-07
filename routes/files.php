@@ -11,4 +11,6 @@ Route::get('/files/getSdoTotal/{sdo}', [FileController::class, 'getSdoTotal']);
 Route::post('/files/delete/{id}', [FileController::class, 'destroy'])->name('file.delete');
 Route::get('/files/rcd/{id}', [FileController::class, 'getIdToRCD']);
 Route::get('/files/data/{fileIds}', [FileDataController::class, 'getData']);
+Route::get('/files/list/{fileId}', [FileDataController::class, 'getIndividualList']);
+
 
