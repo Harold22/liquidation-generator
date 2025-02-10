@@ -23,13 +23,26 @@ class FileDataController extends Controller
         $grouped_data = $file_data->groupBy('file_id');
 
         return response()->json($grouped_data);
-    }
+    }   
 
     public function getIndividualList($fileId)
     {
-        $file_data = FileData::where('file_id', $fileId)->get();
+        $file_data = FileData::where('file_id', $fileId)->paginate(10);
 
-        return response()->json($file_data);
+        return response()->json($file_data->toArray());
+    }
+
+    public function destroy($id)
+    {
+        $beneficiary = FileData::find($id);
+
+        if ($beneficiary) {
+            $beneficiary->delete(); 
+
+            return response()->json(['message' => 'Beneficiary Deleted successfully']);
+        }
+
+        return response()->json(['message' => 'File not found'], 404);
     }
  
 }

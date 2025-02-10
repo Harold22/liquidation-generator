@@ -30,23 +30,6 @@ class FileDataService
         return $fileData;
     }
 
-    /**
-     * Delete a file data entry.
-     *
-     * @param FileData $fileData
-     * @return bool|null
-     */
-    public function delete(FileData $fileData): ?bool
-    {
-        return $fileData->delete();
-    }
-
-    /**
-     * Retrieve file data by file ID.
-     *
-     * @param int $fileId
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
     public function getByFileId(int $fileId)
     {
         return FileData::where('file_id', $fileId)->get();

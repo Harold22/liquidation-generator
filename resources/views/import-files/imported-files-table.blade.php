@@ -17,7 +17,7 @@
                     <td class="px-4 py-4" x-text="file.total_amount.toLocaleString()"></td>
                     <td class="px-4 py-4 flex items-center space-x-2">
                     <!-- View Button -->
-                    <button @click="importedFilesTable = false, beneficiaryListTable = true; getFileData(file.id)"
+                    <button @click="importedFilesTable = false, beneficiaryListTable = true; getFileDataPerFile(file.id), loading = true"
                         class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
@@ -74,4 +74,23 @@
             <td class="px-4 py-3"></td>
         </tr>
     </tfoot>
+    
 </table>
+<!-- Pagination -->
+<div class="flex items-center justify-center mt-6 space-x-4 mb-4">
+    <button 
+        @click="changePage(currentPage - 1)" 
+        :disabled="currentPage === 1" 
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
+        &laquo; Previous
+    </button>
+    <span class="text-sm text-gray-600">
+        Page <span x-text="currentPage"></span> of <span x-text="totalPages"></span>
+    </span>
+    <button 
+        @click="changePage(currentPage + 1)" 
+        :disabled="currentPage === totalPages" 
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
+        Next &raquo;
+    </button>
+</div>
