@@ -12,6 +12,32 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <style>
+            @media print {
+                .no-print {
+                    display: none;
+                }
+                table {
+                    width: 100%;
+                }
+
+                thead, tfoot {
+                    display: table-row-group;
+                }
+
+                tr {
+                    page-break-inside: avoid;
+                }
+
+                .no-print {
+                    display: none !important;
+                }
+
+                .page-break {
+                    page-break-after: always;
+                }
+            }
+        </style>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">

@@ -39,3 +39,13 @@
             </div>
         </div>
     @endif
+
+    @if (session('info'))
+        <div x-data="{ show: true }" x-show="show" 
+            class="p-4 my-5 text-sm text-blue-800 bg-blue-100 rounded-lg" 
+            role="alert">
+            <div class="flex justify-between items-center">
+                <span>{{ session('info') }}</span>
+            </div>
+        </div>
+    @endif

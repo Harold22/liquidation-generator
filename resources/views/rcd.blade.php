@@ -40,99 +40,197 @@
         </style>
     </head>
     <body class="font-sans antialiased">
-        <div x-data="rcd()" class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            <div x-show="loading" class="w-full mt-4 flex justify-center items-center">
-                <div class="w-16 h-16 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
-            </div>
+        <div x-data="rcd()" class="min-h-screen dark:bg-gray-900">
             <div class="p-6 text-sm">
                 <div class="max-w-4xl mx-auto">
-                    <div class="flex justify-center">
-                        <h1 class="text-xl font-bold">REPORT OF CASH DISBURSEMENTS</h1>
+                    <!-- filter -->
+                    <div class="w-full no-print border border-gray-200 p-6 rounded-lg shadow-sm bg-white">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <!-- Liquidation Type -->
+                            <div class="w-full md:w-1/6">
+                                <label for="liquidationType" class="block text-sm font-medium text-gray-700 mb-1">Liquidation Type</label>
+                                <select id="liquidationType" name="liquidationType" x-model="liquidationType" class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                    <option value="Full">Full</option>
+                                    <option value="Partial">Partial</option>
+                                </select>
+                            </div>
+
+                            <!-- Liquidation Mode -->
+                            <div class="w-full md:w-1/4">
+                                <label for="liquidation_mode" class="block text-sm font-medium text-gray-700 mb-1">Liquidation Mode</label>
+                                <select id="liquidationMode" name="liquidationMode" x-model="liquidationMode" @click="filteredData()" class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                    <option value="Overall">Overall</option>
+                                    <option value="Bundle">Per Bundle</option>
+                                </select>
+                            </div>
+
+                            <!-- Conditional Inputs for Bundle Mode -->
+                            <template x-if="liquidationMode === 'Bundle'">
+                                <div class="w-full md:w-1/4">
+                                    <label for="nameFrom" class="block text-sm font-medium text-gray-700 mb-1">From (Names) <span class="text-red-500">*</span></label>
+                                    <select @click="filteredData()" required id="nameFrom" name="nameFrom" x-model="nameFrom" class="text-sm  mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" aria-required="true">
+                                        <option value="">Select Name</option>
+                                        <template x-for="(file, fileId) in file_data" :key="fileId">
+                                            <option :value="file.id" 
+                                                    x-text="file.lastname + ',' + (file.firstname ? ' ' + file.firstname : '') + (file.middlename ? ' ' + file.middlename : '') + (file.extension_name ? ' ' + file.extension_name : '')">
+                                            </option>
+                                        </template>
+                                    </select>
+                                </div>
+                            </template>
+
+                            <template x-if="liquidationMode === 'Bundle'">
+                                <div class="w-full md:w-1/4">
+                                    <label for="nameTo" class="block text-sm font-medium text-gray-700 mb-1">To (Names) <span class="text-red-500">*</span></label>
+                                    <select @click="filteredData()" required id="nameTo" name="nameTo" x-model="nameTo" class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" aria-required="true">
+                                    <option value="">Select Name</option>
+                                        <template x-for="(file, fileId) in file_data" :key="fileId">
+                                            <option :value="file.id" 
+                                                    x-text="file.lastname + ',' + (file.firstname ? ' ' + file.firstname : '') + (file.middlename ? ' ' + file.middlename : '') + (file.extension_name ? ' ' + file.extension_name : '')">
+                                            </option>
+                                        </template>
+                                    </select>                              
+                                </div>
+                            </template>
+                        </div>
                     </div>
-                    <div class="flex justify-center">
-                        <h1 class="text-md font-bold">
-                            Period Covered: 
-                            <span class="font-semibold" 
-                                x-text="firstDate === lastDate ? firstDate : firstDate + ' to ' + lastDate">
-                            </span>
-                        </h1>
+
+                    <div x-show="loading" class="w-full mt-4 flex justify-center items-center">
+                        <div class="w-16 h-16 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
                     </div>
-                    <div x-show="loading == false" class="pb-5 overflow-auto max-w-full">
-                        <table class="bg-white border border-gray-200 border-collapse mt-1 max-w-full">
-                            <thead class="text-center">
-                                <tr>
-                                    <th class="border border-black" colspan="1">Date</th>
-                                    <th class="border border-black" colspan="1">DV/Payroll No.</th>
-                                    <th class="border border-black" colspan="1">ORS/BURS No.</th>
-                                    <th class="border border-black" colspan="1">Responsibility Center Code</th>
-                                    <th class="border border-black" colspan="1">Payee</th>
-                                    <th class="border border-black" colspan="1">UACS Object Code</th>
-                                    <th class="border border-black" colspan="1">Nature of Payment</th>
-                                    <th class="border border-black" colspan="1">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <template x-for="(fileList, fileId) in file_data" :key="fileId">
-                                    <template x-for="file in fileList" :key="file.id">
+
+                    <!-- start sa rcd -->
+                    <div class="border rounded p-4 overflow-hidden border-black mt-4">
+                        <div class="flex justify-center mt-2">
+                            <h1 class="text-xl font-bold">REPORT OF CASH DISBURSEMENTS</h1>
+                        </div>
+                        <div class="flex justify-center">
+                            <h1 class="text-md font-bold">
+                                Period Covered: 
+                                <span class="font-semibold" 
+                                    x-text="firstDate === lastDate ? firstDate : firstDate + ' to ' + lastDate">
+                                </span>
+                            </h1>
+                        </div>
+                        <div class="mt-7">
+                            <div class="flex justify-between items-center">
+                                <div class="flex w-3/4">
+                                    <label for="entity_name">Entity Name: DSWD Field Office XI</label>
+                                </div>
+                                <div class="flex w-1/4">
+                                    <label for="sheet_no">Report No.:</label>
+                                    <span class="text-sm ml-2"></span>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <div class="flex w-3/4">
+                                    <label for="fund_cluster">Fund Cluster: AICS (FUND 101)</label>
+                                </div>
+                                <div class="flex w-1/4">
+                                    <label for="sheet_no">Sheet No.:</label>
+                                    <span class="text-sm ml-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div x-show="loading == false" class="pb-5 overflow-auto max-w-full">
+                            <table class="bg-white border border-gray-200 border-collapse mt-1 max-w-full text-xs">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th class="border border-black" colspan="1">Date</th>
+                                        <th class="border border-black" colspan="1">ADA/Check/DV/
+                                            Payroll/Reference No.</th>
+                                        <th class="border border-black" colspan="1">ORS/BURS No.</th>
+                                        <th class="border border-black" colspan="1">Responsibility Center Code</th>
+                                        <th class="border border-black" colspan="1">Payee</th>
+                                        <th class="border border-black" colspan="1">UACS Object Code</th>
+                                        <th class="border border-black" colspan="1">Nature of Payment</th>
+                                        <th class="border border-black" colspan="1">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template  x-for="file in filtered_file_data" :key="file.id">
                                         <tr>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="new Date(file.date_time_claimed).toLocaleDateString('en-US')"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.dv_number"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.ors_burs_number"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.responsibility_code"></td>
-                                            <td class="border border-black px-2 py-2 text-center">
+                                            <td class="border border-black px-1 py-1 text-center" x-text="new Date(file.date_time_claimed).toLocaleDateString('en-US')"></td>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.dv_number"></td>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.ors_burs_number"></td>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.responsibility_code"></td>
+                                            <td class="border border-black px-1 py-1 text-center">
                                                 <span x-text="`${file.lastname || ''}, ${file.firstname || ''} ${file.middlename || ''} ${file.extension_name || ''}`.trim().replace(/\s+/g, ' ').replace(/\?/g, 'Ñ')"></span>
                                             </td>
 
-                                            <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.uacs_code"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="file.assistance_type"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="file.amount.toLocaleString()"></td>
-                                        </tr>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.uacs_code"></td>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="file.assistance_type"></td>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="file.amount.toLocaleString()"></td>
+                                        </tr> 
                                     </template>
-                                </template>
-                            </tbody>
-
-                            <tfoot>
-                                <tr>
-                                    <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
-                                    <td class="border border-black px-4 py-2 text-center font-semibold" 
-                                        x-text="Object.values(file_data).reduce((total, fileList) => total + fileList.reduce((sum, file) => sum + file.amount, 0), 0).toLocaleString()">
-                                    </td>
-                                </tr>
+                                    <tr x-show="liquidationMode === 'Overall' && amount_refunded != 0">
+                                        <td class="border border-black px-1 py-1 text-center" x-text="new Date(date_refunded).toLocaleDateString('en-US')"></td>
+                                        <td class="border border-black px-1 py-1 text-center uppercase" x-text="official_receipt"></td>
+                                        <td class="border border-black px-1 py-1 text-center"></td>
+                                        <td class="border border-black px-1 py-1 text-center"></td>
+                                        <td class="border border-black px-1 py-1 text-center">BUREAU OF TREASURY</td>
+                                        <td class="border border-black px-1 py-1 text-center"></td>
+                                        <td class="border border-black px-1 py-1 text-center">REFUND</td>
+                                        <td class="border border-black px-1 py-1 text-center" x-text="parseInt(amount_refunded).toLocaleString()"></td>
+                                    </tr>
+                                </tbody>
+                         
+                                <tfoot>
+                                    <tr x-show="liquidationMode === 'Bundle'">
+                                        <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
+                                        <td class="border border-black px-4 py-2 text-center font-semibold" 
+                                            x-text="(
+                                                Object.values(filtered_file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
+                                            ).toLocaleString() + '.00'">
+                                        </td>
+                                    </tr>
+                    
+                                    <tr x-show="liquidationMode === 'Overall'">
+                                        <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
+                                        <td class="border border-black px-4 py-2 text-center font-semibold" 
+                                            x-text="(
+                                                Object.values(filtered_file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
+                                                + parseInt(amount_refunded)
+                                            ).toLocaleString() + '.00'">
+                                        </td>
+                                    </tr>
                             </tfoot>
 
-                        </table>
-                    </div>
-                    <div class="mt-8 text-center px-20">
-                        <p class="text-lg font-bold">CERTIFICATION</p>
-                        <p class="mt-4">
-                            I hereby certify on my official oath that this Report of Cash Disbursements in sheet(s)
-                            is a full, true and correct statement of all cash disbursements during the period stated
-                            above actually made by me in payment for obligations shown in pertinent disbursement
-                            vouchers/payroll.
-                        </p>
-                    </div>
-                    <div class="mt-10 text-center px-5">
-                        <span class="uppercase font-semibold" x-text="mapped_cash_advance_details.special_disbursing_officer"></span>
-                        <div class="mt-2 border-t border-black w-1/2 mx-auto"></div> 
-                        <p>Name and Signature of Disbursing Officer/Cashier</p>
-                    </div>
-                    <div class="flex mt-10 justify-between text-center px-18 mx-40">
-                        <div class="w-1/3">
-                            <span class="uppercase font-semibold" x-text="mapped_cash_advance_details.position"></span>
-                            <div class="mt-2 border-t border-black w-full mx-auto"></div>
-                            <p>Official Designation</p>
+                            </table>
                         </div>
-                        <div class="w-1/3">
-                            <span class="uppercase font-semibold">{{ now()->format('F j, Y') }}</span>
-                            <div class="mt-2 border-t border-black w-full mx-auto"></div> 
-                            <p>Date</p>
+                        <div class="mt-8 text-center px-20">
+                            <p class="text-lg font-bold">CERTIFICATION</p>
+                            <p class="mt-4">
+                                I hereby certify on my official oath that this Report of Cash Disbursements in ___sheet(s)
+                                is a <span x-text="liquidationType"></span>, true and correct statement of all cash disbursements during the period stated
+                                above actually made by me in payment for obligations shown in pertinent disbursement
+                                vouchers/payroll.
+                            </p>
                         </div>
-                    </div>
-                    <div class="flex justify-between mt-3">
-                        <button onclick="window.print()" class="print:hidden">
-                            <span class="fas fa-print mr-2"></span>
-                            Print
-                        </button>
+                        <div class="mt-10 text-center px-5">
+                            <span class="uppercase font-semibold" x-text="mapped_cash_advance_details.special_disbursing_officer"></span>
+                            <div class="mt-2 border-t border-black w-1/2 mx-auto"></div> 
+                            <p>Name and Signature of Disbursing Officer/Cashier</p>
+                        </div>
+                        <div class="flex mt-10 justify-between text-center px-18 mx-40">
+                            <div class="w-1/3">
+                                <span class="uppercase font-semibold" x-text="mapped_cash_advance_details.position"></span>
+                                <div class="mt-2 border-t border-black w-full mx-auto"></div>
+                                <p>Official Designation</p>
+                            </div>
+                            <div class="w-1/3">
+                                <span class="uppercase font-semibold">{{ now()->format('F j, Y') }}</span>
+                                <div class="mt-2 border-t border-black w-full mx-auto"></div> 
+                                <p>Date</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between mt-3">
+                            <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 print:hidden">
+                                <span class="fas fa-print mr-2"></span>
+                                Print
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -142,6 +240,10 @@
 <script>
     function rcd() {
         return {
+            liquidationType: 'Full',
+            liquidationMode: 'Overall',
+            nameFrom: '',
+            nameTo: '',
             cash_advance_id: null,
             file_list: [],
             file_data: [],
@@ -156,7 +258,7 @@
                     this.cash_advance_id = id;
                 } else {
                     console.log('ID not found in the URL path');
-                }
+                }       
             },
 
             async getCashAdvanceDetails() {
@@ -196,7 +298,6 @@
                 try {
                     const response = await axios.get(`/files/rcd/${this.cash_advance_id}`);
                     this.file_list = response.data; 
-                    console.log("File List", this.file_list);
                     
                     await this.getFileData(this.file_list);
                 } catch (error) {
@@ -211,14 +312,64 @@
                 }
                 try {
                     const response = await axios.get(`/files/data/${fileIds.join(',')}`);
-                    this.file_data = response.data; 
+                    this.file_data = response.data;
+                    const combinedData = Object.values(this.file_data).flat();
+
+                    const sortedData = combinedData.sort((a, b) => {
+                        const dateA = new Date(a.date_time_claimed);
+                        const dateB = new Date(b.date_time_claimed);
+                        return dateA - dateB; 
+                    });
+
+                    this.file_data = sortedData;
+                    console.log(this.file_data);
+                    this.filteredData();
                     this.getDates();
                     this.loading = false;
-                    console.log("File Data", this.file_data);
                 } catch (error) {
                     console.error('Error fetching file data:', error);
                 }
             },
+
+            filtered_file_data: [],
+
+            filteredData() {
+                if(this.liquidationMode === 'Overall'){
+                    this.filtered_file_data = this.file_data;
+                    return;
+                }
+
+                if (!this.file_data || this.file_data.length === 0) {
+                    console.log('No file data available for filtering.');
+                    return;
+                }
+
+                if (!this.nameFrom && !this.nameTo) {
+                    console.log('Showing all data since nameFrom or nameTo is empty.');
+                    this.filtered_file_data = this.file_data;
+                    return;
+                }
+
+                let fromIndex = -1;
+                let toIndex = -1;
+
+                const nameFromId = parseInt(this.nameFrom);
+                const nameToId = parseInt(this.nameTo);
+
+                this.file_data.forEach((file, index) => {
+                    if (file.id === nameFromId) fromIndex = index;
+                    if (file.id === nameToId) toIndex = index;
+                });
+
+                if (fromIndex !== -1 && toIndex !== -1 && fromIndex <= toIndex) {
+                    this.filtered_file_data = this.file_data.slice(fromIndex, toIndex + 1);
+                } else {
+                    this.filtered_file_data = [];
+                }
+
+                console.log('Filtered data:', this.filtered_file_data);
+            },
+        
             firstDate: '',
             lastDate: '',
 
@@ -233,14 +384,46 @@
                 this.firstDate = dates[0].toLocaleDateString('en-US', options);
                 this.lastDate = dates[dates.length - 1].toLocaleDateString('en-US', options);
 
-                console.log('1st:' + this.firstDate);
-                console.log('2nd:' + this.lastDate);
+            },
+
+            refund_id: null,
+            amount_refunded: 0,
+            date_refunded: null,
+            official_receipt: null,
+
+            async getRefundList() {
+                if (!this.cash_advance_id) {
+                    this.refund_id = null;
+                    this.amount_refunded = 0;
+                    this.date_refunded = null;
+                    this.official_receipt = null;
+                    return;
+                }
+                try {
+                    const response = await axios.get(`/refund/show/${this.cash_advance_id}`);
+                    
+                    if (Array.isArray(response.data) && response.data.length > 0) {
+                        const refund = response.data[0]; 
+                        this.refund_id = refund.id;
+                        this.amount_refunded = refund.amount_refunded;
+                        this.date_refunded = refund.date_refunded;
+                        this.official_receipt = refund.official_receipt;
+                    } else {
+                        this.refund_id = null;
+                        this.amount_refunded = 0;
+                        this.date_refunded = null;
+                        this.official_receipt = null;
+                    }
+                } catch (error) {
+                    console.error('Error fetching Refund Data:', error);
+                }
             },
 
             init() {
                 this.getUrlId();  
                 this.getFileList();  
                 this.getCashAdvanceDetails();
+                this.getRefundList();
             }
         };
     }

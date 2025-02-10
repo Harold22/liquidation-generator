@@ -43,7 +43,11 @@ class FileController extends Controller
             $fileContent = mb_convert_encoding($fileContent, 'UTF-8', 'auto');
             $csv = Reader::createFromString($fileContent);
             $csv->setHeaderOffset(0);
+
+            // Read the records in chunks
+            $chunkSize = 500;
             $records = $csv->getRecords();
+            $chunk = [];
 
             $storedFile = File::create([
                 'file_name' => $fileName,
@@ -57,7 +61,7 @@ class FileController extends Controller
 
                     $validatedRecord = $this->validateRecord($record);
 
-                    $formattedDateTimeClaimed = $this->formatDateTimeClaimed($record['TIME_CLAIMED'] ?? null);
+                    $formattedDateTimeClaimed = $this->formatDateTimeClaimed($record['TIME_CLAIMED']);
 
                     $data = [
                         'file_id' => $storedFile->id,
@@ -76,7 +80,13 @@ class FileController extends Controller
                         'assistance_type' => $validatedRecord['TYPE OF ASSISTANCE'],
                     ];
 
-                    $this->fileDataService->create($data);
+                    $chunk[] = $data;
+
+                    if (count($chunk) >= $chunkSize) {
+                        $this->fileDataService->create($chunk); 
+                        $chunk = []; 
+                    }
+    
 
                 } catch (\Exception $e) {
                     $failedRecords[] = [
@@ -85,19 +95,24 @@ class FileController extends Controller
                     ];
                 }
             }
+            if (count($chunk) > 0) {
+                $this->fileDataService->create($chunk);
+            }
+
             if (count($failedRecords) > 0) {
                 DB::rollback();
                 return $this->downloadFailedCSV($failedRecords);
             }
+
             $this->updateFileTotals($storedFile);
             DB::commit();
+
             return redirect()->back()->with('message', 'File uploaded and data saved successfully.');
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'An error occurred. Please try again.');
         }
     }
-
 
     private function validateRecord(array $record)
     {
@@ -109,6 +124,7 @@ class FileController extends Controller
             'EXT_NAME' => 'nullable|string|max:50',
             'BIRTHDATE' => 'nullable',
             'STATUS' => 'required|string|max:50',
+            'TIME_CLAIMED' => 'required|regex:/^\d{1,2}\/\d{1,2}\/\d{4} \d{2}:\d{2}$/',
             'REMARKS' => 'nullable|string|max:500',
             'AMOUNT' => 'required|numeric|min:0',
             'TYPE OF ASSISTANCE' => 'required|string|max:255',
@@ -121,26 +137,16 @@ class FileController extends Controller
         return $record;
     }
 
-    private function validateFile()
+    private function formatDateTimeClaimed(string $dateTime): string
     {
-
-    }
-    private function formatDateTimeClaimed(?string $dateTime): string
-    {
-        if (!empty($dateTime)) {
-            try {
-                return Carbon::createFromFormat('m/d/Y h:i:s A', $dateTime)->format('Y-m-d H:i:s');
-            } catch (\Exception $e) {
-                try {
-                    return Carbon::createFromFormat('m/d/Y H:i:s', $dateTime)->format('Y-m-d H:i:s');
-                } catch (\Exception $innerException) {
-                    return now()->format('Y-m-d H:i:s');
-                }
-            }
+        try {
+            return Carbon::createFromFormat('m/d/Y H:i', $dateTime)
+                ->format('Y-m-d H:i:00');
+        } catch (\Exception $e) {
+            throw new \Exception("Invalid date format for TIME_CLAIMED: $dateTime");
         }
-
-        return now()->format('Y-m-d H:i:s');
     }
+
 
     private function updateFileTotals(File $file)
     {
@@ -243,4 +249,5 @@ class FileController extends Controller
             'overall_total_beneficiaries' => $totalBeneficiaries
         ]);
     }
+  
 }

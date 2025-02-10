@@ -23,53 +23,26 @@ class FileDataController extends Controller
         $grouped_data = $file_data->groupBy('file_id');
 
         return response()->json($grouped_data);
+    }   
+
+    public function getIndividualList($fileId)
+    {
+        $file_data = FileData::where('file_id', $fileId)->paginate(10);
+
+        return response()->json($file_data->toArray());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function destroy($id)
     {
-        //
-    }
+        $beneficiary = FileData::find($id);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        if ($beneficiary) {
+            $beneficiary->delete(); 
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(FileData $fileData)
-    {
-      
-    }
+            return response()->json(['message' => 'Beneficiary Deleted successfully']);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(FileData $fileData)
-    {
-        //
+        return response()->json(['message' => 'File not found'], 404);
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, FileData $fileData)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(FileData $fileData)
-    {
-        //
-    }
+ 
 }

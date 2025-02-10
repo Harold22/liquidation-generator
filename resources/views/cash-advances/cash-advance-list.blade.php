@@ -21,12 +21,15 @@
 <script>
     function cashAdvances() {
         return {
-            updateCashAdvanceModal: false,
-            deleteCashAdvanceModal: false,
+            updateCashAdvanceModal: false, deleteCashAdvanceModal: false, refundCashAdvanceModal: false,
             cashAdvancesList: [],
             currentPage: 1,
             totalPages: 1,
             loading: true,
+            refund_id: null,
+            amount_refunded: null,
+            date_refunded: null,
+            official_receipt: null,
 
             getCashAdvancesList(page = 1) {
                 axios.get(`/cash-advance/show/?page=${page}`)
@@ -59,6 +62,86 @@
                 this.toDeleteSelectedList = list;
                 this.deleteCashAdvanceModal = true;
             },
+            refundList: {},
+            refundModalData(list) {
+                this.refundList = list;
+                this.refundCashAdvanceModal = true;
+                this.getRefundData(this.refundList.id);
+
+            },
+            async getRefundData(cash_advance_id) {
+                if (!cash_advance_id) {
+                    this.refund_id = null;
+                    this.amount_refunded = null;
+                    this.date_refunded = null;
+                    this.official_receipt = null;
+                    return;
+                }
+                try {
+                    const response = await axios.get(`/refund/show/${cash_advance_id}`);
+                    
+                    if (Array.isArray(response.data) && response.data.length > 0) {
+                        const refund = response.data[0]; 
+                        this.refund_id = refund.id;
+                        this.amount_refunded = refund.amount_refunded;
+                        this.date_refunded = refund.date_refunded;
+                        this.official_receipt = refund.official_receipt;
+                        this.loading = false;
+                    } else {
+                        this.refund_id = null;
+                        this.amount_refunded = null;
+                        this.date_refunded = null;
+                        this.official_receipt = null;
+                        this.loading = false;
+                    }
+                } catch (error) {
+                    console.error('Error fetching Refund Data:', error);
+                }
+            },
+
+            async deleteRefund() {
+                if (!this.refund_id) {
+                    Swal.fire("No Refund on this Cash Advance!");
+                    return;
+                }
+
+                // Show confirmation dialog
+                const result = await Swal.fire({
+                    title: "Are you sure?",
+                    text: "This action cannot be undone.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "Cancel",
+                    reverseButtons: true
+                });
+
+                // If user confirms, proceed with deletion
+                if (result.isConfirmed) {
+                    try {
+                        const response = await axios.post(`/refund/delete/${this.refund_id}`);
+                        this.refundCashAdvanceModal = false;
+
+                        // Show success message
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "The refund has been deleted successfully.",
+                            icon: "success"
+                        });
+
+                    } catch (error) {
+                        console.error('Error fetching Refund Data:', error);
+                        
+                        // Show error message
+                        Swal.fire({
+                            title: "Error",
+                            text: "Something went wrong while deleting the refund.",
+                            icon: "error"
+                        });
+                    }
+                }
+            },
+
 
             init() {
                 this.getCashAdvancesList();
