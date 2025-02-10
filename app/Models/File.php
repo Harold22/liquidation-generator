@@ -18,6 +18,7 @@ class File extends Model
         'total_beneficiary'
     ];
 
+
     public function cashAdvance()
     {
         return $this->belongsTo(CashAdvance::class, 'cash_advance_id');

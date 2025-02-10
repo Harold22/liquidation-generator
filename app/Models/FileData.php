@@ -32,6 +32,35 @@ class FileData extends Model
         return LogOptions::defaults()->logFillable();
 
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($fileData) {
+            $fileData->updateFileTotals();
+        });
+
+        static::updated(function ($fileData) {
+            $fileData->updateFileTotals();
+        });
+
+        static::deleted(function ($fileData) {
+            $fileData->updateFileTotals();
+        });
+    }
+    public function updateFileTotals()
+    {
+        $file = $this->file()->first(); 
+
+        if ($file) {
+            $file->update([
+                'total_amount' => $file->file_data()->sum('amount'),
+                'total_beneficiary' => $file->file_data()->count(),
+            ]);
+        }
+    }
+
     public function file()
     {
         return $this->belongsTo(File::class);
