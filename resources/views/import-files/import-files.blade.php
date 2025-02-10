@@ -36,7 +36,7 @@
                                     id="cash_advance" 
                                     name="cash_advance" 
                                     x-model="selectedSdo" 
-                                    @change="fetchCashAdvanceData(), getFileList(selectedSdo), getAllFile(selectedSdo), loading = true" 
+                                    @change="fetchCashAdvanceData(), getFileList(selectedSdo), getAllFile(selectedSdo), loading = true, importedFilesTable = true, beneficiaryListTable = false" 
                                     class="block w-full mt-1 text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 focus:border-indigo-500"
                                     required>
                                     <option value="">{{ __('Select SDO') }}</option>
@@ -115,25 +115,6 @@
                             </button>
                             @include('import-files.beneficiary-list-table')
                         </div>
-
-                        <!-- Pagination -->
-                        <div class="flex items-center justify-center mt-6 space-x-4 mb-4">
-                            <button 
-                                @click="changePage(currentPage - 1)" 
-                                :disabled="currentPage === 1" 
-                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
-                                &laquo; Previous
-                            </button>
-                            <span class="text-sm text-gray-600">
-                                Page <span x-text="currentPage"></span> of <span x-text="totalPages"></span>
-                            </span>
-                            <button 
-                                @click="changePage(currentPage + 1)" 
-                                :disabled="currentPage === totalPages" 
-                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
-                                Next &raquo;
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -146,6 +127,7 @@
                 importedFilesTable: true,
                 beneficiaryListTable: false,
                 deleteFileModal: false,
+                deleteBeneficiaryModal: false,
                 sdo_list: [],
                 selectedSdo: null,
                 cashAdvanceDetails: null,
@@ -155,20 +137,36 @@
                 totalPages: 1,
                 loading: true,
                 beneficiaryList: [],
-                
-                async getFileData(fileId) {
-                    if (!fileId || fileId.length === 0) {
+                beneCurrentPage: 1,
+                beneTotalPages: 1,
+                fileId: null,
+
+
+                //kuha individual na data
+                async getFileDataPerFile(fileId, page_bene = 1) {
+                    this.fileId = fileId;
+                    if (!this.fileId || this.fileId.length === 0) {
                         console.log('No file IDs to fetch data for.');
+                        this.beneficiaryList = [];
+                        this.beneCurrentPage = 1; 
+                        this.beneTotalPages = 1;     
+                        this.loading = false;
                         return;
                     }
+                    this.loading = true; 
                     try {
-                        const response = await axios.get(`/files/list/${fileId}`);
-                        beneficiaryList = response.data;
-                        this.loading = false;
+                        const response = await axios.get(`/files/list/${this.fileId}?page=${page_bene}`);
+                        this.beneficiaryList = response.data.data;
+                        this.beneCurrentPage = response.data.current_page;
+                        this.beneTotalPages = response.data.last_page;
                     } catch (error) {
                         console.error('Error fetching file data:', error);
+                    } finally {
+                        this.loading = false; 
                     }
                 },
+
+
                 async getFileList(selectedSdo, page = 1) {
                     if (!selectedSdo || selectedSdo === null || selectedSdo === '') {
                         this.file_list = []; 
@@ -180,7 +178,7 @@
                     
                     try {
                         const response = await axios.get(`/files/show/${selectedSdo}/?page=${page}`);
-                        this.file_list = [];
+                        this.file_list = [];  
                         this.file_list = response.data.data;
                         this.currentPage = response.data.current_page;
                         this.totalPages = response.data.last_page;
@@ -230,9 +228,16 @@
                     }
                     this.getFileList(this.selectedSdo, page);
                 },
+
+                changePageBene(page_bene) {
+                    if (page_bene < 1 || page_bene > this.beneTotalPages) return;
+                    if (!this.fileId) 
+                        return;
+                    this.getFileDataPerFile(this.fileId, page_bene); 
+                },
+
                 deleteFile(id) {
                     this.loading = true;
-
                     axios.post(`/files/delete/${id}`)
                         .then(response => {
                             this.file_list = this.file_list.filter(file => file.id !== id); 
@@ -257,13 +262,28 @@
                         const response = await axios.get(`/files/getSdoTotal/${selectedSdo}`);
                         this.file_list_total = [];
                         this.file_list_total = response.data;
-                        console.log('for:' + this.file_list_total);
                         this.loading = false;
                     } catch (error) {
                         this.loading = false;
                         console.error('Error fetching file list for total:', error);
                     }
 
+                },
+
+                deleteBeneficiary(id){
+                    this.loading = true;
+                    axios.post(`/data/delete/${id}`)
+                    .then(response => {
+                        this.beneficiaryList = this.beneficiaryList.filter(beneficiary => beneficiary.id !== id); 
+                        alert('Beneficiary deleted successfully!');    
+                        this.loading = false;
+                        this.deleteBeneficiaryModal = false; 
+                    })
+                    .catch(error => {
+                        this.loading = false;
+                        console.error("Error deleting bene:", error);
+                        alert('Error deleting file!');
+                    });
                 },
 
                 init() {
