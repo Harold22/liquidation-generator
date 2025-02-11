@@ -21,7 +21,7 @@
                 <td class="px-6 py-4" x-text="beneficiary.amount"></td>
                 <td class="px-6 py-4 flex space-x-2">
                     <!-- update button -->
-                    <button @click="updateBeneficiaryData()"
+                    <button @click="updateBeneficiaryData(beneficiary)"
                         class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 ease-in-out">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path d="M12 20h9" />

@@ -33,32 +33,50 @@ class FileData extends Model
 
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($fileData) {
-            $fileData->updateFileTotals();
-        });
-
-        static::updated(function ($fileData) {
-            $fileData->updateFileTotals();
-        });
-
-        static::deleted(function ($fileData) {
-            $fileData->updateFileTotals();
-        });
-    }
-    public function updateFileTotals()
-    {
-        $this->update([
-            'total_amount' => $this->fileData()->sum('amount'),
-            'total_beneficiary' => $this->fileData()->count(),
-        ]);
-    }
-
     public function file()
     {
         return $this->belongsTo(File::class);
+    }
+
+    protected static function booted()
+    {
+        // When a new record is created
+        static::created(function ($fileData) {
+            $fileData->updateTotals();
+        });
+
+        // When a record is updated (e.g., amount is changed)
+        static::updated(function ($fileData) {
+            $fileData->updateTotals();
+        });
+
+        // When a record is deleted
+        static::deleted(function ($fileData) {
+            $fileData->updateTotals();
+        });
+
+        // If restoring a soft-deleted record
+        static::restored(function ($fileData) {
+            $fileData->updateTotals();
+        });
+    }
+
+    public function updateTotals()
+    {
+        if (!$this->file_id) {
+            return; 
+        }
+
+        $file = $this->file; // Get the related File model
+
+        if ($file) {
+            $totalAmount = $file->file_data()->sum('amount') ?? 0;
+            $totalBeneficiaries = $file->file_data()->count();
+
+            $file->update([
+                'total_amount' => $totalAmount,
+                'total_beneficiary' => $totalBeneficiaries,
+            ]);
+        }
     }
 }

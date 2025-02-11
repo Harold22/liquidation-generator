@@ -104,8 +104,7 @@ class FileController extends Controller
                 return $this->downloadFailedCSV($failedRecords);
             }
 
-            // $this->updateFileTotals($storedFile);
-            $storedFile->refresh();
+            $this->updateFileTotals($storedFile);
             DB::commit();
 
             return redirect()->back()->with('message', 'File uploaded and data saved successfully.');
@@ -149,12 +148,12 @@ class FileController extends Controller
     }
 
 
-    // private function updateFileTotals(File $file)
-    // {
-    //     $file->total_amount = $file->file_data()->sum('amount');
-    //     $file->total_beneficiary = $file->file_data()->count();
-    //     $file->save();
-    // }
+    private function updateFileTotals(File $file)
+    {
+        $file->total_amount = $file->file_data()->sum('amount');
+        $file->total_beneficiary = $file->file_data()->count();
+        $file->save();
+    }
 
     /**
      * Download the failed CSV records.
