@@ -68,7 +68,7 @@ class FileDataController extends Controller
             });
         }
 
-        return response()->json($query->paginate(10));
+        return response()->json($query->paginate(5));
     }
 
     
