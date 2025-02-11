@@ -286,6 +286,11 @@
                     });
                 },
 
+                updateBeneficiaryModal: false,
+                updateBeneficiaryData(){
+                    this.updateBeneficiaryModal = true;
+                },
+
                 init() {
                     this.getSdoList();
                 },

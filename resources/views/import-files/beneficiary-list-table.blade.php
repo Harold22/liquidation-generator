@@ -3,7 +3,6 @@
     <thead class="bg-gray-100 dark:bg-gray-600">
         <tr>
             <th scope="col" class="px-6 py-3">{{ __('Name') }}</th>
-            <th scope="col" class="px-6 py-3">{{ __('Birthday') }}</th>
             <th scope="col" class="px-6 py-3">{{ __('Assistance') }}</th>
             <th scope="col" class="px-6 py-3">{{ __('Amount') }}</th>
             <th scope="col" class="px-6 py-3">{{ __('Actions') }}</th>
@@ -18,11 +17,11 @@
                             (beneficiary.middlename ?? '') + ' ' + 
                             (beneficiary.extension_name ?? '')">
                 </td>
-                <td class="px-6 py-4" x-text="beneficiary.birthdate"></td>
                 <td class="px-6 py-4" x-text="beneficiary.assistance_type"></td>
                 <td class="px-6 py-4" x-text="beneficiary.amount"></td>
                 <td class="px-6 py-4 flex space-x-2">
-                    <button @click="update"
+                    <!-- update button -->
+                    <button @click="updateBeneficiaryData()"
                         class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 ease-in-out">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path d="M12 20h9" />
@@ -30,6 +29,22 @@
                         </svg>
                         Update
                     </button>
+
+                    <div x-show="updateBeneficiaryModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-20">
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                            <header class="flex justify-between items-center">
+                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update Beneficiary Data</h2>
+                                <button @click="updateBeneficiaryModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                                        <path d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </header>
+                            @include('import-files.update-beneficiary')
+                        </div>
+                    </div>
+
+                    <!-- delete button -->
                     <button @click="deleteBeneficiaryModal = true; beneToDelete = beneficiary.id"
                         class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-200 ease-in-out">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
