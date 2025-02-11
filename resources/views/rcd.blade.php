@@ -77,8 +77,7 @@
                                         </template>
                                     </select>
                                 </div>
-                            </template>
-
+                            </template> 
                             <template x-if="liquidationMode === 'Bundle'">
                                 <div class="w-full md:w-1/4">
                                     <label for="nameTo" class="block text-sm font-medium text-gray-700 mb-1">To (Names) <span class="text-red-500">*</span></label>
@@ -100,7 +99,7 @@
                     </div>
 
                     <!-- start sa rcd -->
-                    <div class="border rounded p-4 overflow-hidden border-black mt-4">
+                    <div class="rounded p-4 overflow-hidden mt-4">
                         <div class="flex justify-center mt-2">
                             <h1 class="text-xl font-bold">REPORT OF CASH DISBURSEMENTS</h1>
                         </div>
@@ -418,6 +417,38 @@
                 } catch (error) {
                     console.error('Error fetching Refund Data:', error);
                 }
+            },
+
+
+
+
+
+            // search sa dropdown sa per  bundle
+
+            searchQuery: '',
+            filteredNames: [],
+            showDropdown: false,
+
+            // Function to filter names based on user input
+            filterNames() {
+                if (!this.searchQuery) {
+                    this.filteredNames = [];
+                    this.showDropdown = false;
+                } else {
+                    this.filteredNames = this.file_data.filter(file => 
+                        (file.lastname + ' ' + (file.firstname || '') + ' ' + (file.middlename || '') + ' ' + (file.extension_name || ''))
+                            .toLowerCase()
+                            .includes(this.searchQuery.toLowerCase())
+                    );
+                    this.showDropdown = true;
+                }
+            },
+
+            // Function to select a name from the dropdown
+            selectName(file) {
+                this.searchQuery = file.lastname + ', ' + (file.firstname || '') + ' ' + (file.middlename || '') + ' ' + (file.extension_name || '');
+                this.nameFrom = file.id;
+                this.showDropdown = false;
             },
 
             init() {
