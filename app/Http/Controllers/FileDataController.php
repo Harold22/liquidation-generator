@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FileData;
+use App\Services\FileDataService;
 use Illuminate\Http\Request;
 
 class FileDataController extends Controller
@@ -10,6 +11,12 @@ class FileDataController extends Controller
     /**
      * Display a listing of the resource.
      */
+    protected $fileDataService;
+
+    public function __construct(FileDataService $fileDataService)
+    {
+        $this->fileDataService = $fileDataService;
+    }
 
     public function getData($fileIds)
     {
@@ -23,11 +30,33 @@ class FileDataController extends Controller
         $grouped_data = $file_data->groupBy('file_id');
 
         return response()->json($grouped_data);
-    }   
+    }  
+
+    public function update(Request $request)
+    {
+        $validatedData = $request->validate([
+            'id' => 'required|exists:file_data,id',
+            'firstname' => 'required|string|max:255',
+            'middlename' => 'nullable|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'extension_name' => 'nullable|string|max:50',
+            'assistance_type' => 'required|string|max:255',
+            'amount' => 'sometimes|numeric|min:0',
+        ]);
+
+        $fileData = FileData::findOrFail($validatedData['id']);
+
+        $this->fileDataService->update($fileData, $validatedData);
+
+        return redirect()->back()->with('success', 'Beneficiary updated successfully!');
+    }
+
 
     public function getIndividualList($fileId)
     {
-        $file_data = FileData::where('file_id', $fileId)->paginate(10);
+        $file_data = FileData::where('file_id', $fileId)
+            ->select('id', 'firstname', 'middlename', 'lastname', 'extension_name', 'assistance_type', 'amount')
+            ->paginate(10);
 
         return response()->json($file_data->toArray());
     }

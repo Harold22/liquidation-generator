@@ -51,14 +51,10 @@ class FileData extends Model
     }
     public function updateFileTotals()
     {
-        $file = $this->file()->first(); 
-
-        if ($file) {
-            $file->update([
-                'total_amount' => $file->file_data()->sum('amount'),
-                'total_beneficiary' => $file->file_data()->count(),
-            ]);
-        }
+        $this->update([
+            'total_amount' => $this->fileData()->sum('amount'),
+            'total_beneficiary' => $this->fileData()->count(),
+        ]);
     }
 
     public function file()

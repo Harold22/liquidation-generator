@@ -13,5 +13,6 @@ Route::get('/files/rcd/{id}', [FileController::class, 'getIdToRCD']);
 Route::get('/files/data/{fileIds}', [FileDataController::class, 'getData']);
 Route::get('/files/list/{fileId}', [FileDataController::class, 'getIndividualList']);
 Route::post('/data/delete/{id}', [FileDataController::class, 'destroy']);
+Route::post('/data/update/', [FileDataController::class, 'update'])->name('beneficiary.update');
 
 
