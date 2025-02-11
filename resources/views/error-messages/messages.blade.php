@@ -13,9 +13,10 @@
     @if (session('message'))
         <div x-data="{ show: true }" x-show="show" 
             class="p-4 my-5 text-sm text-green-800 bg-green-100 rounded-lg" 
+            x-init="setTimeout(() => show = false, 3000)" 
             role="alert">
             <div class="flex justify-between items-center">
-                <span>{{ session('message') }}</span>
+                <span>{{ session('message') }}</span>   
             </div>
         </div>
     @endif
@@ -23,6 +24,7 @@
     @if (session('success'))
         <div x-data="{ show: true }" x-show="show" 
             class="p-4 my-5 text-sm text-green-800 bg-green-100 rounded-lg" 
+            x-init="setTimeout(() => show = false, 3000)" 
             role="alert">
             <div class="flex justify-between items-center">
                 <span>{{ session('success') }}</span>
@@ -43,6 +45,7 @@
     @if (session('info'))
         <div x-data="{ show: true }" x-show="show" 
             class="p-4 my-5 text-sm text-blue-800 bg-blue-100 rounded-lg" 
+            x-init="setTimeout(() => show = false, 3000)" 
             role="alert">
             <div class="flex justify-between items-center">
                 <span>{{ session('info') }}</span>

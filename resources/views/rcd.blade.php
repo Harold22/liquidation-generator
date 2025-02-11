@@ -308,6 +308,7 @@
             async getFileData(fileIds) {
                 if (!fileIds || fileIds.length === 0) {
                     console.log('No file IDs to fetch data for.');
+                    this.loading = false;
                     return;
                 }
                 try {
