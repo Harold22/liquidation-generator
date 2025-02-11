@@ -298,6 +298,7 @@
                 try {
                     const response = await axios.get(`/files/rcd/${this.cash_advance_id}`);
                     this.file_list = response.data; 
+                    console.log('file list ni', this.file_list);
                     
                     await this.getFileData(this.file_list);
                 } catch (error) {

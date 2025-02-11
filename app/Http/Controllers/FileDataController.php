@@ -51,15 +51,27 @@ class FileDataController extends Controller
         return redirect()->back()->with('success', 'Beneficiary updated successfully!');
     }
 
-
-    public function getIndividualList($fileId)
+    public function getIndividualList(Request $request, $fileId)
     {
-        $file_data = FileData::where('file_id', $fileId)
-            ->select('id', 'firstname', 'middlename', 'lastname', 'extension_name', 'assistance_type', 'amount')
-            ->paginate(10);
+        $query = FileData::where('file_id', $fileId)
+            ->select('id', 'firstname', 'middlename', 'lastname', 'extension_name', 'assistance_type', 'amount');
 
-        return response()->json($file_data->toArray());
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('firstname', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('middlename', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('lastname', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('extension_name', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('assistance_type', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('amount', 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
+        return response()->json($query->paginate(10));
     }
+
+    
 
     public function destroy($id)
     {

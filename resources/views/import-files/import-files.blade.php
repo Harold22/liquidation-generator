@@ -10,9 +10,10 @@
             <!-- Card Container -->
             <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
                 <!-- Loading Indicator -->
-                <div x-show="loading" class="mb-4">
-                    <div class="h-2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 animate-pulse rounded-full shadow-lg overflow-hidden"></div>
+                <div x-show="loading" x-transition.opacity class="fixed top-0 left-0 w-full h-2 bg-gray-900 bg-opacity-10 backdrop-blur-md z-50">
+                    <div class="h-2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 animate-pulse rounded-full shadow-lg"></div>
                 </div>
+
 
                 <!-- Error Messages -->
                 @include('error-messages.messages')
@@ -106,15 +107,33 @@
                         </div>
 
                         <div class="space-y-4" x-show="beneficiaryListTable">
-                            <button @click="beneficiaryListTable = false, importedFilesTable = true"
-                                class="flex items-center justify-center gap-1 px-3 py-2 text-sm font-medium text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200 ease-in-out">
-                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                    <path d="M15 19l-7-7 7-7" />
-                                </svg>
-                                Imported File List
-                            </button>
+                            <div class="flex justify-between items-center">
+                                <!-- Button -->
+                                <button @click="fetchCashAdvanceData(), getFileList(selectedSdo), getAllFile(selectedSdo), loading = true, importedFilesTable = true, beneficiaryListTable = false"
+                                    class="flex items-center justify-center gap-1 px-3 py-2 text-sm font-medium text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200 ease-in-out">
+                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                    Imported File List
+                                </button>
+
+                                <!-- Search Input & Button -->
+                                <div class="flex items-center space-x-2">
+                                    <input 
+                                        type="text" 
+                                        placeholder="Search..." 
+                                        x-model="searchQuery"
+                                        @input.debounce.500ms="getFileDataPerFile(fileId, 1)"
+                                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100"
+                                    />
+
+
+                                </div>
+                            </div>
+
                             @include('import-files.beneficiary-list-table')
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -140,9 +159,8 @@
                 beneCurrentPage: 1,
                 beneTotalPages: 1,
                 fileId: null,
+                searchQuery: null,
 
-
-                //kuha individual na data
                 async getFileDataPerFile(fileId, page_bene = 1) {
                     this.fileId = fileId;
                     if (!this.fileId || this.fileId.length === 0) {
@@ -153,9 +171,16 @@
                         this.loading = false;
                         return;
                     }
+
                     this.loading = true; 
                     try {
-                        const response = await axios.get(`/files/list/${this.fileId}?page=${page_bene}`);
+                        const params = { page: page_bene };
+                        if (this.searchQuery && this.searchQuery.trim() !== '') {
+                            params.search = this.searchQuery;
+                        }
+
+                        const response = await axios.get(`/files/list/${this.fileId}`, { params });
+
                         this.beneficiaryList = response.data.data;
                         this.beneCurrentPage = response.data.current_page;
                         this.beneTotalPages = response.data.last_page;
@@ -287,8 +312,11 @@
                 },
 
                 updateBeneficiaryModal: false,
-                updateBeneficiaryData(){
+                selectedBeneficiary: [],
+                updateBeneficiaryData(beneficiary){
+                    this.selectedBeneficiary = { ...beneficiary };
                     this.updateBeneficiaryModal = true;
+
                 },
 
                 init() {
