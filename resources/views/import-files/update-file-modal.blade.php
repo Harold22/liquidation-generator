@@ -4,7 +4,23 @@
         <!-- First Name -->
 
         <div class="hidden">        
-                <x-text-input id="file_id" name="file_id" class="mt-1 block w-full" x-bind:value="selectedFile.id" />
+            <x-text-input id="file_id" name="file_id" class="mt-1 block w-full" x-bind:value="selectedFile.id" />
+        </div>
+        <!-- File Name Display -->
+        <div>
+            <x-input-label for="file_name" class="text-sm">
+                {{ __('File Name') }}
+            </x-input-label>
+            <x-text-input id="file_name" name="file_name" class="mt-1 block w-full text-sm bg-gray-100 dark:bg-gray-800" x-bind:value="selectedFile.file_name" disabled />
+        </div>
+         <!-- Date Imported Display -->
+         <div>
+            <x-input-label for="date_imported" class="text-sm">
+                {{ __('Date Imported') }}
+            </x-input-label>
+            <x-text-input id="date_imported" name="date_imported" class="mt-1 block w-full text-sm bg-gray-100 dark:bg-gray-800"
+                x-bind:value="new Date(selectedFile.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })"
+                disabled />
         </div>
         <div>
             <x-input-label for="location" class="text-sm">
@@ -19,7 +35,7 @@
         <!-- Submit Button -->
         <div class="flex items-center gap-4">
             <x-primary-button class="text-sm px-4 py-2">
-                {{ __('Update') }}
+                {{ __('Save') }}
             </x-primary-button>
         </div>
     </div>
