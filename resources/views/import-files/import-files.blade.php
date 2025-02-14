@@ -157,10 +157,8 @@
     <script>
         function importFiles() {
             return {
-                importedFilesTable: true,
-                beneficiaryListTable: false,
-                deleteFileModal: false,
-                deleteBeneficiaryModal: false,
+                importedFilesTable: true, beneficiaryListTable: false, deleteFileModal: false,
+                deleteBeneficiaryModal: false, updateFileModal: false,
                 sdo_list: [],
                 selectedSdo: null,
                 cashAdvanceDetails: null,
@@ -356,7 +354,13 @@
                     this.updateBeneficiaryModal = true;
 
                 },
+                selectedFile: [],
+                updateFileLocation(file){
+                    this.selectedFile = { ...file };
+                    this.updateFileModal = true;
 
+                },
+            
                 init() {
                     this.getSdoList();
                 },
