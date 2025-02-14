@@ -21,16 +21,43 @@ class FileDataController extends Controller
     public function getData($fileIds)
     {
         $fileIdsArray = explode(',', $fileIds);
-        $file_data = FileData::whereIn('file_id', $fileIdsArray)->orderBy('date_time_claimed', 'ASC')->get();
+
+        $file_data = FileData::with('file:id,location') 
+            ->whereIn('file_id', $fileIdsArray)
+            ->orderBy('date_time_claimed', 'ASC')
+            ->get();
 
         if ($file_data->isEmpty()) {
             return response()->json(['message' => 'No data found for the given file IDs'], 404);
         }
 
-        $grouped_data = $file_data->groupBy('file_id');
+        $grouped_data = $file_data->groupBy('file_id')->map(function ($items) {
+            return $items->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'file_id' => $item->file_id,
+                    'control_number' => $item->control_number,
+                    'lastname' => $item->lastname,
+                    'firstname' => $item->firstname,
+                    'middlename' => $item->middlename,
+                    'extension_name' => $item->extension_name,
+                    'birthdate' => $item->birthdate,
+                    'status' => $item->status,
+                    'date_time_claimed' => $item->date_time_claimed,
+                    'remarks' => $item->remarks,
+                    'amount' => $item->amount,
+                    'assistance_type' => $item->assistance_type,
+                    'created_at' => $item->created_at,
+                    'updated_at' => $item->updated_at,
+                    'deleted_at' => $item->deleted_at,
+                    'location' => $item->file->location, 
+                ];
+            });
+        });
 
         return response()->json($grouped_data);
-    }  
+    }
+
 
     public function update(Request $request)
     {

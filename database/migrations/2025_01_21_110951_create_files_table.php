@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('cash_advance_id')->constrained()->onDelete('cascade');
             $table->bigInteger('total_amount');
             $table->bigInteger('total_beneficiary');
+            $table->enum('location', ['onsite', 'offsite'])->nullable(false);
             $table->timestamps();
             $table->softDeletes();
         });

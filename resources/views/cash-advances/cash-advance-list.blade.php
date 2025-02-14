@@ -32,7 +32,7 @@
             official_receipt: null,
 
             getCashAdvancesList(page = 1) {
-                axios.get(`/cash-advance/show/?page=${page}`)
+                axios.get(`/cash-advance/index/?page=${page}`)
                     .then(response => {
                         const data = response.data;
                         this.cashAdvancesList = data.data;
