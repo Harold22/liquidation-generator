@@ -210,7 +210,6 @@
                         }
 
                         const response = await axios.get(`/files/list/${this.fileId}`, { params });
-
                         this.beneficiaryList = response.data.data;
                         this.beneCurrentPage = response.data.current_page;
                         this.beneTotalPages = response.data.last_page;
