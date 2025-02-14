@@ -35,7 +35,7 @@
                                     id="cash_advance" 
                                     name="cash_advance" 
                                     x-model="selectedSdo" 
-                                    @change="fetchCashAdvanceData(), getFileList(selectedSdo), getAllFile(selectedSdo), loading = true, importedFilesTable = true, beneficiaryListTable = false" 
+                                    @change="handleSdoChange()"
                                     class="block w-full mt-1 text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 focus:border-indigo-500"
                                     required>
                                     <option value="">{{ __('Select SDO') }}</option>
@@ -46,19 +46,35 @@
                             </div>
 
                             <!-- Cash Advance Details -->
-                            <template x-if="cashAdvanceDetails">
-                                <div class="space-y-2">
-                                    <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow">
-                                        <p class="text-sm font-semibold">{{ __('Cash Advance Date:') }}</p>
-                                        <p class="text-lg text-green-600" x-text="formatDate(cashAdvanceDetails.date)"></p>
-                                    </div>
-                                    <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow">
-                                        <p class="text-sm font-semibold">{{ __('Cash Advance Amount:') }}</p>
-                                        <p class="text-lg text-green-600" x-text="'₱' + parseFloat(cashAdvanceDetails.amount).toLocaleString()"></p>
-                                    </div>
+                            <div class="space-y-2">
+                                <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow">
+                                    <p class="text-sm font-semibold">{{ __('Cash Advance Date:') }}</p>
+                                    <p class="text-lg text-green-600" x-text="cashAdvanceDetails ? formatDate(cashAdvanceDetails.date) : 'mm/dd/yyyy'"></p>
                                 </div>
-                            </template>
+                                <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow">
+                                    <p class="text-sm font-semibold">{{ __('Cash Advance Amount:') }}</p>
+                                    <p class="text-lg text-green-600" 
+                                        x-text="cashAdvanceDetails ? '₱' + parseFloat(cashAdvanceDetails.amount).toLocaleString() : '₱0'">
+                                    </p>
+                                </div>
+                            </div>
 
+                            <div>
+                                <x-input-label for="location" class="text-sm">
+                                    {{ __('Select Location') }}<span class="text-red-500">*</span>
+                                </x-input-label>
+                                <select 
+                                    id="location" 
+                                    name="location" 
+                                    class="block w-full mt-1 text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 focus:border-indigo-500"
+                                    required>
+                                    <option value="">{{ __('Select Location') }}</option>
+                                    <option value="onsite">Onsite</option>
+                                    <option value="offsite">Offsite</option>
+                                </select>
+                            </div>
+
+                            
                             <!-- File Upload -->
                             <div>
                                 <x-input-label for="file" class="text-sm">
@@ -159,6 +175,24 @@
                 fileId: null,
                 searchQuery: null,
 
+                handleSdoChange() {
+                    if (!this.selectedSdo) {
+                        this.cashAdvanceDetails = null;
+                        this.file_list = [];
+                        this.file_list_total = [];
+                        this.importedFilesTable = true;
+                        this.beneficiaryListTable = false;
+                        this.loading = false;
+                    } else {
+                        this.loading = true;
+                        this.importedFilesTable = true;
+                        this.beneficiaryListTable = false;
+                        this.fetchCashAdvanceData();
+                        this.getFileList(this.selectedSdo);
+                        this.getAllFile(this.selectedSdo);
+                    }
+                },
+
                 async getFileDataPerFile(fileId, page_bene = 1) {
                     this.fileId = fileId;
                     if (!this.fileId || this.fileId.length === 0) {
@@ -205,6 +239,7 @@
                         this.file_list = response.data.data;
                         this.currentPage = response.data.current_page;
                         this.totalPages = response.data.last_page;
+                        this.loading = false;
                     } catch (error) {
                         console.error('Error fetching file list:', error);
                     }
@@ -279,6 +314,7 @@
                 {
                     if (!selectedSdo || selectedSdo === null || selectedSdo === '') {
                         this.file_list_total = []; 
+                        this.loading = false;
                         return;
                     }
                     try {
