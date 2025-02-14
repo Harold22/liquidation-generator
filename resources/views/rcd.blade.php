@@ -317,8 +317,8 @@
                     const combinedData = Object.values(this.file_data).flat();
 
                     const sortedData = combinedData.sort((a, b) => {
-                        const dateA = new Date(a.date_time_claimed);
-                        const dateB = new Date(b.date_time_claimed);
+                        const dateA = new Date(a.date_time_claimed).setHours(0, 0, 0, 0);
+                        const dateB = new Date(b.date_time_claimed).setHours(0, 0, 0, 0);
                         return dateA - dateB; 
                     });
 
@@ -419,10 +419,6 @@
                     console.error('Error fetching Refund Data:', error);
                 }
             },
-
-
-
-
 
             // search sa dropdown sa per  bundle
 
