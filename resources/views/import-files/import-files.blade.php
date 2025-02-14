@@ -124,11 +124,11 @@
                             <div class="flex justify-between items-center">
                                 <!-- Button -->
                                 <button @click="fetchCashAdvanceData(), getFileList(selectedSdo), getAllFile(selectedSdo), loading = true, importedFilesTable = true, beneficiaryListTable = false"
-                                    class="flex items-center justify-center gap-1 px-3 py-2 text-sm font-medium text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200 ease-in-out">
-                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                        <path d="M15 19l-7-7 7-7" />
+                                    class="flex items-center justify-between gap-2 px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-400 rounded-lg shadow-sm hover:bg-gray-100 hover:border-gray-600 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 ease-in-out active:scale-95">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
-                                    Imported File List
+                                    <span>Imported File List</span>
                                 </button>
 
                                 <!-- Search Input & Button -->
