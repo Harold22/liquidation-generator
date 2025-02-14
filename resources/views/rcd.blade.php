@@ -160,7 +160,7 @@
 
                                             <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.uacs_code"></td>
                                             <td class="border border-black px-1 py-1 text-center" x-text="file.assistance_type"></td>
-                                            <td class="border border-black px-1 py-1 text-center" x-text="file.amount.toLocaleString()"></td>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="file.amount.toLocaleString()"></td>   
                                         </tr> 
                                     </template>
                                     <tr x-show="liquidationMode === 'Overall' && amount_refunded != 0">
