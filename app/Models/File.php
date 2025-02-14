@@ -15,7 +15,8 @@ class File extends Model
         'file_name', 
         'cash_advance_id',
         'total_amount',
-        'total_beneficiary'
+        'total_beneficiary',
+        'location'
     ];
 
 

@@ -1,36 +1,49 @@
 <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-300 border rounded-lg">
     <thead class="bg-gray-100 dark:bg-gray-600">
         <tr>
-            <th scope="col" class="px-4 py-3">{{ __('File Name') }}</th>
-            <th scope="col" class="px-4 py-3">{{ __('Date Imported') }}</th>
-            <th scope="col" class="px-4 py-3">{{ __('Beneficiaries') }}</th>
-            <th scope="col" class="px-4 py-3">{{ __('Amount') }}</th>
-            <th scope="col" class="px-4 py-3">{{ __('Actions') }}</th>
+            <th scope="col" class="px-2 py-2">{{ __('File Name') }}</th>
+            <th scope="col" class="px-2 py-2">{{ __('Date Imported') }}</th>
+            <th scope="col" class="px-2 py-2">{{ __('Location') }}</th>
+            <th scope="col" class="px-2 py-2">{{ __('Beneficiaries') }}</th>
+            <th scope="col" class="px-2 py-2">{{ __('Amount') }}</th>
+            <th scope="col" class="px-2 py-2">{{ __('Actions') }}</th>
         </tr>
     </thead>
     <tbody>
         <template x-for="file in file_list" :key="file.id">
             <tr class="border-t">
-                <td class="px-4 py-4" x-text="file.file_name"></td>
-                    <td class="px-4 py-4" x-text="formatDate(file.created_at)"></td>
-                    <td class="px-4 py-4" x-text="file.total_beneficiary.toLocaleString()"></td>
-                    <td class="px-4 py-4" x-text="file.total_amount.toLocaleString()"></td>
-                    <td class="px-4 py-4 flex items-center space-x-2">
+                <td class="px-2 py-3" x-text="file.file_name"></td>
+                <td class="px-2 py-3" x-text="formatDate(file.created_at)"></td>
+                <td class="px-2 py-3 capitalize" x-text="file.location"></td>
+                <td class="px-2 py-3" x-text="file.total_beneficiary.toLocaleString()"></td>
+                <td class="px-2 py-3" x-text="file.total_amount.toLocaleString()"></td>
+                <td class="px-2 py-3 flex items-center justify-center space-x-2">
+                    <button @click="updateFileLocation(file)"
+                        class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 ease-in-out">
+                        Edit
+                    </button>
+
+                    <div x-show="updateFileModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-20">
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                            <header class="flex justify-between items-center">
+                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update File</h2>
+                                <button @click="updateFileModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                                        <path d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </header>
+                            @include('import-files.update-file-modal')
+                        </div>
+                    </div>
                     <!-- View Button -->
                     <button @click="importedFilesTable = false, beneficiaryListTable = true; getFileDataPerFile(file.id), loading = true"
                         class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
-                            <circle cx="12" cy="12" r="3" />
-                        </svg>
-                        View
+                        List
                     </button>
 
                     <button @click="deleteFileModal = true; fileToDelete = file.id"
                         class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-200 ease-in-out">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                            <path d="M6 18L18 6M6 6l12 12" />
-                        </svg>
                         Delete
                     </button>
 
@@ -68,10 +81,10 @@
     </tbody>
     <tfoot class="bg-gray-100 dark:bg-gray-600">
         <tr>
-            <td colspan="2" class="px-6 py-3 font-semibold">{{ __('Overall Total') }}</td>
-            <td class="px-4 py-3" x-text="file_list.reduce((total, file) => total + file.total_beneficiary, 0).toLocaleString()"></td>
-            <td class="px-4 py-3" x-text="file_list.reduce((total, file) => total + file.total_amount, 0).toLocaleString()"></td>
-            <td class="px-4 py-3"></td>
+            <td colspan="3" class="px-6 py-3 font-semibold">{{ __('Overall Total') }}</td>
+            <td class="px-2 py-3" x-text="file_list.reduce((total, file) => total + file.total_beneficiary, 0).toLocaleString()"></td>
+            <td class="px-2 py-3" x-text="file_list.reduce((total, file) => total + file.total_amount, 0).toLocaleString()"></td>
+            <td class="px-2 py-3"></td>
         </tr>
     </tfoot>
     
