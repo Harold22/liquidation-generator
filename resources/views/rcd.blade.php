@@ -63,32 +63,65 @@
                                     <option value="Bundle">Per Bundle</option>
                                 </select>
                             </div>
-
                             <!-- Conditional Inputs for Bundle Mode -->
                             <template x-if="liquidationMode === 'Bundle'">
-                                <div class="w-full md:w-1/4">
-                                    <label for="nameFrom" class="block text-sm font-medium text-gray-700 mb-1">From (Names) <span class="text-red-500">*</span></label>
-                                    <select @click="filteredData()" required id="nameFrom" name="nameFrom" x-model="nameFrom" class="text-sm  mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" aria-required="true">
-                                        <option value="">Select Name</option>
-                                        <template x-for="(file, fileId) in file_data" :key="fileId">
-                                            <option :value="file.id" 
-                                                    x-text="file.lastname + ',' + (file.firstname ? ' ' + file.firstname : '') + (file.middlename ? ' ' + file.middlename : '') + (file.extension_name ? ' ' + file.extension_name : '')">
-                                            </option>
+                                <div class="w-full md:w-1/4 relative" x-data="{ searchFrom: '', filteredNames: [] }" @click.away="filteredNames = [], filteredData()">
+                                    <label for="nameFrom" class="block text-sm font-medium text-gray-700 mb-1">
+                                        From (Names) <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="nameFrom" name="nameFrom" required x-model="searchFrom" 
+                                        @input="
+                                            filteredNames = file_data.filter(file => 
+                                                (file.lastname + ' ' + (file.firstname || '') + ' ' + (file.middlename || '')).toLowerCase().includes(searchFrom.toLowerCase())
+                                            );
+                                            if (!searchFrom.trim()) { 
+                                                nameFrom = ''; 
+                                                filteredData(); 
+                                            }
+                                        "
+                                        class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                                        placeholder="Type to search..." />
+
+
+                                    <ul class="absolute z-50 border border-gray-300 mt-1 rounded-lg shadow-md bg-white max-h-40 overflow-y-auto w-full"
+                                        x-show="filteredNames.length > 0">
+                                        <template x-for="file in filteredNames" :key="file.id">
+                                            <li @click="nameFrom = file.id; searchFrom = file.lastname + ', ' + (file.firstname || '') + (file.middlename ? ' ' + file.middlename : ''); filteredNames = []; filteredData()"
+                                                class="p-2 cursor-pointer hover:bg-gray-100">
+                                                <span x-text="file.lastname + ', ' + (file.firstname || '') + (file.middlename ? ' ' + file.middlename : '')"></span>
+                                            </li>
                                         </template>
-                                    </select>
+                                    </ul>
                                 </div>
-                            </template> 
+                            </template>
+
                             <template x-if="liquidationMode === 'Bundle'">
-                                <div class="w-full md:w-1/4">
-                                    <label for="nameTo" class="block text-sm font-medium text-gray-700 mb-1">To (Names) <span class="text-red-500">*</span></label>
-                                    <select @click="filteredData()" required id="nameTo" name="nameTo" x-model="nameTo" class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" aria-required="true">
-                                    <option value="">Select Name</option>
-                                        <template x-for="(file, fileId) in file_data" :key="fileId">
-                                            <option :value="file.id" 
-                                                    x-text="file.lastname + ',' + (file.firstname ? ' ' + file.firstname : '') + (file.middlename ? ' ' + file.middlename : '') + (file.extension_name ? ' ' + file.extension_name : '')">
-                                            </option>
+                                <div class="w-full md:w-1/4" x-data="{ searchTo: '', filteredNamesTo: [] }" @click.away="filteredNamesTo = [], filteredData()">
+                                    <label for="nameTo" class="block text-sm font-medium text-gray-700 mb-1">
+                                        To (Names) <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="nameTo" name="nameTo" required x-model="searchTo"
+                                        @input="
+                                            filteredNamesTo = file_data.filter(file => 
+                                                (file.lastname + ' ' + (file.firstname || '') + ' ' + (file.middlename || '')).toLowerCase().includes(searchTo.toLowerCase())
+                                            );
+                                            if (!searchTo.trim()) { 
+                                                nameTo = ''; 
+                                                filteredData(); 
+                                            }
+                                        "
+                                        class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                                        placeholder="Type to search..." />
+
+                                    <ul class="absolute z-50 border border-gray-300 mt-1 rounded-lg shadow-md bg-white max-h-40 overflow-y-auto w-full"
+                                        x-show="filteredNamesTo.length > 0">
+                                        <template x-for="file in filteredNamesTo" :key="file.id">
+                                            <li @click="nameTo = file.id; searchTo = file.lastname + ', ' + (file.firstname || '') + (file.middlename ? ' ' + file.middlename : ''); filteredNamesTo = []; filteredData()"
+                                                class="p-2 cursor-pointer hover:bg-gray-100">
+                                                <span x-text="file.lastname + ', ' + (file.firstname || '') + (file.middlename ? ' ' + file.middlename : '')"></span>
+                                            </li>
                                         </template>
-                                    </select>                              
+                                    </ul>
                                 </div>
                             </template>
                         </div>
@@ -335,6 +368,7 @@
             filtered_file_data: [],
 
             filteredData() {
+                console.log();
                 if(this.liquidationMode === 'Overall'){
                     this.filtered_file_data = this.file_data;
                     return;
@@ -370,7 +404,7 @@
 
                 console.log('Filtered data:', this.filtered_file_data);
             },
-        
+
             firstDate: '',
             lastDate: '',
 
