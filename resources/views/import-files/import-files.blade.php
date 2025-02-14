@@ -200,7 +200,7 @@
                     }
                     
                     try {
-                        const response = await axios.get(`/files/show/${selectedSdo}/?page=${page}`);
+                        const response = await axios.get(`/files/index/${selectedSdo}/?page=${page}`);
                         this.file_list = [];  
                         this.file_list = response.data.data;
                         this.currentPage = response.data.current_page;

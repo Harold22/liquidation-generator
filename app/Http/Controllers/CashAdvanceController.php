@@ -71,7 +71,7 @@ class CashAdvanceController extends Controller
     }
 
 
-    public function show()
+    public function index()
     {   
         $cash_advances = CashAdvance::orderBy('cash_advance_date', 'DESC')->paginate(5);
     
