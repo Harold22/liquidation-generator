@@ -2,24 +2,24 @@
 <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-300 border rounded-lg">
     <thead class="bg-gray-100 dark:bg-gray-600">
         <tr>
-            <th scope="col" class="px-6 py-3">{{ __('Name') }}</th>
-            <th scope="col" class="px-6 py-3">{{ __('Assistance') }}</th>
-            <th scope="col" class="px-6 py-3">{{ __('Amount') }}</th>
-            <th scope="col" class="px-6 py-3">{{ __('Actions') }}</th>
+            <th scope="col" class="px-4 py-2">{{ __('Name') }}</th>
+            <th scope="col" class="px-4 py-2">{{ __('Assistance') }}</th>
+            <th scope="col" class="px-4 py-2">{{ __('Amount') }}</th>
+            <th scope="col" class="px-4 py-2">{{ __('Actions') }}</th>
         </tr>
     </thead>
     <tbody x-show="loading === false">
         <template x-for="beneficiary in beneficiaryList" :key="beneficiary.id">
             <tr class="border-t">
-                <td class="px-6 py-4" 
+                <td class="px-4 py-3" 
                     x-text="(beneficiary.lastname) + ', ' + 
                             (beneficiary.firstname) + ' ' + 
                             (beneficiary.middlename ?? '') + ' ' + 
                             (beneficiary.extension_name ?? '')">
                 </td>
-                <td class="px-6 py-4" x-text="beneficiary.assistance_type"></td>
-                <td class="px-6 py-4" x-text="beneficiary.amount"></td>
-                <td class="px-6 py-4 flex space-x-2">
+                <td class="px-4 py-3" x-text="beneficiary.assistance_type"></td>
+                <td class="px-4 py-3" x-text="beneficiary.amount"></td>
+                <td class="px-4 py-3 flex space-x-2">
                     <!-- update button -->
                     <button @click="updateBeneficiaryData(beneficiary)"
                         class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 ease-in-out">
