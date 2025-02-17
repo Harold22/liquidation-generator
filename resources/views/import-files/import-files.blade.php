@@ -205,9 +205,9 @@
                     this.loading = true; 
                     try {
                         const params = { page: page_bene };
-                        if (this.searchQuery && this.searchQuery.trim() !== '') {
-                            params.search = this.searchQuery;
-                        }
+                            if (this.searchQuery?.trim()) {
+                                params.search = this.searchQuery;
+                            }
 
                         const response = await axios.get(`/files/list/${this.fileId}`, { params });
                         this.beneficiaryList = response.data.data;
@@ -239,6 +239,8 @@
                         this.loading = false;
                     } catch (error) {
                         console.error('Error fetching file list:', error);
+                    }finally {
+                        this.loading = false; 
                     }
                 },
 
@@ -263,6 +265,8 @@
                         this.loading = false;
                     } catch (error) {
                         console.error('Error fetching SDO list:', error);
+                    } finally {
+                        this.loading = false; 
                     }
                 },
 
@@ -322,6 +326,8 @@
                     } catch (error) {
                         this.loading = false;
                         console.error('Error fetching file list for total:', error);
+                    } finally {
+                        this.loading = false; 
                     }
 
                 },
@@ -332,8 +338,7 @@
                     .then(response => {
                         this.beneficiaryList = this.beneficiaryList.filter(beneficiary => beneficiary.id !== id); 
                         alert('Beneficiary deleted successfully!');  
-                        this.loading = false;
-                        this.deleteBeneficiaryModal = false; 
+                        this.getAllFile(this.selectedSdo); 
                     })
                     .catch(error => {
                         this.loading = false;
@@ -342,7 +347,8 @@
                     })
                     .finally(() => {
                         this.loading = false;
-                        this.getAllFile(this.selectedSdo); 
+                        this.deleteBeneficiaryModal = false; 
+                     
                     });
                 },
 
