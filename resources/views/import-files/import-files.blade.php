@@ -10,10 +10,9 @@
             <!-- Card Container -->
             <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
                 <!-- Loading Indicator -->
-                <div x-show="loading" class="mb-4">
-                    <div class="h-2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 animate-pulse rounded-full shadow-lg overflow-hidden"></div>
+                <div x-show="loading" x-transition.opacity class="fixed top-0 left-0 w-full h-2 bg-gray-900 bg-opacity-10 backdrop-blur-md z-50">
+                    <div class="h-2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 animate-pulse rounded-full shadow-lg"></div>
                 </div>
-
                 <!-- Error Messages -->
                 @include('error-messages.messages')
 
@@ -36,7 +35,7 @@
                                     id="cash_advance" 
                                     name="cash_advance" 
                                     x-model="selectedSdo" 
-                                    @change="fetchCashAdvanceData(), getFileList(selectedSdo), getAllFile(selectedSdo), loading = true, importedFilesTable = true, beneficiaryListTable = false" 
+                                    @change="handleSdoChange()"
                                     class="block w-full mt-1 text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 focus:border-indigo-500"
                                     required>
                                     <option value="">{{ __('Select SDO') }}</option>
@@ -47,19 +46,35 @@
                             </div>
 
                             <!-- Cash Advance Details -->
-                            <template x-if="cashAdvanceDetails">
-                                <div class="space-y-2">
-                                    <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow">
-                                        <p class="text-sm font-semibold">{{ __('Cash Advance Date:') }}</p>
-                                        <p class="text-lg text-green-600" x-text="formatDate(cashAdvanceDetails.date)"></p>
-                                    </div>
-                                    <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow">
-                                        <p class="text-sm font-semibold">{{ __('Cash Advance Amount:') }}</p>
-                                        <p class="text-lg text-green-600" x-text="'₱' + parseFloat(cashAdvanceDetails.amount).toLocaleString()"></p>
-                                    </div>
+                            <div class="space-y-2">
+                                <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow">
+                                    <p class="text-sm font-semibold">{{ __('Cash Advance Date:') }}</p>
+                                    <p class="text-lg text-green-600" x-text="cashAdvanceDetails ? formatDate(cashAdvanceDetails.date) : 'mm/dd/yyyy'"></p>
                                 </div>
-                            </template>
+                                <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow">
+                                    <p class="text-sm font-semibold">{{ __('Cash Advance Amount:') }}</p>
+                                    <p class="text-lg text-green-600" 
+                                        x-text="cashAdvanceDetails ? '₱' + parseFloat(cashAdvanceDetails.amount).toLocaleString() : '₱0'">
+                                    </p>
+                                </div>
+                            </div>
 
+                            <div>
+                                <x-input-label for="location" class="text-sm">
+                                    {{ __('Select Location') }}<span class="text-red-500">*</span>
+                                </x-input-label>
+                                <select 
+                                    id="location" 
+                                    name="location" 
+                                    class="block w-full mt-1 text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 focus:border-indigo-500"
+                                    required>
+                                    <option value="">{{ __('Select Location') }}</option>
+                                    <option value="onsite">Onsite</option>
+                                    <option value="offsite">Offsite</option>
+                                </select>
+                            </div>
+
+                            
                             <!-- File Upload -->
                             <div>
                                 <x-input-label for="file" class="text-sm">
@@ -106,15 +121,33 @@
                         </div>
 
                         <div class="space-y-4" x-show="beneficiaryListTable">
-                            <button @click="beneficiaryListTable = false, importedFilesTable = true"
-                                class="flex items-center justify-center gap-1 px-3 py-2 text-sm font-medium text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200 ease-in-out">
-                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                    <path d="M15 19l-7-7 7-7" />
-                                </svg>
-                                Imported File List
-                            </button>
+                            <div class="flex justify-between items-center">
+                                <!-- Button -->
+                                <button @click="fetchCashAdvanceData(), getFileList(selectedSdo), getAllFile(selectedSdo), loading = true, importedFilesTable = true, beneficiaryListTable = false"
+                                    class="flex items-center justify-between gap-2 px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-400 rounded-lg shadow-sm hover:bg-gray-100 hover:border-gray-600 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 ease-in-out active:scale-95">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Imported File List</span>
+                                </button>
+
+                                <!-- Search Input & Button -->
+                                <div class="flex items-center space-x-2">
+                                    <input 
+                                        type="text" 
+                                        placeholder="Search..." 
+                                        x-model="searchQuery"
+                                        @input.debounce.500ms="getFileDataPerFile(fileId, 1)"
+                                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100"
+                                    />
+
+
+                                </div>
+                            </div>
+
                             @include('import-files.beneficiary-list-table')
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -124,10 +157,8 @@
     <script>
         function importFiles() {
             return {
-                importedFilesTable: true,
-                beneficiaryListTable: false,
-                deleteFileModal: false,
-                deleteBeneficiaryModal: false,
+                importedFilesTable: true, beneficiaryListTable: false, deleteFileModal: false,
+                deleteBeneficiaryModal: false, updateFileModal: false,
                 sdo_list: [],
                 selectedSdo: null,
                 cashAdvanceDetails: null,
@@ -140,9 +171,26 @@
                 beneCurrentPage: 1,
                 beneTotalPages: 1,
                 fileId: null,
+                searchQuery: null,
 
+                handleSdoChange() {
+                    if (!this.selectedSdo) {
+                        this.cashAdvanceDetails = null;
+                        this.file_list = [];
+                        this.file_list_total = [];
+                        this.importedFilesTable = true;
+                        this.beneficiaryListTable = false;
+                        this.loading = false;
+                    } else {
+                        this.loading = true;
+                        this.importedFilesTable = true;
+                        this.beneficiaryListTable = false;
+                        this.fetchCashAdvanceData();
+                        this.getFileList(this.selectedSdo);
+                        this.getAllFile(this.selectedSdo);
+                    }
+                },
 
-                //kuha individual na data
                 async getFileDataPerFile(fileId, page_bene = 1) {
                     this.fileId = fileId;
                     if (!this.fileId || this.fileId.length === 0) {
@@ -153,9 +201,15 @@
                         this.loading = false;
                         return;
                     }
+
                     this.loading = true; 
                     try {
-                        const response = await axios.get(`/files/list/${this.fileId}?page=${page_bene}`);
+                        const params = { page: page_bene };
+                        if (this.searchQuery && this.searchQuery.trim() !== '') {
+                            params.search = this.searchQuery;
+                        }
+
+                        const response = await axios.get(`/files/list/${this.fileId}`, { params });
                         this.beneficiaryList = response.data.data;
                         this.beneCurrentPage = response.data.current_page;
                         this.beneTotalPages = response.data.last_page;
@@ -177,11 +231,12 @@
                     }
                     
                     try {
-                        const response = await axios.get(`/files/show/${selectedSdo}/?page=${page}`);
+                        const response = await axios.get(`/files/index/${selectedSdo}/?page=${page}`);
                         this.file_list = [];  
                         this.file_list = response.data.data;
                         this.currentPage = response.data.current_page;
                         this.totalPages = response.data.last_page;
+                        this.loading = false;
                     } catch (error) {
                         console.error('Error fetching file list:', error);
                     }
@@ -256,6 +311,7 @@
                 {
                     if (!selectedSdo || selectedSdo === null || selectedSdo === '') {
                         this.file_list_total = []; 
+                        this.loading = false;
                         return;
                     }
                     try {
@@ -275,7 +331,7 @@
                     axios.post(`/data/delete/${id}`)
                     .then(response => {
                         this.beneficiaryList = this.beneficiaryList.filter(beneficiary => beneficiary.id !== id); 
-                        alert('Beneficiary deleted successfully!');    
+                        alert('Beneficiary deleted successfully!');  
                         this.loading = false;
                         this.deleteBeneficiaryModal = false; 
                     })
@@ -283,9 +339,27 @@
                         this.loading = false;
                         console.error("Error deleting bene:", error);
                         alert('Error deleting file!');
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                        this.getAllFile(this.selectedSdo); 
                     });
                 },
 
+                updateBeneficiaryModal: false,
+                selectedBeneficiary: [],
+                updateBeneficiaryData(beneficiary){
+                    this.selectedBeneficiary = { ...beneficiary };
+                    this.updateBeneficiaryModal = true;
+
+                },
+                selectedFile: [],
+                updateFileLocation(file){
+                    this.selectedFile = { ...file };
+                    this.updateFileModal = true;
+
+                },
+            
                 init() {
                     this.getSdoList();
                 },

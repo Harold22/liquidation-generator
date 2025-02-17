@@ -71,12 +71,29 @@ class CashAdvanceController extends Controller
     }
 
 
-    public function show()
-    {   
-        $cash_advances = CashAdvance::orderBy('cash_advance_date', 'DESC')->paginate(5);
+    // public function index()
+    // {   
+    //     $cash_advances = CashAdvance::orderBy('cash_advance_date', 'DESC')->paginate(5);
     
+    //     return response()->json($cash_advances->toArray());
+    // }
+    public function index(Request $request)
+    {   
+        $query = CashAdvance::query();
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('special_disbursing_officer', 'LIKE', "%$search%")
+                ->orWhere('dv_number', 'LIKE', "%$search%")
+                ->orWhere('cash_advance_amount', 'LIKE', "%$search%");
+            });
+        }
+
+        $cash_advances = $query->orderBy('cash_advance_date', 'DESC')->paginate(5);
+
         return response()->json($cash_advances->toArray());
     }
+
 
     public function showSdo()
     {

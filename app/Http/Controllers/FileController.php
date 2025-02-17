@@ -30,6 +30,7 @@ class FileController extends Controller
                 'file' => 'required|mimetypes:text/csv,text/plain',
                 'cash_advance' => 'required|exists:cash_advances,id',
                 'file_name' => 'unique:files,file_name,NULL,id,cash_advance_id,' . $request->input('cash_advance'),
+                'location' => 'required|in:onsite,offsite', 
             ]);
 
             $failedRecords = [];
@@ -54,6 +55,7 @@ class FileController extends Controller
                 'cash_advance_id' => $request->input('cash_advance'),
                 'total_amount' => 0,
                 'total_beneficiary' => 0,
+                'location' => $request->input('location'),
             ]);
 
             foreach ($records as $record) {
@@ -104,8 +106,7 @@ class FileController extends Controller
                 return $this->downloadFailedCSV($failedRecords);
             }
 
-            // $this->updateFileTotals($storedFile);
-            $storedFile->refresh();
+            $this->updateFileTotals($storedFile);
             DB::commit();
 
             return redirect()->back()->with('message', 'File uploaded and data saved successfully.');
@@ -149,12 +150,12 @@ class FileController extends Controller
     }
 
 
-    // private function updateFileTotals(File $file)
-    // {
-    //     $file->total_amount = $file->file_data()->sum('amount');
-    //     $file->total_beneficiary = $file->file_data()->count();
-    //     $file->save();
-    // }
+    private function updateFileTotals(File $file)
+    {
+        $file->total_amount = $file->file_data()->sum('amount');
+        $file->total_beneficiary = $file->file_data()->count();
+        $file->save();
+    }
 
     /**
      * Download the failed CSV records.
@@ -203,7 +204,7 @@ class FileController extends Controller
     /**
      * Show the list of files for a specific SDO (cash advance).
      */
-    public function show($sdo)
+    public function index($sdo)
     {
         $file_list = File::where('cash_advance_id', $sdo)->paginate(5);
 
@@ -250,5 +251,22 @@ class FileController extends Controller
             'overall_total_beneficiaries' => $totalBeneficiaries
         ]);
     }
+
+    public function update(Request $request)
+    {
+        $id = $request->input('file_id');
+        $file = File::findOrFail($id);
+
+        $request->validate([
+            'location' => 'required|in:onsite,offsite',
+        ]);
+
+        $file->update([
+            'location' => $request->input('location'),
+        ]);
+
+        return redirect()->back()->with('success', 'Location updated successfully!');
+    }
+
   
 }

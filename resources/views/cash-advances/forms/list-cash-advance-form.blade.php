@@ -9,6 +9,8 @@
             <input 
                 type="text" 
                 placeholder="Search..." 
+                x-model="searchCashAdvance"
+                @input.debounce.500ms="getCashAdvancesList(1)"
                 class="px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100"
             />
 
@@ -24,10 +26,9 @@
     </div>
     @include('error-messages.messages')
 
-    <div x-show="loading" class="w-full mt-4">
-        <div class="h-2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 animate-pulse rounded-full shadow-lg overflow-hidden">
-            <div class="h-full w-1/4 bg-blue-400 rounded-full"></div>
-        </div>
+    <!-- Loading Indicator -->
+    <div x-show="loading" x-transition.opacity class="fixed top-0 left-0 w-full h-2 bg-gray-900 bg-opacity-10 backdrop-blur-md z-50">
+        <div class="h-2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 animate-pulse rounded-full shadow-lg"></div>
     </div>
     <div class="mt-4 overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">

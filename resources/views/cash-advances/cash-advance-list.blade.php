@@ -30,20 +30,28 @@
             amount_refunded: null,
             date_refunded: null,
             official_receipt: null,
+            searchCashAdvance: null,
+            
+            async getCashAdvancesList(page = 1) {
+                this.loading = true; 
 
-            getCashAdvancesList(page = 1) {
-                axios.get(`/cash-advance/show/?page=${page}`)
-                    .then(response => {
-                        const data = response.data;
-                        this.cashAdvancesList = data.data;
-                        this.currentPage = data.current_page;
-                        this.totalPages = data.last_page; 
-                    })
-                    .catch(error => console.error("Error fetching cash advances:", error))
-                    .finally(() => {
-                        this.loading = false;
+                try {
+                    const response = await axios.get(`/cash-advance/index`, {
+                        params: {
+                            page: page,
+                            search: this.searchCashAdvance
+                        }
                     });
 
+                    const data = response.data;
+                    this.cashAdvancesList = data.data;
+                    this.currentPage = data.current_page;
+                    this.totalPages = data.last_page;
+                } catch (error) {
+                    console.error("Error fetching cash advances:", error);
+                } finally {
+                    this.loading = false; // End loading state
+                }
             },
 
             changePage(page) {

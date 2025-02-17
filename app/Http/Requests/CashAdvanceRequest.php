@@ -52,6 +52,7 @@ class CashAdvanceRequest extends FormRequest
         return [
             'special_disbursing_officer.required' => 'Special Disbursing Officer is required!',
             'cash_advance_amount.required' => 'Cash Advance Amount is required!',
+            'cash_advance_amount.numeric' => 'Cash Advance Amount must be a valid number!',
             'cash_advance_date.required' => 'Cash Advance Date is required!',
             'special_disbursing_officer.unique' => 'Special Disbursing officer already exist',
         ];
