@@ -70,13 +70,6 @@ class CashAdvanceController extends Controller
         }
     }
 
-
-    // public function index()
-    // {   
-    //     $cash_advances = CashAdvance::orderBy('cash_advance_date', 'DESC')->paginate(5);
-    
-    //     return response()->json($cash_advances->toArray());
-    // }
     public function index(Request $request)
     {   
         $query = CashAdvance::query();
