@@ -126,6 +126,26 @@
                             </template>
                         </div>
                     </div>
+                    <div class="my-3  border rounded-lg p-3 no-print">
+                        <p class="text-sm text-gray-500 mb-3">
+                            Note: This sequence number is for onsite beneficiaries only.
+                        </p>
+                        <div class="flex flex-col md:flex-row items-center gap-4">
+                            <label for="sequenceNumber" class="text-sm font-medium text-gray-700 w-full md:w-auto">
+                                Generate Sequence Number
+                            </label>
+                            <input type="text" id="prefix" name="prefix" x-model="prefix" 
+                                class="uppercase text-sm border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 w-full md:w-1/4"
+                                placeholder="Prefix"/>
+                            <input type="number" id="sequenceNumber" name="sequenceNumber" x-model="startingNumber"
+                                class="text-sm border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 w-full md:w-1/4"
+                                placeholder="Starting Number" />
+                            <button type="button" @click="generateSequenceNumber"
+                                    class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-blue-700 transition duration-200 w-full md:w-auto">
+                                Generate
+                            </button>
+                        </div>
+                    </div>
 
                     <div x-show="loading" class="w-full mt-4 flex justify-center items-center">
                         <div class="w-16 h-16 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
@@ -184,7 +204,7 @@
                                     <template  x-for="file in filtered_file_data" :key="file.id">
                                         <tr>
                                             <td class="border border-black px-1 py-1 text-center" x-text="new Date(file.date_time_claimed).toLocaleDateString('en-US')"></td>
-                                            <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.dv_number"></td>
+                                            <td class="border border-black px-1 py-1 text-center" x-text="file.sequence_number ? file.sequence_number : mapped_cash_advance_details.dv_number"></td>
                                             <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.ors_burs_number"></td>
                                             <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.responsibility_code"></td>
                                             <td class="border border-black px-1 py-1 text-center">
@@ -364,6 +384,34 @@
                     console.error('Error fetching file data:', error);
                 }
             },
+            prefix: '',
+            startingNumber: '',
+            generateSequenceNumber() {
+                console.log("Current file data:", this.file_data);
+                if (!this.prefix || !this.startingNumber) {
+                    console.error('Prefix and Starting Number are required.');
+                    alert('No Prefix or Starting Number');
+                    return;
+                }
+
+                const startNum = parseInt(this.startingNumber, 10);
+                if (isNaN(startNum)) {
+                    alert('Starting number must be a valid number.');
+                    console.error('Starting number must be a valid number.');
+                    return;
+                }
+                const startingLength = this.startingNumber.length;
+                const onsiteFiles = this.file_data.filter(file => file.location === "onsite");
+
+                onsiteFiles.forEach((file, index) => {
+                    const sequenceNumber = `${this.prefix ? this.prefix + '-' : ''}${(startNum + index).toString().padStart(startingLength, '0')}`;
+                    file.sequence_number = sequenceNumber;
+                });
+
+                console.log("Updated file data with sequence numbers:", this.file_data);
+
+
+            },
 
             filtered_file_data: [],
 
@@ -454,13 +502,9 @@
                 }
             },
 
-            // search sa dropdown sa per  bundle
-
             searchQuery: '',
             filteredNames: [],
             showDropdown: false,
-
-            // Function to filter names based on user input
             filterNames() {
                 if (!this.searchQuery) {
                     this.filteredNames = [];
@@ -475,7 +519,6 @@
                 }
             },
 
-            // Function to select a name from the dropdown
             selectName(file) {
                 this.searchQuery = file.lastname + ', ' + (file.firstname || '') + ' ' + (file.middlename || '') + ' ' + (file.extension_name || '');
                 this.nameFrom = file.id;

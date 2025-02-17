@@ -12,6 +12,7 @@ class FileData extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
+    protected $table = 'file_data';
     protected $fillable = [
         'file_id',
         'control_number',
