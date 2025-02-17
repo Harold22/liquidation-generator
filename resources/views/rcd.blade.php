@@ -153,6 +153,15 @@
 
                     <!-- start sa rcd -->
                     <div class="rounded p-4 overflow-hidden mt-4 border border-black">
+                        <div class="flex justify-end">
+                            <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 print:hidden">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 8h-2V6a2 2 0 00-2-2H9a2 2 0 00-2 2v2H5a2 2 0 00-2 2v8a2 2 0 002 2h14a2 2 0 002-2V10a2 2 0 00-2-2zm-6 0V6h-4v2H5v6h14V8h-4z" />
+                                </svg>
+                                <span class="text-sm font-medium">Print</span>
+                            </button>
+                        </div>
+
                         <div class="flex justify-center mt-2">
                             <h1 class="text-xl font-bold">REPORT OF CASH DISBURSEMENTS</h1>
                         </div>
@@ -277,10 +286,12 @@
                                 <p>Date</p>
                             </div>
                         </div>
-                        <div class="flex justify-between mt-3">
-                            <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 print:hidden">
-                                <span class="fas fa-print mr-2"></span>
-                                Print
+                        <div class="flex justify-end mt-3">
+                            <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 print:hidden">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 8h-2V6a2 2 0 00-2-2H9a2 2 0 00-2 2v2H5a2 2 0 00-2 2v8a2 2 0 002 2h14a2 2 0 002-2V10a2 2 0 00-2-2zm-6 0V6h-4v2H5v6h14V8h-4z" />
+                                </svg>
+                                <span class="text-sm font-medium">Print</span>
                             </button>
                         </div>
                     </div>
@@ -290,8 +301,8 @@
     </body>
 </html>
 <script>
-    function rcd() {
-        return {
+   document.addEventListener('alpine:init', () => {
+        Alpine.data('rcd', () => ({
             liquidationType: 'Full',
             liquidationMode: 'Overall',
             nameFrom: '',
@@ -449,6 +460,7 @@
                 } else {
                     this.filtered_file_data = [];
                 }
+                this.getDates();
 
                 console.log('Filtered data:', this.filtered_file_data);
             },
@@ -459,7 +471,7 @@
             getDates() {
                 this.firstDate = '';
                 this.lastDate = '';
-                let dates = Object.values(this.file_data).flat().map(file => new Date(file.date_time_claimed));
+                let dates = Object.values(this.filtered_file_data).flat().map(file => new Date(file.date_time_claimed));
 
                 dates.sort((a, b) => a - b);
 
@@ -531,8 +543,8 @@
                 this.getCashAdvanceDetails();
                 this.getRefundList();
             }
-        };
-    }
+        }));
+    });
 </script>
 
 
