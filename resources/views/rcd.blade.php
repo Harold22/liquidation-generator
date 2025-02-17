@@ -132,7 +132,7 @@
                     </div>
 
                     <!-- start sa rcd -->
-                    <div class="rounded p-4 overflow-hidden mt-4">
+                    <div class="rounded p-4 overflow-hidden mt-4 border border-black">
                         <div class="flex justify-center mt-2">
                             <h1 class="text-xl font-bold">REPORT OF CASH DISBURSEMENTS</h1>
                         </div>
