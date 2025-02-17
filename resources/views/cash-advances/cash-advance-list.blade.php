@@ -19,8 +19,8 @@
 </x-app-layout>
 
 <script>
-    function cashAdvances() {
-        return {
+   document.addEventListener('alpine:init', () => {
+    Alpine.data('cashAdvances', () => ({
             updateCashAdvanceModal: false, deleteCashAdvanceModal: false, refundCashAdvanceModal: false,
             cashAdvancesList: [],
             currentPage: 1,
@@ -154,7 +154,8 @@
             init() {
                 this.getCashAdvancesList();
             }
-        }
-    }
+        }));
+    });
+        
 </script>
 

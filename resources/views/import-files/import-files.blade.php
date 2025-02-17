@@ -155,8 +155,8 @@
     </div>
 
     <script>
-        function importFiles() {
-            return {
+         document.addEventListener('alpine:init', () => {
+            Alpine.data('importFiles', () => ({
                 importedFilesTable: true, beneficiaryListTable: false, deleteFileModal: false,
                 deleteBeneficiaryModal: false, updateFileModal: false,
                 sdo_list: [],
@@ -363,8 +363,8 @@
                 init() {
                     this.getSdoList();
                 },
-            };
-        }
+            }));
+        });
 
     </script>
 </x-app-layout>
