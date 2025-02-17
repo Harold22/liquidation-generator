@@ -29,7 +29,6 @@ class FileController extends Controller
             $request->validate([
                 'file' => 'required|mimetypes:text/csv,text/plain',
                 'cash_advance' => 'required|exists:cash_advances,id',
-                'file_name' => 'unique:files,file_name,NULL,id,cash_advance_id,' . $request->input('cash_advance'),
                 'location' => 'required|in:onsite,offsite', 
             ]);
 
