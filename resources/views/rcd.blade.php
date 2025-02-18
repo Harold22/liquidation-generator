@@ -36,6 +36,13 @@
                 .page-break {
                     page-break-after: always;
                 }
+                th, td {
+                    padding: 2px !important; 
+                    font-size: 8px !important; 
+                }
+                .payee-column {
+                    width: 250px !important; 
+                }
             }
         </style>
     </head>
@@ -49,7 +56,7 @@
                             <!-- Liquidation Type -->
                             <div class="w-full md:w-1/6">
                                 <label for="liquidationType" class="block text-sm font-medium text-gray-700 mb-1">Liquidation Type</label>
-                                <select id="liquidationType" name="liquidationType" x-model="liquidationType" class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                                <select id="liquidationType" name="liquidationType" x-model="liquidationType" class="text-[12px] mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                                     <option value="Full">Full</option>
                                     <option value="Partial">Partial</option>
                                 </select>
@@ -163,10 +170,10 @@
                         </div>
 
                         <div class="flex justify-center mt-2">
-                            <h1 class="text-xl font-bold">REPORT OF CASH DISBURSEMENTS</h1>
+                            <h1 class="text-[16px] font-bold">REPORT OF CASH DISBURSEMENTS</h1>
                         </div>
                         <div class="flex justify-center">
-                            <h1 class="text-md font-bold">
+                            <h1 class="text-sm font-bold">
                                 Period Covered: 
                                 <span class="font-semibold" 
                                     x-text="firstDate === lastDate ? firstDate : firstDate + ' to ' + lastDate">
@@ -174,7 +181,7 @@
                             </h1>
                         </div>
                         <div class="mt-7">
-                            <div class="flex justify-between items-center">
+                            <div class="flex justify-between items-center text-[12px]">
                                 <div class="flex w-3/4">
                                     <label for="entity_name">Entity Name: DSWD Field Office XI</label>
                                 </div>
@@ -184,7 +191,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex justify-between items-center">
+                            <div class="flex justify-between items-center text-[12px]">
                                 <div class="flex w-3/4">
                                     <label for="fund_cluster">Fund Cluster: AICS (FUND 101)</label>
                                 </div>
@@ -195,74 +202,72 @@
                             </div>
                         </div>
                         <div x-show="loading == false" class="pb-5 overflow-auto max-w-full">
-                            <table class="bg-white border border-gray-200 border-collapse mt-1 max-w-full text-xs">
-                                <thead class="text-center">
+                            <table class="bg-white border border-gray-200 border-collapse mt-1 max-w-full">
+                                <thead class="text-center text-xs">
                                     <tr>
-                                        <th class="border border-black" colspan="1">Date</th>
-                                        <th class="border border-black" colspan="1">ADA/Check/DV/
-                                            Payroll/Reference No.</th>
-                                        <th class="border border-black" colspan="1">ORS/BURS No.</th>
-                                        <th class="border border-black" colspan="1">Responsibility Center Code</th>
-                                        <th class="border border-black" colspan="1">Payee</th>
-                                        <th class="border border-black" colspan="1">UACS Object Code</th>
-                                        <th class="border border-black" colspan="1">Nature of Payment</th>
-                                        <th class="border border-black" colspan="1">Amount</th>
+                                        <th class="border border-black w-24">Date</th>
+                                        <th class="border border-black w-32">ADA/Check/DV/ Payroll/Reference No.</th>
+                                        <th class="border border-black w-32">ORS/BURS No.</th>
+                                        <th class="border border-black w-32">Responsibility Center Code</th>
+                                        <th class="border border-black payee-column">Payee</th>
+                                        <th class="border border-black w-24">UACS Object Code</th>
+                                        <th class="border border-black w-32">Nature of Payment</th>
+                                        <th class="border border-black w-24">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template  x-for="file in filtered_file_data" :key="file.id">
-                                        <tr>
-                                            <td class="border border-black px-1 py-1 text-center" x-text="new Date(file.date_time_claimed).toLocaleDateString('en-US')"></td>
-                                            <td class="border border-black px-1 py-1 text-center" x-text="file.sequence_number ? file.sequence_number : mapped_cash_advance_details.dv_number"></td>
-                                            <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.ors_burs_number"></td>
-                                            <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.responsibility_code"></td>
-                                            <td class="border border-black px-1 py-1 text-center">
+                                    <template x-for="file in filtered_file_data" :key="file.id">
+                                        <tr class="text-xs leading-tight">
+                                            <td class="border border-black px-1 py-[2px] text-center" x-text="new Date(file.date_time_claimed).toLocaleDateString('en-US')"></td>
+                                            <td class="border border-black px-1 py-[2px] text-center" x-text="file.sequence_number || mapped_cash_advance_details.dv_number"></td>
+                                            <td class="border border-black px-1 py-[2px] text-center" x-text="mapped_cash_advance_details.ors_burs_number"></td>
+                                            <td class="border border-black px-1 py-[2px] text-center" x-text="mapped_cash_advance_details.responsibility_code"></td>
+                                            <td class="border border-black px-1 py-[2px] text-center uppercase truncate payee-column">
                                                 <span x-text="`${file.lastname || ''}, ${file.firstname || ''} ${file.middlename || ''} ${file.extension_name || ''}`.trim().replace(/\s+/g, ' ').replace(/\?/g, 'Ñ')"></span>
                                             </td>
-
-                                            <td class="border border-black px-1 py-1 text-center" x-text="mapped_cash_advance_details.uacs_code"></td>
-                                            <td class="border border-black px-1 py-1 text-center" x-text="file.assistance_type"></td>
-                                            <td class="border border-black px-1 py-1 text-center" x-text="file.amount.toLocaleString()"></td>   
+                                            <td class="border border-black px-1 py-[2px] text-center" x-text="mapped_cash_advance_details.uacs_code"></td>
+                                            <td class="border border-black px-1 py-[2px] text-center" x-text="file.assistance_type"></td>
+                                            <td class="border border-black px-1 py-[2px] text-center" x-text="file.amount.toLocaleString()"></td>   
                                         </tr> 
                                     </template>
-                                    <tr x-show="liquidationMode === 'Overall' && amount_refunded != 0">
-                                        <td class="border border-black px-1 py-1 text-center" x-text="new Date(date_refunded).toLocaleDateString('en-US')"></td>
-                                        <td class="border border-black px-1 py-1 text-center uppercase" x-text="official_receipt"></td>
-                                        <td class="border border-black px-1 py-1 text-center"></td>
-                                        <td class="border border-black px-1 py-1 text-center"></td>
-                                        <td class="border border-black px-1 py-1 text-center">BUREAU OF TREASURY</td>
-                                        <td class="border border-black px-1 py-1 text-center"></td>
-                                        <td class="border border-black px-1 py-1 text-center">REFUND</td>
-                                        <td class="border border-black px-1 py-1 text-center" x-text="parseInt(amount_refunded).toLocaleString()"></td>
+                                    <tr x-show="liquidationMode === 'Overall' && amount_refunded != 0" class="text-xs leading-tight">
+                                        <td class="border border-black px-1 py-[2px] text-center" x-text="new Date(date_refunded).toLocaleDateString('en-US')"></td>
+                                        <td class="border border-black px-1 py-[2px] text-center uppercase" x-text="official_receipt"></td>
+                                        <td class="border border-black px-1 py-[2px] text-center"></td>
+                                        <td class="border border-black px-1 py-[2px] text-center"></td>
+                                        <td class="border border-black px-1 py-[2px] text-center">BUREAU OF TREASURY</td>
+                                        <td class="border border-black px-1 py-[2px] text-center"></td>
+                                        <td class="border border-black px-1 py-[2px] text-center">REFUND</td>
+                                        <td class="border border-black px-1 py-[2px] text-center" x-text="parseInt(amount_refunded).toLocaleString()"></td>
                                     </tr>
                                 </tbody>
-                         
-                                <tfoot>
-                                    <tr x-show="liquidationMode === 'Bundle'">
-                                        <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
-                                        <td class="border border-black px-4 py-2 text-center font-semibold" 
-                                            x-text="(
-                                                Object.values(filtered_file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
-                                            ).toLocaleString() + '.00'">
-                                        </td>
-                                    </tr>
-                    
-                                    <tr x-show="liquidationMode === 'Overall'">
-                                        <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
-                                        <td class="border border-black px-4 py-2 text-center font-semibold" 
-                                            x-text="(
-                                                Object.values(filtered_file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
-                                                + parseInt(amount_refunded)
-                                            ).toLocaleString() + '.00'">
-                                        </td>
-                                    </tr>
-                            </tfoot>
+                            
+                                    <tfoot>
+                                        <tr class="text-[14px]" x-show="liquidationMode === 'Bundle'">
+                                            <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
+                                            <td class="border border-black px-4 py-2 text-center font-semibold" 
+                                                x-text="(
+                                                    Object.values(filtered_file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
+                                                ).toLocaleString() + '.00'">
+                                            </td>
+                                        </tr>
+                        
+                                        <tr class="text-[14px]" x-show="liquidationMode === 'Overall'">
+                                            <td class="border border-black px-4 py-2 text-right" colspan="7"><strong>TOTAL</strong></td>
+                                            <td class="border border-black px-4 py-2 text-center font-semibold" 
+                                                x-text="(
+                                                    Object.values(filtered_file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
+                                                    + parseInt(amount_refunded)
+                                                ).toLocaleString() + '.00'">
+                                            </td>
+                                        </tr>
+                                </tfoot>
 
                             </table>
                         </div>
                         <div class="mt-8 text-center px-20">
-                            <p class="text-lg font-bold">CERTIFICATION</p>
-                            <p class="mt-4">
+                            <p class="text-[14px] font-bold">CERTIFICATION</p>
+                            <p class="mt-4 text-[12px]">
                                 I hereby certify on my official oath that this Report of Cash Disbursements in ___sheet(s)
                                 is a <span x-text="liquidationType"></span>, true and correct statement of all cash disbursements during the period stated
                                 above actually made by me in payment for obligations shown in pertinent disbursement
@@ -270,23 +275,23 @@
                             </p>
                         </div>
                         <div class="mt-10 text-center px-5">
-                            <span class="uppercase font-semibold" x-text="mapped_cash_advance_details.special_disbursing_officer"></span>
+                            <span class="uppercase font-semibold text-[12px]" x-text="mapped_cash_advance_details.special_disbursing_officer"></span>
                             <div class="mt-2 border-t border-black w-1/2 mx-auto"></div> 
                             <p>Name and Signature of Disbursing Officer/Cashier</p>
                         </div>
                         <div class="flex mt-10 justify-between text-center px-18 mx-40">
                             <div class="w-1/3">
-                                <span class="uppercase font-semibold" x-text="mapped_cash_advance_details.position"></span>
+                                <span class="uppercase font-semibold text-[12px]" x-text="mapped_cash_advance_details.position"></span>
                                 <div class="mt-2 border-t border-black w-full mx-auto"></div>
                                 <p>Official Designation</p>
                             </div>
-                            <div class="w-1/3">
+                            <div class="w-1/3 text-[12px]">
                                 <span class="uppercase font-semibold">{{ now()->format('F j, Y') }}</span>
                                 <div class="mt-2 border-t border-black w-full mx-auto"></div> 
                                 <p>Date</p>
                             </div>
                         </div>
-                        <div class="flex justify-end mt-3">
+                        <div class="flex justify-end mt-3 text-[12px]">
                             <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 print:hidden">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 8h-2V6a2 2 0 00-2-2H9a2 2 0 00-2 2v2H5a2 2 0 00-2 2v8a2 2 0 002 2h14a2 2 0 002-2V10a2 2 0 00-2-2zm-6 0V6h-4v2H5v6h14V8h-4z" />

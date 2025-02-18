@@ -66,7 +66,7 @@
                                 </button>
                             </header>
                             <p class="mt-4 text-gray-600 dark:text-gray-300">
-                                Are you sure you want to delete <span x-text="(beneficiary.lastname) + ', ' + 
+                                Are you sure you want to delete <span class="font-bold  text-red-500" x-text="(beneficiary.lastname) + ', ' + 
                                 (beneficiary.firstname) + ' ' + 
                                 (beneficiary.middlename ?? '') + ' ' + 
                                 (beneficiary.extension_name ?? '')"></span>?
