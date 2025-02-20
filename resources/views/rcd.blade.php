@@ -435,6 +435,8 @@
                 console.log();
                 if(this.liquidationMode === 'Overall'){
                     this.filtered_file_data = this.file_data;
+                    this.nameFrom = '';
+                    this.nameTo = '';
                     return;
                 }
 
