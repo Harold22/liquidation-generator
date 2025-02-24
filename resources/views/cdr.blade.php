@@ -49,10 +49,6 @@
     </head>
     <body class="font-sans antialiased">
         <div x-data="cdr()" class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            <div x-show="loading" class="w-full mt-4 flex justify-center items-center">
-                <div class="w-16 h-16 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
-            </div>
-
             <div class="p-6 text-sm">
                 <div class="max-w-4xl mx-auto">
                     <!-- filtering -->
