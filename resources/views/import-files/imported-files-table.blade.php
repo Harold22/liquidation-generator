@@ -81,7 +81,7 @@
     </tbody>
     <tfoot class="bg-gray-100 dark:bg-gray-600">
         <tr>
-            <td colspan="3" class="px-6 py-3 font-semibold">{{ __('Overall Total') }}</td>
+            <td colspan="3" class="px-6 py-3 font-semibold">{{ __('TOTAL') }}</td>
             <td class="px-2 py-3" x-text="file_list.reduce((total, file) => total + file.total_beneficiary, 0).toLocaleString()"></td>
             <td class="px-2 py-3" x-text="file_list.reduce((total, file) => total + file.total_amount, 0).toLocaleString()"></td>
             <td class="px-2 py-3"></td>

@@ -58,23 +58,39 @@
                                         class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 ease-in-out">
                                         Liquidate
                                     </button>
+
                                     <!-- Dropdown Menu -->
-                                    <div x-show="open" @mouseover="open = true" @mouseleave="open = false" class="z-10 mt-2 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 absolute transition ease-in-out duration-300">
+                                    <div 
+                                        x-show="open" 
+                                        @mouseover="open = true" 
+                                        @mouseleave="open = false" 
+                                        @click.away="open = false" 
+                                        class="absolute bottom-full left-0 mb-2 w-56 bg-white z-[9999] rounded-md shadow-lg ring-1 ring-black/5 dark:bg-gray-700 dark:ring-gray-600 transition duration-300 ease-in-out">
+                                        
                                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
                                             <li>
-                                                <a href="#" target="_blank"  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Liquidation Report</a>
+                                                <a href="#" target="_blank" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                    Liquidation Report
+                                                </a>
                                             </li>
                                             <li>
-                                                <a x-bind:href="'{{ route('rcd', ['id' => ':id']) }}'.replace(':id', list.id)" target="_blank"  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Report Cash Disbursements</a>
+                                                <a x-bind:href="'{{ route('rcd', ['id' => ':id']) }}'.replace(':id', list.id)" 
+                                                target="_blank"  
+                                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                    Report Cash Disbursements
+                                                </a>
                                             </li>
-                                            <!-- <li>
-                                                <a x-bind:href="'{{ route('cdr', ['id' => ':id']) }}'.replace(':id', list.id)" target="_blank"  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cash Disbursement Record</a>
-                                            </li> -->
-                                            
+                                            <li>
+                                                <a x-bind:href="'{{ route('cdr', ['id' => ':id']) }}'.replace(':id', list.id)" 
+                                                target="_blank"  
+                                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                    Cash Disbursement Record
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
-                            
+                 
                                 <!-- Refund Button -->
                                 <button @click="refundModalData(list), loading = true" class="flex items-center justify-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out">
                                     Refund  

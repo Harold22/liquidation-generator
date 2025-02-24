@@ -14,9 +14,6 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <style>
             @media print {
-                .no-print {
-                    display: none;
-                }
                 table {
                     width: 100%;
                 }
