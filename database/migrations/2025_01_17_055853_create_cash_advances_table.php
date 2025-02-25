@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('special_disbursing_officer');
             $table->string('position');
             $table->string('station');
+            $table->string('check_number');
             $table->decimal('cash_advance_amount', 10 ,2);
             $table->string('cash_advance_date');
             $table->string('dv_number');
