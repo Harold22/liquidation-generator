@@ -33,6 +33,13 @@
                 <x-text-input id="station" name="station" type="text" class="mt-1 block w-full " required />
             </div>
 
+            <div>
+                <x-input-label for="check_number">
+                    {{ __('Check Number') }} <span class="text-red-500">*</span>
+                </x-input-label>
+                <x-text-input id="check_number" name="check_number" type="text" class="mt-1 block w-full " required />
+            </div>
+
             <!-- Cash Advance Amount -->
             <div>
                 <x-input-label for="cash_advance_amount">

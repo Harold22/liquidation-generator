@@ -16,6 +16,7 @@ class CashAdvance extends Model
         'special_disbursing_officer',
         'position',
         'station',
+        'check_number',
         'cash_advance_amount',
         'cash_advance_date',
         'dv_number',

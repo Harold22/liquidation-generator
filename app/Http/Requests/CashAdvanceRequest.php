@@ -34,6 +34,7 @@ class CashAdvanceRequest extends FormRequest
             ],
             'position' => 'required|string|max:255',
             'station' => 'required|string|max:255',
+            'check_number' => 'required|string|max:255',
             'cash_advance_amount' => 'required|numeric|min:0.01',
             'cash_advance_date' => 'required|date|date_format:Y-m-d|before_or_equal:today',
             'dv_number' => 'required|string|max:255',
