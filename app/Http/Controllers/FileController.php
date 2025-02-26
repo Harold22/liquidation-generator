@@ -41,7 +41,8 @@ class FileController extends Controller
             $fileName = $file->getClientOriginalName();
             $filePath = $file->getPathname();
             $fileContent = file_get_contents($filePath);
-            $fileContent = mb_convert_encoding($fileContent, 'UTF-8', 'auto');
+            $encoding = mb_detect_encoding($fileContent, ['UTF-8', 'ISO-8859-1', 'Windows-1252', 'ASCII'], true);
+            $fileContent = mb_convert_encoding($fileContent, 'UTF-8', $encoding ?: 'UTF-8');
             $csv = Reader::createFromString($fileContent);
             $csv->setHeaderOffset(0);
 
