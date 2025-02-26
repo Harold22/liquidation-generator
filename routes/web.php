@@ -40,6 +40,10 @@ Route::get('/cdr/{id}', function () {
     return view('cdr');
 })->middleware(['auth', 'verified'])->name('cdr');
 
+Route::get('/liquidation-report/{id}', function () {
+    return view('liquidation-report');
+})->middleware(['auth', 'verified'])->name('liquidation-report');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

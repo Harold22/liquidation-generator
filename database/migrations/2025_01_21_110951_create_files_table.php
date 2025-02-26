@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('files', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->uuid('cash_advance_id'); 
+            $table->foreign('cash_advance_id')->references('id')->on('cash_advances')->onDelete('cascade');
             $table->string('file_name'); 
-            $table->foreignId('cash_advance_id')->constrained()->onDelete('cascade');
             $table->bigInteger('total_amount');
             $table->bigInteger('total_beneficiary');
             $table->enum('location', ['onsite', 'offsite'])->nullable(false);

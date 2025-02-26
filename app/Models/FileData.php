@@ -7,13 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class FileData extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity;
+    use HasFactory, SoftDeletes, LogsActivity, HasUuids;
 
     protected $table = 'file_data';
+    
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+    
     protected $fillable = [
+        'id', 
         'file_id',
         'control_number',
         'lastname',

@@ -8,6 +8,7 @@ use App\Models\FileData;
 use App\Services\FileDataService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use League\Csv\Reader;
 use League\Csv\Writer;
 use Illuminate\Support\Facades\DB;
@@ -29,42 +30,38 @@ class FileController extends Controller
             $request->validate([
                 'file' => 'required|mimetypes:text/csv,text/plain',
                 'cash_advance' => 'required|exists:cash_advances,id',
-                'location' => 'required|in:onsite,offsite', 
+                'location' => 'required|in:onsite,offsite',
             ]);
 
             $failedRecords = [];
-            
-            DB::beginTransaction();
 
-            $file = $request->file('file');
-            $fileName = $file->getClientOriginalName();
-            $filePath = $file->getPathname();
-            $fileContent = file_get_contents($filePath);
-            $fileContent = mb_convert_encoding($fileContent, 'UTF-8', 'auto');
-            $csv = Reader::createFromString($fileContent);
-            $csv->setHeaderOffset(0);
-
-            // Read the records in chunks
-            $chunkSize = 500;
-            $records = $csv->getRecords();
-            $chunk = [];
+            DB::beginTransaction(); 
 
             $storedFile = File::create([
-                'file_name' => $fileName,
+                'id' => Str::uuid()->toString(), 
+                'file_name' => $request->file('file')->getClientOriginalName(),
                 'cash_advance_id' => $request->input('cash_advance'),
                 'total_amount' => 0,
                 'total_beneficiary' => 0,
                 'location' => $request->input('location'),
             ]);
 
-            foreach ($records as $record) {
+            if (!File::where('id', $storedFile->id)->exists()) {
+                throw new \Exception("File record was not inserted!");
+            }
+
+            $csv = Reader::createFromString(file_get_contents($request->file('file')->getPathname()));
+            $csv->setHeaderOffset(0);
+            $chunkSize = 500;
+            $chunk = [];
+
+            foreach ($csv->getRecords() as $record) {
                 try {
-
                     $validatedRecord = $this->validateRecord($record);
-
                     $formattedDateTimeClaimed = $this->formatDateTimeClaimed($record['TIME_CLAIMED']);
 
-                    $data = [
+                    $chunk[] = [
+                        'id' => Str::uuid()->toString(), 
                         'file_id' => $storedFile->id,
                         'control_number' => $validatedRecord['CONTROL_NUMBER'],
                         'lastname' => $validatedRecord['LASTNAME'],
@@ -81,21 +78,16 @@ class FileController extends Controller
                         'assistance_type' => $validatedRecord['TYPE OF ASSISTANCE'],
                     ];
 
-                    $chunk[] = $data;
-
                     if (count($chunk) >= $chunkSize) {
-                        $this->fileDataService->create($chunk); 
-                        $chunk = []; 
+                        $this->fileDataService->create($chunk);
+                        $chunk = [];
                     }
-    
 
                 } catch (\Exception $e) {
-                    $failedRecords[] = [
-                        'data' => $record,
-                        'reason' => $e->getMessage(),
-                    ];
+                    $failedRecords[] = ['data' => $record, 'reason' => $e->getMessage()];
                 }
             }
+
             if (count($chunk) > 0) {
                 $this->fileDataService->create($chunk);
             }
@@ -106,14 +98,15 @@ class FileController extends Controller
             }
 
             $this->updateFileTotals($storedFile);
-            DB::commit();
+            DB::commit(); 
 
             return redirect()->back()->with('message', 'File uploaded and data saved successfully.');
         } catch (\Exception $e) {
             DB::rollback();
-            return back()->with('error', 'An error occurred. Please try again.');
+            return back()->with('error', 'An error occurred. Please try again. ' . $e->getMessage());
         }
     }
+
 
     private function validateRecord(array $record)
     {
