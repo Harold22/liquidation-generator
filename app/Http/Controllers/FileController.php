@@ -37,30 +37,34 @@ class FileController extends Controller
 
             DB::beginTransaction(); 
 
+            $file = $request->file('file');
+            $fileName = $file->getClientOriginalName();
+            $filePath = $file->getPathname();
+            $fileContent = file_get_contents($filePath);
+            $fileContent = mb_convert_encoding($fileContent, 'UTF-8', 'auto');
+            $csv = Reader::createFromString($fileContent);
+            $csv->setHeaderOffset(0);
+
+            // Read the records in chunks
+            $chunkSize = 500;
+            $records = $csv->getRecords();
+            $chunk = [];
+
             $storedFile = File::create([
                 'id' => Str::uuid()->toString(), 
-                'file_name' => $request->file('file')->getClientOriginalName(),
+                'file_name' => $fileName,
                 'cash_advance_id' => $request->input('cash_advance'),
                 'total_amount' => 0,
                 'total_beneficiary' => 0,
                 'location' => $request->input('location'),
             ]);
 
-            if (!File::where('id', $storedFile->id)->exists()) {
-                throw new \Exception("File record was not inserted!");
-            }
-
-            $csv = Reader::createFromString(file_get_contents($request->file('file')->getPathname()));
-            $csv->setHeaderOffset(0);
-            $chunkSize = 500;
-            $chunk = [];
-
-            foreach ($csv->getRecords() as $record) {
+            foreach ($records  as $record) {
                 try {
                     $validatedRecord = $this->validateRecord($record);
                     $formattedDateTimeClaimed = $this->formatDateTimeClaimed($record['TIME_CLAIMED']);
 
-                    $chunk[] = [
+                        $data = [
                         'id' => Str::uuid()->toString(), 
                         'file_id' => $storedFile->id,
                         'control_number' => $validatedRecord['CONTROL_NUMBER'],
@@ -77,6 +81,8 @@ class FileController extends Controller
                         'amount' => $validatedRecord['AMOUNT'],
                         'assistance_type' => $validatedRecord['TYPE OF ASSISTANCE'],
                     ];
+
+                    $chunk[] = $data;
 
                     if (count($chunk) >= $chunkSize) {
                         $this->fileDataService->create($chunk);
