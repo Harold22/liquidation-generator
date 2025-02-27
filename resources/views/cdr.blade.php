@@ -227,8 +227,7 @@
             mapped_cash_advance_details: {},
             loading: true,
             selectedMonth: '',
-            selectMonthLoading : false,
-
+           
             async handleSelectMonth() {
                 try {
                     await this.filterData(); 
