@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('file_data', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('file_id')->constrained('files')->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->uuid('file_id'); 
+            $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');
             $table->string('control_number');
             $table->string('lastname');
             $table->string('firstname');

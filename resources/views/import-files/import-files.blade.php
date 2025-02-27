@@ -232,6 +232,7 @@
                         const response = await axios.get(`/files/index/${selectedSdo}/?page=${page}`);
                         this.file_list = [];  
                         this.file_list = response.data.data;
+                        console.log("file list:", this.file_list);
                         this.currentPage = response.data.current_page;
                         this.totalPages = response.data.last_page;
                         this.loading = false;
