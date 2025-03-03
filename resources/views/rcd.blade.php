@@ -312,7 +312,6 @@
             cash_advance_id: null,
             file_list: [],
             file_data: [],
-            cash_advance_details: {},
             mapped_cash_advance_details: {},
             loading: true,
 

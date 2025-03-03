@@ -31,18 +31,31 @@
                     <div x-show="loading" class="w-full mt-4 flex justify-center items-center">
                         <div class="w-16 h-16 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
                     </div>
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-start gap-2 print:hidden my-2">
+                        <label for="liquidationType" class="text-sm font-medium text-gray-700 md:w-auto">
+                            Liquidation Type:
+                        </label>
+                        <select id="liquidationType" name="liquidationType" 
+                            x-model="liquidationType" 
+                            class="text-sm border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 w-full md:w-48">
+                            <option value="Full">Full</option>
+                            <option value="Partial">Partial</option>
+                        </select>
+                    </div>
                   <!-- Header -->
                     <div class="flex border border-black ">
                         <div class="w-3/4 p-6 border-r border-black">
                             <div class="text-center mb-4">
                                 <h2 class="text-lg font-bold uppercase">Liquidation Report</h2>
-                                <p class="text-sm">Period Covered: December 18, 2024 - December 19, 2024</p>
+                                <p class="text-sm">Period Covered: <span x-text="firstDate === lastDate ? firstDate : firstDate + ' to ' + lastDate"></span></p>
                             </div>
 
                             <!-- Entity Details -->
                             <div>
                                 <p><strong>Entity Name:</strong> Department of Social Welfare and Development FO XI</p>
-                                <p><strong>Fund Cluster:</strong> ______101______</p>
+                                <p><strong>Fund Cluster:</strong> <span class="inline-block border-b border-black min-w-[150px]">101</span></p>
+
+
                             </div>
                         </div>
                         <div class="w-1/4 text-sm no-wrap">
@@ -51,7 +64,9 @@
                             <div class="border-b border-black w-full"></div>
                             <div class="px-4 pb-5">Responsibility Code:</div>
                             <div class="px-4 pb-4">
-                                <span class="border-b border-black w-full block"></span>
+                                <div class="border-b border-black w-full flex justify-center">
+                                    <span x-text="mapped_cash_advance_details.responsibility_code"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -70,14 +85,19 @@
                     <div class="flex items-stretch border border-black h-96">
                         <div class="w-3/4 p-6 border-r border-black flex flex-col">
                             <p class="mt-2">
-                                Partial Liquidation for Assistance to Individual in Crisis Situation (AICS) in Davao City, 
+                                <span x-text="liquidationType"></span> Liquidation for Assistance to Individual in Crisis Situation (AICS) in Davao City, 
                                 as per supporting documents attached hereinto the amount of
                             </p>
-                            <p class="text-lg font-bold">THREE MILLION PESOS ONLY</p>
-                            <p class="text-lg font-bold">₱3,000,000.00</p>
+                            <p class="font-bold">THREE MILLION PESOS ONLY</p>
+                            <p class="font-bold" x-text="'₱ ' + (
+                                    Object.values(file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
+                                ).toLocaleString() + '.00'"></p>
                         </div>
                         <div class="w-1/4 p-6 flex items-start justify-center">
-                            <h3 class="font-semibold text-center">₱3,000,000.00</h3>
+                            <h3 class="font-semibold text-center" x-text="'₱ ' + (
+                                    Object.values(file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
+                                ).toLocaleString() + '.00'">
+                            </h3>
                         </div>
                     </div>
 
@@ -86,25 +106,43 @@
                             <h3 class="font-semibold ml-5">TOTAL AMOUNT SPENT</h3>
                         </div>
                         <div class="w-1/4 border-black p-1">
-                            <h3 class="font-semibold text-center">₱3,000,000.00</h3>
+                            <h3 class="font-semibold text-center" x-text="'₱ ' + (
+                                    Object.values(file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
+                                ).toLocaleString() + '.00'"></h3>
                         </div>
                     </div>
                     <div class="flex items-stretch border border-black">
                         <div class="w-3/4 px-6 py-2 border-r border-black flex flex-col">
                             <p><strong>TOTAL AMOUNT OF CASH ADVANCE PER</strong></p>
-                            <p><strong>DV NO#:</strong> 21.12.13906</p>
-                            <p><strong>CHECK #:</strong> 117203</p>
-                            <p><strong>DATED:</strong> 12/04/2024</p>
+                            <p><strong>DV NO#: </strong><span x-text="mapped_cash_advance_details.dv_number"></span></p>
+                            <p><strong>CHECK #: </strong><span x-text="mapped_cash_advance_details.check_number"></span></p>
+                            <p><strong>DATED: </strong><span x-text="new Date(mapped_cash_advance_details.cash_advance_date).toLocaleDateString('en-US')"></span></p>
                         </div>
                         <div class="w-1/4 px-6 py-2 flex items-start justify-center">
-                            <h3 class="font-semibold text-center">₱3,000,000.00</h3>
+                            <h3 class="font-semibold text-center" x-text="'₱ '+ Number(mapped_cash_advance_details.cash_advance_amount).toLocaleString() + '.00'"></h3>
                         </div>
                     </div>
 
                       <!-- Table Header -->
                     <div class="flex border-x border-b border-black">
                         <div class="w-3/4 border-r px-6 border-black p-1">
-                            <h3>AMOUNT REFUNDED PER OR NO.______________________DTD:</h3>
+                            <h3>
+                                AMOUNT REFUNDED PER OR NO.:
+                                <span 
+                                    class="uppercase font-semibold border-b border-black inline-block min-w-[120px]" 
+                                    x-text="official_receipt ? official_receipt : '\u00A0'">
+                                </span> 
+                                DTD:
+                                <span 
+                                    class="uppercase font-semibold border-b border-black inline-block min-w-[120px]" 
+                                    x-text="date_refunded ? date_refunded : '\u00A0'">
+                                </span>
+                            </h3>
+
+
+                        </div>
+                        <div class="w-1/4 border-black p-1">
+                            <h3 class="font-semibold text-center" x-text="amount_refunded != 0 ?  '₱ ' + Number(amount_refunded).toLocaleString() + '.00' : '' "></h3>
                         </div>
                     </div>
                     <div class="flex border-x border-black">
@@ -130,7 +168,7 @@
 
                     <div class="flex w-full border-x border-black">
                         <div class="flex-1 border-r border-black px-6 p-2">
-                            <p class=" border-black text-center font-semibold">JENNIFER AMISCUA</p>
+                            <p class=" border-black text-center font-semibold" x-text="mapped_cash_advance_details.special_disbursing_officer"></p>
                         </div>
                         <div class="flex-1 border-r border-black px-6 p-2">
                             <p class=" border-black text-center font-semibold">GEMMA D. DELA CRUZ</p>
@@ -181,7 +219,10 @@
    document.addEventListener('alpine:init', () => {
         Alpine.data('report', () => ({
             cash_advance_id: null,
+            mapped_cash_advance_details: {},
             loading: true,
+            file_data: [],
+            liquidationType : 'Full',
 
             getUrlId() {
                 const pathSegments = window.location.pathname.split('/');
@@ -194,8 +235,129 @@
                 }       
             },
 
+            async getCashAdvanceDetails() {
+                if (!this.cash_advance_id) {
+                    console.log('No cash advance id');
+                    return;
+                }
+                try {
+                    const response = await axios.get(`/cash-advance/details/${this.cash_advance_id}`);
+                    const details = response.data[0]; 
+                    if (details) {
+                        this.mapped_cash_advance_details = {
+                            special_disbursing_officer: details.special_disbursing_officer,
+                            position: details.position,
+                            cash_advance_amount: parseFloat(details.cash_advance_amount).toFixed(2),
+                            cash_advance_date: details.cash_advance_date,
+                            dv_number: details.dv_number,
+                            ors_burs_number: details.ors_burs_number,
+                            responsibility_code: details.responsibility_code,
+                            uacs_code: details.uacs_code,
+                            check_number: details.check_number,
+                            status: details.status,
+                        };
+                    } else {
+                        console.log('No cash advance details found.');
+                    }
+                } catch (error) {
+                    console.error('Error fetching CA details:', error);
+                }
+            },
+            refund_id: null,
+            amount_refunded: 0,
+            date_refunded: null,
+            official_receipt: null,
+
+            async getRefundList() {
+                if (!this.cash_advance_id) {
+                    this.refund_id = null;
+                    this.amount_refunded = 0;
+                    this.date_refunded = null;
+                    this.official_receipt = null;
+                    return;
+                }
+                try {
+                    const response = await axios.get(`/refund/show/${this.cash_advance_id}`);
+                    
+                    if (Array.isArray(response.data) && response.data.length > 0) {
+                        const refund = response.data[0]; 
+                        this.refund_id = refund.id;
+                        this.amount_refunded = refund.amount_refunded;
+                        this.date_refunded = refund.date_refunded;
+                        this.official_receipt = refund.official_receipt;
+                    } else {
+                        this.refund_id = null;
+                        this.amount_refunded = 0;
+                        this.date_refunded = null;
+                        this.official_receipt = null;
+                    }
+                } catch (error) {
+                    console.error('Error fetching Refund Data:', error);
+                }
+            },
+
+            async getFileList() {
+                if (!this.cash_advance_id) {
+                    console.log('No cash advance id');
+                    return;
+                }
+                try {
+                    const response = await axios.get(`/files/rcd/${this.cash_advance_id}`);
+                    this.file_list = response.data; 
+                    console.log('file list ni', this.file_list);
+                    
+                    await this.getFileData(this.file_list);
+                } catch (error) {
+                    console.error('Error fetching file list:', error);
+                }
+            },
+
+            async getFileData(fileIds) {
+                if (!fileIds || fileIds.length === 0) {
+                    console.log('No file IDs to fetch data for.');
+                    this.loading = false;
+                    return;
+                }
+                try {
+                    const response = await axios.get(`/files/data/${fileIds.join(',')}`);
+                    this.file_data = response.data;
+                    const combinedData = Object.values(this.file_data).flat();
+
+                    const sortedData = combinedData.sort((a, b) => {
+                        const dateA = new Date(a.date_time_claimed).setHours(0, 0, 0, 0);
+                        const dateB = new Date(b.date_time_claimed).setHours(0, 0, 0, 0);
+                        return dateA - dateB; 
+                    });
+
+                    this.file_data = sortedData;
+                    this.getDates();
+                    this.loading = false;
+                } catch (error) {
+                    console.error('Error fetching file data:', error);
+                }
+            },
+
+            firstDate: '',
+            lastDate: '',
+
+            getDates() {
+                this.firstDate = '';
+                this.lastDate = '';
+                let dates = Object.values(this.file_data).flat().map(file => new Date(file.date_time_claimed));
+
+                dates.sort((a, b) => a - b);
+
+                let options = { year: 'numeric', month: 'long', day: 'numeric' };
+                this.firstDate = dates[0].toLocaleDateString('en-US', options);
+                this.lastDate = dates[dates.length - 1].toLocaleDateString('en-US', options);
+
+            },
+
             init() {
-                this.getUrlId();  
+                this.getUrlId(); 
+                this.getCashAdvanceDetails(); 
+                this.getRefundList();
+                this.getFileList(); 
             }
         }));
     });
