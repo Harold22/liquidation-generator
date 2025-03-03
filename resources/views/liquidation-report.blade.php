@@ -220,176 +220,177 @@
     </body>
 </html>
 <script>
-   document.addEventListener('alpine:init', () => {
-        Alpine.data('report', () => ({
-            cash_advance_id: null,
-            mapped_cash_advance_details: {},
-            loading: true,
-            file_data: [],
-            liquidationType : 'Full',
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('report', () => ({
+        cash_advance_id: null,
+        mapped_cash_advance_details: {},
+        loading: true,
+        file_data: [],
+        liquidationType: 'Full',
+        refund_id: null,
+        amount_refunded: 0,
+        date_refunded: null,
+        official_receipt: null,
+        firstDate: '',
+        lastDate: '',
 
-            getUrlId() {
-                const pathSegments = window.location.pathname.split('/');
-                const id = pathSegments[pathSegments.length - 1];
-                if (id) {
-                    this.cash_advance_id = id;
-                    this.loading = false;
+        getUrlId() {
+            const pathSegments = window.location.pathname.split('/').filter(Boolean);
+            const id = pathSegments[pathSegments.length - 1];
+
+            if (id) {
+                this.cash_advance_id = id;
+                this.loading = false;
+            } else {
+                console.log('ID not found in the URL path');
+            }
+        },
+
+        async getCashAdvanceDetails() {
+            if (!this.cash_advance_id) return console.log('No cash advance ID');
+
+            try {
+                const response = await axios.get(`/cash-advance/details/${this.cash_advance_id}`);
+                const details = response.data[0];
+
+                if (details) {
+                    this.mapped_cash_advance_details = {
+                        special_disbursing_officer: details.special_disbursing_officer,
+                        position: details.position,
+                        cash_advance_amount: parseFloat(details.cash_advance_amount).toFixed(2),
+                        cash_advance_date: details.cash_advance_date,
+                        dv_number: details.dv_number,
+                        ors_burs_number: details.ors_burs_number,
+                        responsibility_code: details.responsibility_code,
+                        uacs_code: details.uacs_code,
+                        check_number: details.check_number,
+                        status: details.status,
+                    };
                 } else {
-                    console.log('ID not found in the URL path');
-                }       
-            },
+                    console.log('No cash advance details found.');
+                }
+            } catch (error) {
+                console.error('Error fetching CA details:', error);
+            }
+        },
 
-            async getCashAdvanceDetails() {
-                if (!this.cash_advance_id) {
-                    console.log('No cash advance id');
-                    return;
-                }
-                try {
-                    const response = await axios.get(`/cash-advance/details/${this.cash_advance_id}`);
-                    const details = response.data[0]; 
-                    if (details) {
-                        this.mapped_cash_advance_details = {
-                            special_disbursing_officer: details.special_disbursing_officer,
-                            position: details.position,
-                            cash_advance_amount: parseFloat(details.cash_advance_amount).toFixed(2),
-                            cash_advance_date: details.cash_advance_date,
-                            dv_number: details.dv_number,
-                            ors_burs_number: details.ors_burs_number,
-                            responsibility_code: details.responsibility_code,
-                            uacs_code: details.uacs_code,
-                            check_number: details.check_number,
-                            status: details.status,
-                        };
-                    } else {
-                        console.log('No cash advance details found.');
-                    }
-                } catch (error) {
-                    console.error('Error fetching CA details:', error);
-                }
-            },
-            refund_id: null,
-            amount_refunded: 0,
-            date_refunded: null,
-            official_receipt: null,
+        async getRefundList() {
+            if (!this.cash_advance_id) {
+                this.resetRefundDetails();
+                return;
+            }
 
-            async getRefundList() {
-                if (!this.cash_advance_id) {
-                    this.refund_id = null;
-                    this.amount_refunded = 0;
-                    this.date_refunded = null;
-                    this.official_receipt = null;
-                    return;
-                }
-                try {
-                    const response = await axios.get(`/refund/show/${this.cash_advance_id}`);
-                    
-                    if (Array.isArray(response.data) && response.data.length > 0) {
-                        const refund = response.data[0]; 
-                        this.refund_id = refund.id;
-                        this.amount_refunded = refund.amount_refunded;
-                        this.date_refunded = refund.date_refunded;
-                        this.official_receipt = refund.official_receipt;
-                    } else {
-                        this.refund_id = null;
-                        this.amount_refunded = 0;
-                        this.date_refunded = null;
-                        this.official_receipt = null;
-                    }
-                } catch (error) {
-                    console.error('Error fetching Refund Data:', error);
-                }
-            },
+            try {
+                const response = await axios.get(`/refund/show/${this.cash_advance_id}`);
 
-            async getFileList() {
-                if (!this.cash_advance_id) {
-                    console.log('No cash advance id');
-                    return;
+                if (Array.isArray(response.data) && response.data.length > 0) {
+                    const refund = response.data[0];
+                    this.refund_id = refund.id;
+                    this.amount_refunded = refund.amount_refunded;
+                    this.date_refunded = refund.date_refunded;
+                    this.official_receipt = refund.official_receipt;
+                } else {
+                    this.resetRefundDetails();
                 }
-                try {
-                    const response = await axios.get(`/files/rcd/${this.cash_advance_id}`);
-                    this.file_list = response.data; 
-                    console.log('file list ni', this.file_list);
-                    
+            } catch (error) {
+                console.error('Error fetching Refund Data:', error);
+            }
+        },
+
+        resetRefundDetails() {
+            this.refund_id = null;
+            this.amount_refunded = 0;
+            this.date_refunded = null;
+            this.official_receipt = null;
+        },
+
+        async getFileList() {
+            if (!this.cash_advance_id) return console.log('No cash advance ID');
+
+            try {
+                const response = await axios.get(`/files/rcd/${this.cash_advance_id}`);
+                this.file_list = response.data;
+                
+                if (this.file_list.length > 0) {
                     await this.getFileData(this.file_list);
-                } catch (error) {
-                    console.error('Error fetching file list:', error);
                 }
-            },
+            } catch (error) {
+                console.error('Error fetching file list:', error);
+            }
+        },
 
-            async getFileData(fileIds) {
-                if (!fileIds || fileIds.length === 0) {
-                    console.log('No file IDs to fetch data for.');
-                    this.loading = false;
-                    return;
-                }
-                try {
-                    const response = await axios.get(`/files/data/${fileIds.join(',')}`);
-                    this.file_data = response.data;
-                    const combinedData = Object.values(this.file_data).flat();
+        async getFileData(fileIds) {
+            if (!fileIds || fileIds.length === 0) {
+                console.log('No file IDs to fetch data for.');
+                this.loading = false;
+                return;
+            }
 
-                    const sortedData = combinedData.sort((a, b) => {
-                        const dateA = new Date(a.date_time_claimed).setHours(0, 0, 0, 0);
-                        const dateB = new Date(b.date_time_claimed).setHours(0, 0, 0, 0);
-                        return dateA - dateB; 
-                    });
+            try {
+                const response = await axios.get(`/files/data/${fileIds.join(',')}`);
+                this.file_data = response.data;
+                
+                this.file_data = Object.values(this.file_data)
+                    .flat()
+                    .sort((a, b) => new Date(a.date_time_claimed) - new Date(b.date_time_claimed));
 
-                    this.file_data = sortedData;
-                    this.getDates();
-                    this.loading = false;
-                } catch (error) {
-                    console.error('Error fetching file data:', error);
-                }
-            },
+                this.getDates();
+                this.loading = false;
+            } catch (error) {
+                console.error('Error fetching file data:', error);
+            }
+        },
 
-            firstDate: '',
-            lastDate: '',
-
-            getDates() {
-                this.firstDate = '';
-                this.lastDate = '';
-                let dates = Object.values(this.file_data).flat().map(file => new Date(file.date_time_claimed));
-
+        getDates() {
+            const dates = Object.values(this.file_data).flat().map(file => new Date(file.date_time_claimed));
+            
+            if (dates.length > 0) {
                 dates.sort((a, b) => a - b);
-
-                let options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
                 this.firstDate = dates[0].toLocaleDateString('en-US', options);
                 this.lastDate = dates[dates.length - 1].toLocaleDateString('en-US', options);
-
-            },
-            
-            numberToWords(num) {
-                if (num === 0) return "ZERO";
-                
-                const belowTwenty = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"];
-                const tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"];
-                const thousands = ["", "THOUSAND", "MILLION", "BILLION"];
-
-                function convertChunk(n) {
-                    if (n === 0) return "";
-                    else if (n < 20) return belowTwenty[n] + " ";
-                    else if (n < 100) return tens[Math.floor(n / 10)] + " " + convertChunk(n % 10);
-                    else return belowTwenty[Math.floor(n / 100)] + " HUNDRED " + convertChunk(n % 100);
-                }
-
-                let word = "", i = 0;
-                while (num > 0) {
-                    if (num % 1000 !== 0) {
-                        word = convertChunk(num % 1000) + thousands[i] + " " + word;
-                    }
-                    num = Math.floor(num / 1000);
-                    i++;
-                }
-                return word.trim();
-            },
-
-            init() {
-                this.getUrlId(); 
-                this.getCashAdvanceDetails(); 
-                this.getRefundList();
-                this.getFileList(); 
+            } else {
+                this.firstDate = '';
+                this.lastDate = '';
             }
-        }));
-    });
+        },
+
+        numberToWords(num) {
+            if (num === 0) return "ZERO";
+
+            const belowTwenty = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"];
+            const tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"];
+            const thousands = ["", "THOUSAND", "MILLION", "BILLION"];
+
+            function convertChunk(n) {
+                if (n < 20) return belowTwenty[n];
+                if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + belowTwenty[n % 10] : "");
+                return belowTwenty[Math.floor(n / 100)] + " HUNDRED" + (n % 100 !== 0 ? " " + convertChunk(n % 100) : "");
+            }
+
+            let word = "";
+            let i = 0;
+
+            while (num > 0) {
+                if (num % 1000 !== 0) {
+                    word = convertChunk(num % 1000) + " " + thousands[i] + (word ? " " + word : "");
+                }
+                num = Math.floor(num / 1000);
+                i++;
+            }
+
+            return word.trim();
+        },
+
+        init() {
+            this.getUrlId();
+            this.getCashAdvanceDetails();
+            this.getRefundList();
+            this.getFileList();
+        }
+    }));
+});
+
 </script>
 
 
