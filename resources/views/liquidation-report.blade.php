@@ -88,10 +88,14 @@
                                 <span x-text="liquidationType"></span> Liquidation for Assistance to Individual in Crisis Situation (AICS) in Davao City, 
                                 as per supporting documents attached hereinto the amount of
                             </p>
-                            <p class="font-bold">THREE MILLION PESOS ONLY</p>
+                            <p class="font-bold" x-text="numberToWords(
+                                Object.values(file_data).flat().reduce((sum, file) => sum + file.amount, 0)
+                            ) + ' PESOS ONLY'">
+                            </p>
                             <p class="font-bold" x-text="'₱ ' + (
                                     Object.values(file_data).flat().reduce((sum, file) => sum + file.amount, 0) 
-                                ).toLocaleString() + '.00'"></p>
+                                ).toLocaleString() + '.00'">
+                            </p>
                         </div>
                         <div class="w-1/4 p-6 flex items-start justify-center">
                             <h3 class="font-semibold text-center" x-text="'₱ ' + (
@@ -351,6 +355,31 @@
                 this.firstDate = dates[0].toLocaleDateString('en-US', options);
                 this.lastDate = dates[dates.length - 1].toLocaleDateString('en-US', options);
 
+            },
+            
+            numberToWords(num) {
+                if (num === 0) return "ZERO";
+                
+                const belowTwenty = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"];
+                const tens = ["", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"];
+                const thousands = ["", "THOUSAND", "MILLION", "BILLION"];
+
+                function convertChunk(n) {
+                    if (n === 0) return "";
+                    else if (n < 20) return belowTwenty[n] + " ";
+                    else if (n < 100) return tens[Math.floor(n / 10)] + " " + convertChunk(n % 10);
+                    else return belowTwenty[Math.floor(n / 100)] + " HUNDRED " + convertChunk(n % 100);
+                }
+
+                let word = "", i = 0;
+                while (num > 0) {
+                    if (num % 1000 !== 0) {
+                        word = convertChunk(num % 1000) + thousands[i] + " " + word;
+                    }
+                    num = Math.floor(num / 1000);
+                    i++;
+                }
+                return word.trim();
             },
 
             init() {
