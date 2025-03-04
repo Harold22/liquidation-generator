@@ -36,7 +36,7 @@
                                     name="cash_advance" 
                                     x-model="selectedSdo" 
                                     @change="handleSdoChange()"
-                                    class="block w-full mt-1 text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 focus:border-indigo-500"
+                                    class="uppercase block w-full mt-1 text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 focus:border-indigo-500"
                                     required>
                                     <option value="">{{ __('Select SDO') }}</option>
                                     <template x-for="sdo in sdo_list" :key="sdo.id">
