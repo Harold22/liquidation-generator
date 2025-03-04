@@ -106,5 +106,28 @@
         class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
         Next &raquo;
     </button>
+     <!-- Items per Page Dropdown -->
+     <div class="flex items-center space-x-2">
+        <label for="perPage" class="text-sm font-medium text-gray-700 dark:text-gray-300">Show</label>
+        <div class="relative">
+            <select 
+                id="perPageBene" 
+                x-model="perPageBene"
+                @change="updateBenePerPage(perPageBene)"
+                class="px-3 py-2 pr-5  text-sm font-medium text-gray-700 rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 appearance-none">
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+            </select>
+            <!-- Custom Dropdown Arrow -->
+            <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+            </div>
+        </div>
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">entries</span>
+    </div>
 </div>
  

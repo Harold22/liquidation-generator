@@ -170,6 +170,8 @@
                 beneTotalPages: 1,
                 fileId: null,
                 searchQuery: null,
+                perPage: 5,
+                perPageBene: 5,
 
                 handleSdoChange() {
                     if (!this.selectedSdo) {
@@ -189,7 +191,7 @@
                     }
                 },
 
-                async getFileDataPerFile(fileId, page_bene = 1) {
+                async getFileDataPerFile(fileId, page_bene = 1, perPageBene = this.perPageBene) {
                     this.fileId = fileId;
                     if (!this.fileId || this.fileId.length === 0) {
                         console.log('No file IDs to fetch data for.');
@@ -202,10 +204,11 @@
 
                     this.loading = true; 
                     try {
-                        const params = { page: page_bene };
-                            if (this.searchQuery?.trim()) {
-                                params.search = this.searchQuery;
-                            }
+                        const params = { page: page_bene, perPageBene: perPageBene };
+
+                        if (this.searchQuery?.trim()) {
+                            params.search = this.searchQuery;
+                        }
 
                         const response = await axios.get(`/files/list/${this.fileId}`, { params });
                         this.beneficiaryList = response.data.data;
@@ -218,8 +221,7 @@
                     }
                 },
 
-
-                async getFileList(selectedSdo, page = 1) {
+                async getFileList(selectedSdo, page = 1, perPage = this.perPage) {
                     if (!selectedSdo || selectedSdo === null || selectedSdo === '') {
                         this.file_list = []; 
                         this.currentPage = 1; 
@@ -229,7 +231,12 @@
                     }
                     
                     try {
-                        const response = await axios.get(`/files/index/${selectedSdo}/?page=${page}`);
+                        const response = await axios.get(`/files/index/${selectedSdo}`, {
+                            params: { 
+                                page: page, 
+                                perPage: perPage 
+                            }
+                        });
                         this.file_list = [];  
                         this.file_list = response.data.data;
                         console.log("file list:", this.file_list);
@@ -287,11 +294,24 @@
                     this.getFileList(this.selectedSdo, page);
                 },
 
+                updateImportedPerPage(value){
+                    this.perPage = parseInt(value);
+                    this.currentPage = 1; 
+                    this.getFileList(this.selectedSdo, 1, this.perPage); 
+
+                },
+
                 changePageBene(page_bene) {
                     if (page_bene < 1 || page_bene > this.beneTotalPages) return;
                     if (!this.fileId) 
                         return;
                     this.getFileDataPerFile(this.fileId, page_bene); 
+                },
+
+                updateBenePerPage(value){
+                    this.perPageBene = parseInt(value);
+                    this.beneCurrentPage = 1; 
+                    this.getFileDataPerFile(this.fileId, 1, this.perPageBene); 
                 },
 
                 deleteFile(id) {

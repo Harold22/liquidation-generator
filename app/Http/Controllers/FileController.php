@@ -203,9 +203,11 @@ class FileController extends Controller
     /**
      * Show the list of files for a specific SDO (cash advance).
      */
-    public function index($sdo)
+    public function index(Request $request, $sdo)
     {
-        $file_list = File::where('cash_advance_id', $sdo)->paginate(5);
+        $perPage = $request->input('perPage'); 
+        $file_list = File::where('cash_advance_id', $sdo)
+            ->paginate($perPage);
 
         return response()->json($file_list->toArray());
     }

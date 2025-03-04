@@ -80,6 +80,7 @@ class FileDataController extends Controller
 
     public function getIndividualList(Request $request, $fileId)
     {
+        $perPageBene = $request->input('perPageBene');
         $query = FileData::where('file_id', $fileId)
             ->select('id', 'firstname', 'middlename', 'lastname', 'extension_name', 'assistance_type', 'amount');
 
@@ -95,7 +96,7 @@ class FileDataController extends Controller
             });
         }
 
-        return response()->json($query->paginate(5));
+        return response()->json($query->paginate($perPageBene));
     }
 
     
