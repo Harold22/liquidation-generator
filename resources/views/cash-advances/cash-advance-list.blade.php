@@ -31,14 +31,16 @@
             date_refunded: null,
             official_receipt: null,
             searchCashAdvance: null,
+            perPage: 5,
             
-            async getCashAdvancesList(page = 1) {
+            async getCashAdvancesList(page = 1, perPage = this.perPage) {
                 this.loading = true; 
 
                 try {
                     const response = await axios.get(`/cash-advance/index`, {
                         params: {
                             page: page,
+                            perPage: perPage,
                             search: this.searchCashAdvance
                         }
                     });
@@ -50,13 +52,19 @@
                 } catch (error) {
                     console.error("Error fetching cash advances:", error);
                 } finally {
-                    this.loading = false; // End loading state
+                    this.loading = false; 
                 }
             },
 
             changePage(page) {
                 if (page < 1 || page > this.totalPages) return;
                 this.getCashAdvancesList(page); 
+            },
+
+            updatePerPage(value) {
+                this.perPage = parseInt(value);
+                this.currentPage = 1; 
+                this.getCashAdvancesList(1, this.perPage); 
             },
 
             selectedList: {},

@@ -72,7 +72,10 @@ class CashAdvanceController extends Controller
 
     public function index(Request $request)
     {   
+        $perPage = $request->input('perPage'); 
+
         $query = CashAdvance::query();
+
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -82,10 +85,11 @@ class CashAdvanceController extends Controller
             });
         }
 
-        $cash_advances = $query->orderBy('cash_advance_date', 'DESC')->paginate(5);
+        $cash_advances = $query->orderBy('cash_advance_date', 'DESC')->paginate($perPage);
 
         return response()->json($cash_advances->toArray());
     }
+
 
 
     public function showSdo()
