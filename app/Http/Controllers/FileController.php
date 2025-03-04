@@ -119,10 +119,10 @@ class FileController extends Controller
     {
         $validator = Validator::make($record, [
             'CONTROL_NUMBER' => 'required|string|max:255',
-            'LASTNAME' => 'required|string|max:255',
-            'FIRSTNAME' => 'required|string|max:255',
-            'MIDDLENAME' => 'nullable|string|max:255',
-            'EXT_NAME' => 'nullable|string|max:50',
+            'LASTNAME' => 'required|string|max:255|regex:/^[A-Za-z\s\-]+$/',
+            'FIRSTNAME' => 'required|string|max:255|regex:/^[A-Za-z\s\-]+$/',
+            'MIDDLENAME' => 'nullable|string|max:255|regex:/^[A-Za-z\s\-]+$/',
+            'EXT_NAME' => 'nullable|string|max:50|regex:/^[A-Za-z\s\-]+$/',
             'BIRTHDATE' => 'nullable',
             'STATUS' => 'required|string|max:50',
             'TIME_CLAIMED' => 'required|regex:/^\d{1,2}\/\d{1,2}\/\d{4} \d{2}:\d{2}$/',
