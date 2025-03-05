@@ -30,7 +30,7 @@
                         Update
                     </button>
 
-                    <div x-show="updateBeneficiaryModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-20">
+                    <div x-show="updateBeneficiaryModal" x-cloak x-transition.opacity class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-20">
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
                             <header class="flex justify-between items-center">
                                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update Beneficiary Data</h2>
