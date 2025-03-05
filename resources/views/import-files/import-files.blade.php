@@ -379,8 +379,9 @@
                 updateBeneficiaryData(beneficiary){
                     this.selectedBeneficiary = { ...beneficiary };
                     this.updateBeneficiaryModal = true;
-
+                   
                 },
+
                 selectedFile: [],
                 updateFileLocation(file){
                     this.selectedFile = { ...file };

@@ -80,26 +80,28 @@ class FileDataController extends Controller
 
     public function getIndividualList(Request $request, $fileId)
     {
-        $perPageBene = $request->input('perPageBene');
+        $perPageBene = $request->input('perPageBene'); 
         $query = FileData::where('file_id', $fileId)
             ->select('id', 'firstname', 'middlename', 'lastname', 'extension_name', 'assistance_type', 'amount');
 
         if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('firstname', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('middlename', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('lastname', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('extension_name', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('assistance_type', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('amount', 'LIKE', "%{$searchTerm}%");
+            $searchTerm = trim($request->search);
+            $terms = explode(' ', $searchTerm); 
+
+            $query->where(function ($q) use ($terms) {
+                foreach ($terms as $term) {
+                    $q->where(function ($subQuery) use ($term) {
+                        $subQuery->where('firstname', 'LIKE', "%{$term}%")
+                            ->orWhere('middlename', 'LIKE', "%{$term}%")
+                            ->orWhere('lastname', 'LIKE', "%{$term}%")
+                            ->orWhere('extension_name', 'LIKE', "%{$term}%");
+                    });
+                }
             });
         }
 
         return response()->json($query->paginate($perPageBene));
     }
-
-    
 
     public function destroy($id)
     {

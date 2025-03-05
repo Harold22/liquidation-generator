@@ -73,24 +73,29 @@ class CashAdvanceController extends Controller
     public function index(Request $request)
     {   
         $perPage = $request->input('perPage'); 
-
+    
         $query = CashAdvance::query();
-
+    
         if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('special_disbursing_officer', 'LIKE', "%$search%")
-                ->orWhere('dv_number', 'LIKE', "%$search%")
-                ->orWhere('cash_advance_amount', 'LIKE', "%$search%");
+            $search = trim($request->search);
+            $terms = explode(' ', $search); 
+    
+            $query->where(function($q) use ($terms) {
+                foreach ($terms as $term) {
+                    $q->where(function ($subQuery) use ($term) {
+                        $subQuery->where('special_disbursing_officer', 'LIKE', "%{$term}%")
+                            ->orWhere('dv_number', 'LIKE', "%{$term}%")
+                            ->orWhere('cash_advance_amount', 'LIKE', "%{$term}%");
+                    });
+                }
             });
         }
-
+    
         $cash_advances = $query->orderBy('cash_advance_date', 'DESC')->paginate($perPage);
-
-        return response()->json($cash_advances->toArray());
+    
+        return response()->json($cash_advances);
     }
-
-
+    
 
     public function showSdo()
     {
