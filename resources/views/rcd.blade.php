@@ -151,8 +151,11 @@
                         </div>
                     </div>
 
-                    <div x-show="loading" class="w-full mt-4 flex justify-center items-center">
-                        <div class="w-16 h-16 border-4 border-t-transparent border-blue-500 border-solid rounded-full animate-spin"></div>
+                    <div x-show="loading">
+                        <x-spinner />
+                        <button @click="loading = !loading" class="bg-blue-500 text-white px-4 py-2 mt-4 rounded">
+                            Toggle Loading
+                        </button>
                     </div>
 
                     <!-- start sa rcd -->

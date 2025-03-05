@@ -10,8 +10,11 @@
             <!-- Card Container -->
             <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
                 <!-- Loading Indicator -->
-                <div x-show="loading" x-transition.opacity class="fixed top-0 left-0 w-full h-2 bg-gray-900 bg-opacity-10 backdrop-blur-lg z-50">
-                    <div class="h-2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 animate-pulse rounded-full shadow-lg"></div>
+                <div x-show="loading">
+                    <x-spinner />
+                    <button @click="loading = !loading" class="bg-blue-500 text-white px-4 py-2 mt-4 rounded">
+                        Toggle Loading
+                    </button>
                 </div>
                 <!-- Error Messages -->
                 @include('error-messages.messages')
