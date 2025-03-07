@@ -20,40 +20,65 @@
                         class="border dark:bg-gray-700 dark:text-white px-2 py-1 rounded-md w-24">
                 </div>
             </div>
-             <!-- Summary Cards -->
+            <!-- Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <!-- Total Beneficiaries -->
-                <div class="bg-green-500 text-white shadow-sm sm:rounded-lg p-4 text-center">
-                    <h2 class="text-lg font-medium">Total Beneficiaries</h2>
-                    <p class="text-2xl font-bold" x-text="Number(totalBeneficiaries).toLocaleString()"></p>
+
+              <!-- Total Beneficiaries -->
+                <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 flex items-center gap-4 border border-gray-300 dark:border-gray-700">
+                    <svg class="w-10 h-10 text-blue-500 dark:text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-5m0 0l-5 5m-6-5a6 6 0 100-12 6 6 0 000 12zm-2 2a6 6 0 0112 0"></path>
+                    </svg>
+                    <div>
+                        <h2 class="text-lg font-medium text-blue-600 dark:text-blue-400">Total Beneficiaries</h2>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="Number(totalBeneficiaries).toLocaleString()"></p>
+                    </div>
                 </div>
+
+
                 <!-- Total Cash Advances -->
-                <div class="bg-blue-500 text-white shadow-sm sm:rounded-lg p-4 text-center">
-                    <h2 class="text-lg font-medium">Total CA Amount</h2>
-                    <p class="text-2xl font-bold" x-text="'₱'+ Number(totalCashAdvances).toLocaleString()"></p>
+                <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 flex items-center gap-4 border border-gray-300 dark:border-gray-700">
+                    <svg class="w-10 h-10 text-green-500 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 21V9m4 12V3m4 18v-6"></path>
+                    </svg>
+                    <div>
+                        <h2 class="text-lg font-medium text-green-600 dark:text-green-400">Total CA Amount</h2>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="'₱' + Number(totalCashAdvances).toLocaleString()"></p>
+                    </div>
                 </div>
 
-                <!-- Total Liquidated -->
-                <div class="bg-yellow-500 text-white shadow-sm sm:rounded-lg p-4 text-center">
-                    <h2 class="text-lg font-medium">Liquidated Amount</h2>
-                    <p class="text-2xl font-bold" x-text="'₱'+ Number(totalLiquidatedCashAdvance).toLocaleString()">0</p>
+                <!-- Liquidated Amount -->
+                <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 flex items-center gap-4 border border-gray-300 dark:border-gray-700">
+                    <svg class="w-10 h-10 text-yellow-500 dark:text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <div>
+                        <h2 class="text-lg font-medium text-yellow-600 dark:text-yellow-400">Liquidated Amount</h2>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="'₱' + Number(totalLiquidatedCashAdvance).toLocaleString()">0</p>
+                    </div>
                 </div>
 
-                <!-- Total Liquidated -->
-                <div class="bg-red-500 text-white shadow-sm sm:rounded-lg p-4 text-center">
-                    <h2 class="text-lg font-medium">Unliquidated Amount</h2>
-                    <p class="text-2xl font-bold" x-text="'₱'+ Number(totalUnliquidatedCashAdvance).toLocaleString()">0</p>
+                <!-- Unliquidated Amount -->
+                <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 flex items-center gap-4 border border-gray-300 dark:border-gray-700">
+                    <svg class="w-10 h-10 text-red-500 dark:text-red-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                    <div>
+                        <h2 class="text-lg font-medium text-red-600 dark:text-red-400">Unliquidated Amount</h2>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="'₱' + Number(totalUnliquidatedCashAdvance).toLocaleString()">0</p>
+                    </div>
                 </div>
+
             </div>
+
           <!-- Charts Section -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
-      <!-- Summary Cards -->
+                <!-- Summary Cards -->
                 <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-4 flex flex-col gap-3">
                     
                     <!-- Number of Cash Advances -->
                     <div class="bg-white shadow-md rounded-lg p-3 flex items-center justify-between border border-gray-200 dark:border-gray-700 h-16 md:h-20 flex-wrap overflow-hidden">
                         <div class="flex items-center gap-2">
-                            <svg class="w-6 h-6 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="w-6 h-6 text-blue-500 dark:text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 21V9m4 12V3m4 18v-6"></path>
                             </svg>
                             <h2 class="text-md md:text-lg font-medium text-gray-600 dark:text-gray-300 min-w-[150px] text-left">
@@ -61,7 +86,7 @@
                             </h2>
                         </div>
                         <p class="text-xl font-bold text-gray-800 dark:text-gray-100 w-28 text-center" x-text="totalCashAdvancesNumber"></p>
-                        <span class="text-green-500 font-semibold text-md min-w-fit whitespace-nowrap">
+                        <span class="text-blue-500 font-semibold text-md min-w-fit whitespace-nowrap">
                             100%
                         </span>
                     </div>
@@ -294,33 +319,36 @@
                 pieChartInstance: null,
 
                 sdoStatusChart() {
-                    const ctx = document.getElementById('doughnutChart').getContext('2d');
+                const ctx = document.getElementById('doughnutChart').getContext('2d');
 
-                    if (this.pieChartInstance) {
-                        this.pieChartInstance.destroy(); // Destroy previous instance
-                    }
+                if (this.pieChartInstance) {
+                    this.pieChartInstance.destroy(); // Destroy previous instance
+                }
 
-                    this.pieChartInstance = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['Liquidated', 'Unliquidated'],
-                            datasets: [
-                                {
-                                    label: 'Cash Advance Status',
-                                    data: [this.sdoStatus.liquidated, this.sdoStatus.unliquidated],
-                                    backgroundColor: ['#14B8A6', '#EAB308'],
-                                },
-                            ],
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { display: true },
+                this.pieChartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Liquidated', 'Unliquidated'],
+                        datasets: [
+                            {
+                                label: 'Cash Advance Status',
+                                data: [this.sdoStatus.liquidated, this.sdoStatus.unliquidated],
+                                backgroundColor: ['#4CAF50', '#F44336'], // Updated colors
+                                borderColor: ['#388E3C', '#D32F2F'], // Slightly darker border for better distinction
+                                borderWidth: 1.5
                             },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: true },
                         },
-                    });
-                },
+                    },
+                });
+            },
+
                 //END SDO STATUS
                 
                 totalBeneficiaries: 0,
