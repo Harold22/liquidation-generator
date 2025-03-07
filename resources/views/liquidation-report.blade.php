@@ -31,9 +31,6 @@
                     <!-- loading -->
                     <div x-show="loading">
                         <x-spinner />
-                        <button @click="loading = !loading" class="bg-blue-500 text-white px-4 py-2 mt-4 rounded">
-                            Toggle Loading
-                        </button>
                     </div>
                     <div class="flex flex-col md:flex-row md:items-center md:justify-start gap-2 print:hidden my-2">
                         <label for="liquidationType" class="text-sm font-medium text-gray-700 md:w-auto">

@@ -8,3 +8,4 @@ Route::get('/dashboard/get-cash-advances/{year}', [DashboardController::class, '
 Route::get('/dashboard/get-sdo-status/{year}', [DashboardController::class, 'getSDOStatusPerMonth']);
 Route::get('/dashboard/get-total-beneficiaries/{year}', [DashboardController::class, 'getTotalBeneficiaries']);
 Route::get('/dashboard/get-total-cash-advances/{year}', [DashboardController::class, 'getTotalCashAdvances']);
+Route::get('/dashboard/cash-advances-summary/{year}', [DashboardController::class, 'getCashAdvanceSummary']);

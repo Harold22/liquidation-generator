@@ -75,9 +75,6 @@
                     <!-- loading ni -->
                     <div x-show="loading">
                         <x-spinner />
-                        <button @click="loading = !loading" class="bg-blue-500 text-white px-4 py-2 mt-4 rounded">
-                            Toggle Loading
-                        </button>
                     </div>
                                 <div class="flex justify-center">
                         <h1 class="text-xl font-bold">CASH DISBURSEMENT RECORD</h1>

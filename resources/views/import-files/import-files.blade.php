@@ -5,16 +5,13 @@
         </h2>
     </x-slot>
 
-    <div x-data="importFiles()" class="py-12">
+    <div x-data="importFiles()" class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <!-- Card Container -->
             <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
                 <!-- Loading Indicator -->
                 <div x-show="loading">
                     <x-spinner />
-                    <button @click="loading = !loading" class="bg-blue-500 text-white px-4 py-2 mt-4 rounded">
-                        Toggle Loading
-                    </button>
                 </div>
                 <!-- Error Messages -->
                 @include('error-messages.messages')

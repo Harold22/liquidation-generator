@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\CashAdvance;
-use App\Models\File;
-use Illuminate\Http\Request;
 use App\Models\FileData;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -109,6 +107,35 @@ class DashboardController extends Controller
             'total_unliquidated' => $totalUnliquidated,
         ]);
     }
+
+    public function getCashAdvanceSummary($year)
+    {
+        $totalCashAdvances = CashAdvance::whereYear('cash_advance_date', $year)->count();
+    
+        // Count total liquidated cash advances
+        $totalLiquidated = CashAdvance::whereYear('cash_advance_date', $year)
+            ->where('status', 'Liquidated')
+            ->count();
+    
+        // Count total unliquidated cash advances
+        $totalUnliquidated = CashAdvance::whereYear('cash_advance_date', $year)
+            ->where('status', 'Unliquidated')
+            ->count();
+    
+        // Calculate percentages (avoid division by zero)
+        $liquidatedPercentage = $totalCashAdvances > 0 ? ($totalLiquidated / $totalCashAdvances) * 100 : 0;
+        $unliquidatedPercentage = $totalCashAdvances > 0 ? ($totalUnliquidated / $totalCashAdvances) * 100 : 0;
+    
+        return response()->json([
+            'year' => $year,
+            'total_cash_advances_number' => $totalCashAdvances,
+            'total_liquidated_number' => $totalLiquidated,
+            'total_unliquidated_number' => $totalUnliquidated,
+            'liquidated_percentage' => round($liquidatedPercentage, 2),
+            'unliquidated_percentage' => round($unliquidatedPercentage, 2),
+        ]);
+    }
+    
 
     
 

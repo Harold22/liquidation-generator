@@ -5,13 +5,10 @@
         </h2>
     </x-slot>
 
-    <div x-data="dashboard()" class="py-12">
+    <div x-data="dashboard()" class="py-8">
         <!-- Loading Indicator -->
         <div x-show="loading">
             <x-spinner />
-            <button @click="loading = !loading" class="bg-blue-500 text-white px-4 py-2 mt-4 rounded">
-                Toggle Loading
-            </button>
         </div>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
              <!-- Title and Year Filter -->
@@ -32,7 +29,7 @@
                 </div>
                 <!-- Total Cash Advances -->
                 <div class="bg-blue-500 text-white shadow-sm sm:rounded-lg p-4 text-center">
-                    <h2 class="text-lg font-medium">Total Cash Advances</h2>
+                    <h2 class="text-lg font-medium">Total CA Amount</h2>
                     <p class="text-2xl font-bold" x-text="'₱'+ Number(totalCashAdvances).toLocaleString()"></p>
                 </div>
 
@@ -48,8 +45,73 @@
                     <p class="text-2xl font-bold" x-text="'₱'+ Number(totalUnliquidatedCashAdvance).toLocaleString()">0</p>
                 </div>
             </div>
-            <!-- Charts Section -->
+          <!-- Charts Section -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
+      <!-- Summary Cards -->
+                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-4 flex flex-col gap-3">
+                    
+                    <!-- Number of Cash Advances -->
+                    <div class="bg-white shadow-md rounded-lg p-3 flex items-center justify-between border border-gray-200 dark:border-gray-700 h-16 md:h-20 flex-wrap overflow-hidden">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-6 h-6 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 21V9m4 12V3m4 18v-6"></path>
+                            </svg>
+                            <h2 class="text-md md:text-lg font-medium text-gray-600 dark:text-gray-300 min-w-[150px] text-left">
+                                Number of Cash Advances
+                            </h2>
+                        </div>
+                        <p class="text-xl font-bold text-gray-800 dark:text-gray-100 w-28 text-center" x-text="totalCashAdvancesNumber"></p>
+                        <span class="text-green-500 font-semibold text-md min-w-fit whitespace-nowrap">
+                            100%
+                        </span>
+                    </div>
+
+                    <!-- Unliquidated Cash Advances -->
+                    <div class="bg-white shadow-md rounded-lg p-3 flex items-center justify-between border border-gray-200 dark:border-gray-700 h-16 md:h-20 flex-wrap overflow-hidden">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                            <h2 class="text-md md:text-lg font-medium text-gray-600 dark:text-gray-300 min-w-[150px] text-left">
+                                Unliquidated Cash Advances
+                            </h2>
+                        </div>
+                        <p class="text-xl font-bold text-gray-800 dark:text-gray-100 w-28 text-center" x-text="totalUnliquidatedNumber"></p>
+                        <span class="text-red-500 font-semibold text-md min-w-fit whitespace-nowrap">
+                            <span x-text="unliquidatedPercentage + '%'"></span>
+                            <span class="inline-block" x-show="unliquidatedPercentage > 0 && unliquidatedPercentage < 100">▼</span>
+                            <span class="inline-block" x-show="unliquidatedPercentage == 0 || unliquidatedPercentage == 100">—</span>
+                        </span>
+                    </div>
+
+                    <!-- Liquidated Cash Advances -->
+                    <div class="bg-white shadow-md rounded-lg p-3 flex items-center justify-between border border-gray-200 dark:border-gray-700 h-16 md:h-20 flex-wrap overflow-hidden">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <h2 class="text-md md:text-lg font-medium text-gray-600 dark:text-gray-300 min-w-[150px] text-left">
+                                Liquidated Cash Advances
+                            </h2>
+                        </div>
+                        <p class="text-xl font-bold text-gray-800 dark:text-gray-100 w-28 text-center" x-text="totalLiquidatedNumber"></p>
+                        <span class="text-green-500 font-semibold text-md min-w-fit whitespace-nowrap">
+                            <span x-text="liquidatedPercentage + '%'"></span>
+                            <span class="inline-block" x-show="liquidatedPercentage > 0">▲</span>
+                            <span class="inline-block" x-show="liquidatedPercentage == 0">—</span>
+                        </span>
+                    </div>
+
+                </div>
+
+                <!-- Pie Chart -->
+                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
+                    <h2 class="text-lg font-medium text-gray-800 dark:text-gray-200">Liquidation of Cash Advances</h2>
+                    <div class="h-48 w-full">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                </div>
+
                 <!-- Bar Chart -->
                 <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
                     <h2 class="text-lg font-medium text-gray-800 dark:text-gray-200">Number of Beneficiaries</h2>
@@ -61,14 +123,8 @@
                     <h2 class="text-lg font-medium text-gray-800 dark:text-gray-200">Total Cash Advances</h2>
                     <canvas id="lineChart"></canvas>
                 </div>
-
-                <!-- Pie Chart -->
-                <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
-                    <h2 class="text-lg font-medium text-gray-800 dark:text-gray-200">Liquidation of Cash Advances</h2>
-                    <canvas id="pieChart"></canvas>
-                </div>
-
             </div>
+
         </div>
     </div>
 
@@ -98,6 +154,7 @@
                         this.getSDOStatusPerYear(year),
                         this.fetchTotalBeneficiaries(year),
                         this.fetchTotalCashAdvances(year),
+                        this.getCashAdvanceSummary(year),
                     ]);
 
                     this.loading = false; 
@@ -237,14 +294,14 @@
                 pieChartInstance: null,
 
                 sdoStatusChart() {
-                    const ctx = document.getElementById('pieChart').getContext('2d');
+                    const ctx = document.getElementById('doughnutChart').getContext('2d');
 
                     if (this.pieChartInstance) {
                         this.pieChartInstance.destroy(); // Destroy previous instance
                     }
 
                     this.pieChartInstance = new Chart(ctx, {
-                        type: 'pie',
+                        type: 'doughnut',
                         data: {
                             labels: ['Liquidated', 'Unliquidated'],
                             datasets: [
@@ -257,6 +314,7 @@
                         },
                         options: {
                             responsive: true,
+                            maintainAspectRatio: false,
                             plugins: {
                                 legend: { display: true },
                             },
@@ -290,6 +348,27 @@
                         this.totalUnliquidatedCashAdvance = data.total_unliquidated;
                     } catch (error) {
                         console.error("Error fetching total cash advances:", error);
+                    }
+                },
+
+                totalCashAdvancesNumber: 0,
+                totalLiquidatedNumber: 0,
+                totalUnliquidatedNumber: 0,
+                liquidatedPercentage: 0,
+                unliquidatedPercentage: 0,
+
+                async getCashAdvanceSummary(year) {
+                    try {
+                        const response = await fetch(`/dashboard/cash-advances-summary/${year}`);
+                        const data = await response.json();
+
+                        this.totalCashAdvancesNumber = data.total_cash_advances_number;
+                        this.totalLiquidatedNumber = data.total_liquidated_number;
+                        this.totalUnliquidatedNumber = data.total_unliquidated_number;
+                        this.liquidatedPercentage = data.liquidated_percentage;
+                        this.unliquidatedPercentage = data.unliquidated_percentage;
+                    } catch (error) {
+                        console.error('Error fetching cash advance summary:', error);
                     }
                 },
 
