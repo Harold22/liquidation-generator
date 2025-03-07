@@ -60,7 +60,7 @@
                             <label for="month" class="text-sm font-medium text-gray-700 w-full md:w-auto">
                                 Select Month:
                             </label>
-                            <select id="month" name="month" x-model="selectedMonth" @change="handleSelectMonth()"
+                            <select id="month" name="month" x-model="selectedMonth" @change="handleSelectMonth(), loading = true"
                                 class="capitalize text-sm border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 w-full md:w-1/4">
                                 <option value="">Select Month</option>
                                 <template x-for="month in months" :key="month.month">
@@ -76,7 +76,7 @@
                     <div x-show="loading">
                         <x-spinner />
                     </div>
-                                <div class="flex justify-center">
+                    <div class="flex justify-center">
                         <h1 class="text-xl font-bold">CASH DISBURSEMENT RECORD</h1>
                     </div>
                     <div class="flex justify-center">
@@ -225,7 +225,7 @@
             file_data: [],
             cash_advance_details: {},
             mapped_cash_advance_details: {},
-            loading: true,
+            loading: false,
             selectedMonth: '',
            
             async handleSelectMonth() {
@@ -236,7 +236,10 @@
                 } catch (error) {
                     console.error("Error loading data:", error);
                 } finally {
-                    
+                    setTimeout(() => {
+                        this.loading = false;  
+                        console.log("Loading ended...");
+                    }, 500);
                 }
             },
 
@@ -440,6 +443,7 @@
             },
 
             init() {
+                this.loading = true;
                 this.getUrlId();  
                 this.getFileList();  
                 this.getCashAdvanceDetails();
