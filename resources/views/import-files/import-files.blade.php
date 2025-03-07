@@ -21,7 +21,7 @@
                     <!-- Left Section: Upload Form -->
                     <div class="col-span-1 space-y-6 mt-4">
                         <!-- Header for Left Section -->
-                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                        <h2 class="text-xl font-semibold text-blue-500 dark:text-gray-200">
                             {{ __('Upload File') }}
                         </h2>
                         <form method="POST" action="{{ route('files.upload') }}" enctype="multipart/form-data" class="space-y-6">
@@ -99,7 +99,7 @@
                     <!-- Right Section: Imported Files -->
                     <div class="col-span-2 space-y-4 lg:mt-4">
                         <!-- Header for Right Section -->
-                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                        <h2 class="text-xl font-semibold text-blue-500 dark:text-gray-200">
                             {{ __('Imported Files') }}
                         </h2>
                         <div class="space-y-2 md:space-y-0 md:flex md:justify-between md:gap-4">

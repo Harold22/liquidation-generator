@@ -21,6 +21,19 @@
 <script>
    document.addEventListener('alpine:init', () => {
     Alpine.data('cashAdvances', () => ({
+        fields: [
+            { id: 'special_disbursing_officer', name: 'special_disbursing_officer', label: 'Special Disbursing Officer', type: 'text', value: '' },
+            { id: 'position', name: 'position', label: 'Position', type: 'text', value: '' },
+            { id: 'station', name: 'station', label: 'Station', type: 'text', value: '' },
+            { id: 'check_number', name: 'check_number', label: 'Check Number', type: 'text', value: '' },
+            { id: 'cash_advance_amount', name: 'cash_advance_amount', label: 'Cash Advance Amount', type: 'number', value: '' },
+            { id: 'cash_advance_date', name: 'cash_advance_date', label: 'Cash Advance Date', type: 'date', value: '' },
+            { id: 'dv_number', name: 'dv_number', label: 'DV Number', type: 'text', value: '' },
+            { id: 'ors_burs_number', name: 'ors_burs_number', label: 'ORS/BURS Number', type: 'text', value: '' },
+            { id: 'responsibility_code', name: 'responsibility_code', label: 'Responsibility Code', type: 'text', value: '' },
+            { id: 'uacs_code', name: 'uacs_code', label: 'UACS Object Code', type: 'text', value: '' }
+        ],
+
             updateCashAdvanceModal: false, deleteCashAdvanceModal: false, refundCashAdvanceModal: false,
             cashAdvancesList: [],
             currentPage: 1,

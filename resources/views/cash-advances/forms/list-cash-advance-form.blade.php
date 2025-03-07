@@ -1,9 +1,9 @@
 <section>
     <div class="mt-2 flex justify-between items-center gap-4">
         <div class="flex items-center">
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                {{ __('Cash Advances List') }}
-            </h2>
+        <h2 class="text-xl font-semibold text-blue-500 dark:text-gray-200">
+            {{ __('Cash Advance List') }}
+        </h2>
         </div>
         <div class="flex items-center gap-2">
             <input 

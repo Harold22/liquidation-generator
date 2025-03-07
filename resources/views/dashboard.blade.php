@@ -13,7 +13,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
              <!-- Title and Year Filter -->
              <div class="flex justify-between items-center bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-4">
-                <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">Dashboard Overview</h3>
+                <h3 class="text-xl font-bold text-blue-500">Dashboard Overview</h3>
                 <div class="flex items-center gap-3">
                     <label for="year" class="text-md text-gray-700 dark:text-gray-300">Select Year:</label>
                     <input type="number" id="year" x-model="year" @change="handleLoadingCharts(year)" 
@@ -71,7 +71,7 @@
             </div>
 
           <!-- Charts Section -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-2 gap-6">
                 <!-- Summary Cards -->
                 <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-4 flex flex-col gap-3">
                     
