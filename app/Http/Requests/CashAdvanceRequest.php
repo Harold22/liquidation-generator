@@ -12,7 +12,7 @@ class CashAdvanceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // Adjust this if you have authorization logic
+        return true;
     }
 
     /**
@@ -25,7 +25,7 @@ class CashAdvanceRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                'regex:/^[A-Za-z\s\-]+$/',
+                'regex:/^[A-Za-z\s\-.]+$/',
                 Rule::unique('cash_advances')
                     ->ignore($this->id)
                     ->where(function ($query) {
