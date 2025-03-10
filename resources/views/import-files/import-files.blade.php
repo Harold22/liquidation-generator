@@ -123,7 +123,7 @@
                         <div class="space-y-4" x-show="beneficiaryListTable">
                             <div class="flex justify-between items-center">
                                 <!-- Button -->
-                                <button @click="fetchCashAdvanceData(), getFileList(selectedSdo), getAllFile(selectedSdo), loading = true, importedFilesTable = true, beneficiaryListTable = false"
+                                <button @click="handleClick"
                                     class="flex items-center justify-between gap-2 px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-400 rounded-lg shadow-sm 
                                         hover:bg-blue-100 hover:border-blue-500 hover:text-blue-600 hover:shadow-md 
                                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
@@ -133,6 +133,7 @@
                                     </svg>
                                     <span>Imported File List</span>
                                 </button>
+
 
                                 <!-- Search Input & Button -->
                                 <div class="flex items-center space-x-2">
@@ -176,22 +177,40 @@
                 perPage: 5,
                 perPageBene: 5,
 
-                handleSdoChange() {
+                async handleSdoChange() {
                     if (!this.selectedSdo) {
                         this.cashAdvanceDetails = null;
                         this.file_list = [];
                         this.file_list_total = [];
                         this.importedFilesTable = true;
                         this.beneficiaryListTable = false;
-                        this.loading = false;
                     } else {
                         this.loading = true;
                         this.importedFilesTable = true;
                         this.beneficiaryListTable = false;
-                        this.fetchCashAdvanceData();
-                        this.getFileList(this.selectedSdo);
-                        this.getAllFile(this.selectedSdo);
+
+                        await Promise.all([
+                            this.fetchCashAdvanceData(),
+                            this.getFileList(this.selectedSdo),
+                            this.getAllFile(this.selectedSdo)
+                        ]);
+
+                        this.loading = false;
                     }
+                },
+
+                async handleClick() {
+                    this.loading = true;
+                    this.importedFilesTable = true;
+                    this.beneficiaryListTable = false;
+
+                    await Promise.all([
+                        this.fetchCashAdvanceData(),
+                        this.getFileList(this.selectedSdo),
+                        this.getAllFile(this.selectedSdo)
+                    ]);
+
+                    this.loading = false;
                 },
 
                 async getFileDataPerFile(fileId, page_bene = 1, perPageBene = this.perPageBene) {
@@ -229,7 +248,6 @@
                         this.file_list = []; 
                         this.currentPage = 1; 
                         this.totalPages = 1;  
-                        this.loading = false;
                         return;
                     }
                     
@@ -337,21 +355,15 @@
                 {
                     if (!selectedSdo || selectedSdo === null || selectedSdo === '') {
                         this.file_list_total = []; 
-                        this.loading = false;
                         return;
                     }
                     try {
                         const response = await axios.get(`/files/getSdoTotal/${selectedSdo}`);
                         this.file_list_total = [];
                         this.file_list_total = response.data;
-                        this.loading = false;
                     } catch (error) {
-                        this.loading = false;
                         console.error('Error fetching file list for total:', error);
-                    } finally {
-                        this.loading = false; 
-                    }
-
+                    } 
                 },
 
                 deleteBeneficiary(id){
