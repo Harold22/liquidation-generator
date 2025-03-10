@@ -29,7 +29,7 @@
                             <!-- SDO Dropdown -->
                             <div>
                                 <x-input-label for="cash_advance" class="text-sm">
-                                    {{ __('Select Special Disbursing Officer') }}<span class="text-red-500">*</span>
+                                    {{ __('Special Disbursing Officer') }}<span class="text-red-500">*</span>
                                 </x-input-label>
                                 <select 
                                     id="cash_advance" 
@@ -61,7 +61,7 @@
 
                             <div>
                                 <x-input-label for="location" class="text-sm">
-                                    {{ __('Select Location') }}<span class="text-red-500">*</span>
+                                    {{ __('Location') }}<span class="text-red-500">*</span>
                                 </x-input-label>
                                 <select 
                                     id="location" 
@@ -78,7 +78,7 @@
                             <!-- File Upload -->
                             <div>
                                 <x-input-label for="file" class="text-sm">
-                                    {{ __('Select File to Import') }}<span class="text-red-500">*</span>
+                                    {{ __('File to Import') }}<span class="text-red-500">*</span>
                                 </x-input-label>
                                 <input 
                                     id="file" 

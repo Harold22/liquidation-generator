@@ -62,9 +62,17 @@
                         <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100 capitalize" x-text="list.special_disbursing_officer"></td>
                         <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100" x-text="'₱' +(parseFloat(list.cash_advance_amount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })"></td>
                         <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100" x-text="list.cash_advance_date"></td>
-                        <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100">
-                            <span x-text="list.status"></span>
+                        <td class="px-6 py-4 text-xs font-medium">
+                            <span x-text="list.status"
+                                :class="{
+                                    'bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white px-3 py-1 rounded-xl shadow-md': list.status === 'Unliquidated',
+                                    'bg-gradient-to-r from-emerald-700 via-green-600 to-green-500 text-white px-3 py-1 rounded-xl shadow-md': list.status === 'Liquidated'
+                                }"
+                                class="inline-block">
+                            </span>
                         </td>
+
+
                         <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100">
                             <div class="flex space-x-2">
                                 <div x-data="{ open: false, tooltip: false }" class="relative inline-block text-left">
