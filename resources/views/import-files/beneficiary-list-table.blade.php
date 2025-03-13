@@ -1,7 +1,7 @@
 
 <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-300 border rounded-lg">
     <thead class="bg-gray-100 dark:bg-gray-600">
-        <tr>
+        <tr class="border">
             <th scope="col" class="px-4 py-2">{{ __('Name') }}</th>
             <th scope="col" class="px-4 py-2">{{ __('Assistance') }}</th>
             <th scope="col" class="px-4 py-2">{{ __('Amount') }}</th>
@@ -10,7 +10,7 @@
     </thead>
     <tbody x-show="loading === false">
         <template x-for="beneficiary in beneficiaryList" :key="beneficiary.id">
-            <tr class="border-t">
+            <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
                 <td class="px-4 py-3 uppercase" 
                     x-text="(beneficiary.lastname) + ', ' + 
                             (beneficiary.firstname) + ' ' + 

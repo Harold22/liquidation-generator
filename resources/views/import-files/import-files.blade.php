@@ -87,11 +87,7 @@
                                     accept=".csv" 
                                     class="block w-full mt-2 p-2 border-gray-300 dark:border-gray-700 dark:bg-gray-900 rounded-md text-sm focus:ring-blue-500 dark:focus:ring-blue-600" 
                                     required>
-                                <button 
-                                    type="submit" 
-                                    class="mt-4 w-full lg:w-auto inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                    {{ __('Upload') }}
-                                </button>
+                                    <x-primary-button class="mt-4">{{ __('Upload') }}</x-primary-button>
                             </div>
                         </form>
                     </div>
@@ -114,29 +110,42 @@
                                 <p class="text-sm font-semibold">{{ __('Overall Total Imported Beneficiaries:') }}</p>
                                 <p class="text-lg text-green-600" x-text="(file_list_total?.overall_total_beneficiaries || 0).toLocaleString()"></p>
                             </div>
-                        </div>  
-
-                        <div x-show="importedFilesTable">
+                        </div> 
+                       
+                        <div class="space-y-4" x-show="importedFilesTable">
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100">List of Files</h2>
+                                <div class="flex items-center space-x-2">
+                                    <input 
+                                        type="text" 
+                                        placeholder="Search..." 
+                                        x-model="searchFile"
+                                        @input.debounce.500ms="getFileList(selectedSdo, 1)"
+                                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100"
+                                    />
+                                </div>
+                            </div>
                             @include('import-files.imported-files-table')
                         </div>
 
                         <div class="space-y-4" x-show="beneficiaryListTable">
-                            <div class="flex justify-between items-center">
-                                <!-- Button -->
-                                <button @click="handleClick"
-                                    class="flex items-center justify-between gap-2 px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-400 rounded-lg shadow-sm 
-                                        hover:bg-blue-100 hover:border-blue-500 hover:text-blue-600 hover:shadow-md 
-                                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
-                                        transition-all duration-200 ease-in-out active:scale-95">
-                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                        <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                    <span>Imported File List</span>
-                                </button>
+                            <div class="flex items-center justify-between">
+                                <!-- Header -->
+                                <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100">List of Beneficiaries</h2>
 
-
-                                <!-- Search Input & Button -->
-                                <div class="flex items-center space-x-2">
+                                <div class="flex items-center space-x-3">
+                                    <!-- Button -->
+                                    <button @click="handleClick"
+                                        class="flex items-center justify-between gap-2 px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-400 rounded-lg shadow-sm 
+                                            hover:bg-blue-100 hover:border-blue-500 hover:text-blue-600 hover:shadow-md 
+                                            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
+                                            transition-all duration-200 ease-in-out active:scale-95">
+                                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>File List</span>
+                                    </button>
+                                    <!-- Search Input -->
                                     <input 
                                         type="text" 
                                         placeholder="Search..." 
@@ -147,9 +156,9 @@
                                 </div>
                             </div>
 
+
                             @include('import-files.beneficiary-list-table')
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -174,6 +183,7 @@
                 beneTotalPages: 1,
                 fileId: null,
                 searchQuery: null,
+                searchFile: null,
                 perPage: 5,
                 perPageBene: 5,
 
@@ -250,26 +260,29 @@
                         this.totalPages = 1;  
                         return;
                     }
+                    this.loading = true;
                     
                     try {
-                        const response = await axios.get(`/files/index/${selectedSdo}`, {
-                            params: { 
-                                page: page, 
-                                perPage: perPage 
-                            }
-                        });
-                        this.file_list = [];  
+                        const params = { page: page, perPage: perPage };
+
+                        if (this.searchFile?.trim()) {
+                            params.search = this.searchFile;
+                        }
+                        console.log('seach',this.searchFile);
+
+                        const response = await axios.get(`/files/index/${this.selectedSdo}`, { params });
+
                         this.file_list = response.data.data;
                         console.log("file list:", this.file_list);
                         this.currentPage = response.data.current_page;
                         this.totalPages = response.data.last_page;
-                        this.loading = false;
                     } catch (error) {
                         console.error('Error fetching file list:', error);
-                    }finally {
+                    } finally {
                         this.loading = false; 
                     }
                 },
+
 
                 fetchCashAdvanceData() {
                     if (this.selectedSdo) {

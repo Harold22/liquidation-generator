@@ -205,12 +205,28 @@ class FileController extends Controller
      */
     public function index(Request $request, $sdo)
     {
-        $perPage = $request->input('perPage'); 
-        $file_list = File::where('cash_advance_id', $sdo)
-            ->paginate($perPage);
+        $perPage = $request->input('perPage', 5);
+    
+        $query = File::where('cash_advance_id', $sdo);
+    
+        if ($request->filled('search')) {
+            $searchTerm = trim($request->search);
+            $terms = explode(' ', $searchTerm); 
 
+            $query->where(function ($q) use ($terms) {
+                foreach ($terms as $term) {
+                    $q->where(function ($subQuery) use ($term) {
+                        $subQuery->where('file_name', 'LIKE', "%{$term}%");
+                    });
+                }
+            });
+        }
+    
+        $file_list = $query->paginate($perPage);
+    
         return response()->json($file_list->toArray());
     }
+    
 
     /**
      * Delete the file from storage.

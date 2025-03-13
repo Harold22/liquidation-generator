@@ -1,6 +1,6 @@
 <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-300 border rounded-lg">
     <thead class="bg-gray-100 dark:bg-gray-600">
-        <tr>
+        <tr class="border">
             <th scope="col" class="px-2 py-2">{{ __('File Name') }}</th>
             <th scope="col" class="px-2 py-2">{{ __('Date Imported') }}</th>
             <th scope="col" class="px-2 py-2">{{ __('Location') }}</th>
@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         <template x-for="file in file_list" :key="file.id">
-            <tr class="border-t">
+            <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
                 <td class="px-2 py-3" x-text="file.file_name"></td>
                 <td class="px-2 py-3" x-text="formatDate(file.created_at)"></td>
                 <td class="px-2 py-3 capitalize" x-text="file.location"></td>
@@ -39,7 +39,7 @@
                         </span>
                     </div>
 
-                    <div x-show="updateFileModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-20">
+                    <div x-show="updateFileModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-20">
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
                             <header class="flex justify-between items-center">
                                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Edit Location</h2>
