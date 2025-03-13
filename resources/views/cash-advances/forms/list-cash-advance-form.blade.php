@@ -1,52 +1,54 @@
 <section>
-    <div class="mt-2 flex justify-between items-center gap-4">
+    <div class="mt-2 flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-4">
+        <!-- Header Section -->
         <div class="flex items-center">
-        <h2 class="text-xl font-semibold text-blue-500 dark:text-gray-200">
-            {{ __('Cash Advance List') }}
-        </h2>
+            <h2 class="text-xl font-semibold text-blue-500 dark:text-gray-200">
+                {{ __('Cash Advance List') }}
+            </h2>
         </div>
-        <div class="flex items-center gap-2">
+
+        <!-- Controls (Search + Buttons) -->
+        <div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+            <!-- Search Input -->
             <input 
                 type="text" 
                 placeholder="Search..." 
                 x-model="searchCashAdvance"
                 @input.debounce.500ms="getCashAdvancesList(1)"
-                class="px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100"
+                class="px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 
+                    dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 w-full sm:w-auto"
             />
 
+            <!-- Add Button -->
             <a href="{{ route('cash-advance.add') }}" 
-                class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                class="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg shadow 
+                    hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full sm:w-auto"
             >
-              <!-- Custom Add Icon -->
+                <!-- Custom Add Icon -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <!-- Circular Outline -->
                     <circle cx="12" cy="12" r="9"></circle>
-                    <!-- Plus Symbol -->
                     <path d="M12 8v8"></path>
                     <path d="M8 12h8"></path>
                 </svg>
-
                 {{ __('Add') }}
             </a>
 
-
+            <!-- Import Button -->
             <a href="{{ route('import-files') }}" 
-                class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto w-full mt-2 sm:mt-0"
+                class="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow 
+                    hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-full sm:w-auto"
             >
                 <!-- Upload Icon -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <!-- Box/Base -->
                     <path d="M4 16v4h16v-4"></path>
-                    <!-- Up Arrow -->
                     <path d="M12 3v12"></path>
                     <path d="M8 7l4-4 4 4"></path>
                 </svg>
-
                 {{ __('Import') }}
             </a>
-
         </div>
     </div>
+
     @include('error-messages.messages')
 
     <!-- Loading Indicator -->
@@ -79,10 +81,6 @@
                                 x-text="list.status">
                             </span>
                         </td>
-
-
-
-
                         <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100">
                             <div class="flex space-x-2">
                                 <div x-data="{ open: false, tooltip: false }" class="relative inline-block text-left">

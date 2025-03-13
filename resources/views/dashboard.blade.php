@@ -47,7 +47,7 @@
 
                 <!-- Total Cash Advances -->
                 <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 flex items-center gap-4 border border-gray-300 dark:border-gray-700">
-                    <svg class="w-12 h-12 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+                    <svg class="w-12 h-12 text-yellow-600 dark:text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <rect x="3" y="5" width="18" height="14" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"></rect>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18"></path>
@@ -55,14 +55,14 @@
                     </svg>
 
                     <div>
-                        <h2 class="text-lg font-medium text-green-600 dark:text-green-400">Total CA Amount</h2>
+                        <h2 class="text-lg font-medium text-yellow-600 dark:text-yellow-400">Total CA Amount</h2>
                         <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="'₱' + Number(totalCashAdvances).toLocaleString()"></p>
                     </div>
                 </div>
 
                 <!-- Liquidated Amount -->
                 <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 flex items-center gap-4 border border-gray-300 dark:border-gray-700">
-                    <svg class="w-12 h-12 text-yellow-600 dark:yellow-green-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" 
+                    <svg class="w-12 h-12 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" 
                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="10" cy="10" r="8" stroke-linecap="round" stroke-linejoin="round"></circle>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h4M8 10h4M10 4v12"></path>
@@ -70,7 +70,7 @@
                     </svg>
                         
                     <div>
-                        <h2 class="text-lg font-medium text-yellow-600 dark:text-yellow-400">Liquidated Amount</h2>
+                        <h2 class="text-lg font-medium text-green-600 dark:text-green-400">Liquidated Amount</h2>
                         <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="'₱' + Number(totalLiquidatedCashAdvance).toLocaleString()">0</p>
                     </div>
                 </div>
