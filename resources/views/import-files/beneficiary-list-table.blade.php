@@ -11,7 +11,7 @@
     <tbody x-show="loading === false">
         <template x-for="beneficiary in beneficiaryList" :key="beneficiary.id">
             <tr class="border-t">
-                <td class="px-4 py-3" 
+                <td class="px-4 py-3 uppercase" 
                     x-text="(beneficiary.lastname) + ', ' + 
                             (beneficiary.firstname) + ' ' + 
                             (beneficiary.middlename ?? '') + ' ' + 

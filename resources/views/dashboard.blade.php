@@ -25,9 +25,19 @@
 
               <!-- Total Beneficiaries -->
                 <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 flex items-center gap-4 border border-gray-300 dark:border-gray-700">
-                    <svg class="w-10 h-10 text-blue-500 dark:text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-5m0 0l-5 5m-6-5a6 6 0 100-12 6 6 0 000 12zm-2 2a6 6 0 0112 0"></path>
-                    </svg>
+                    <svg class="w-16 h-16 text-blue-500 dark:text-blue-400 flex-shrink-0" viewBox="-0.5 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <path d="M8.96991 12.89C10.6599 12.89 12.0299 11.5558 12.0299 9.91C12.0299 8.2642 10.6599 6.93 8.96991 6.93C7.27992 6.93 5.90991 8.2642 5.90991 9.91C5.90991 11.5558 7.27992 12.89 8.96991 12.89Z"
+                                stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                            <path d="M12.93 13.1C14.37 14.18 15.32 15.84 15.42 17.72C15.43 17.91 15.27 18.07 15.08 18.07H2.84996C2.64996 18.07 2.48996 17.91 2.49996 17.72C2.60996 15.84 3.55997 14.18 5.00997 13.1"
+                                stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                            <path d="M11.03 12.11H11.02" stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                            <path d="M17.1299 14.56C18.2787 14.56 19.2099 13.6556 19.2099 12.54C19.2099 11.4244 18.2787 10.52 17.1299 10.52C15.9812 10.52 15.0499 11.4244 15.0499 12.54C15.0499 13.6556 15.9812 14.56 17.1299 14.56Z"
+                                stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                            <path d="M20.3 15.13C20.99 15.84 21.44 16.79 21.5 17.83C21.51 17.97 21.4 18.07 21.26 18.07H17.38"
+                                stroke="currentColor" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                        </g>
+                    </svg>          
                     <div>
                         <h2 class="text-lg font-medium text-blue-600 dark:text-blue-400">Total Beneficiaries</h2>
                         <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="Number(totalBeneficiaries).toLocaleString()"></p>
@@ -37,9 +47,13 @@
 
                 <!-- Total Cash Advances -->
                 <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 flex items-center gap-4 border border-gray-300 dark:border-gray-700">
-                    <svg class="w-10 h-10 text-green-500 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 21V9m4 12V3m4 18v-6"></path>
+                    <svg class="w-12 h-12 text-green-600 dark:text-green-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="3" y="5" width="18" height="14" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"></rect>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 8h6M9 12h6M12 5v10"></path>
                     </svg>
+
                     <div>
                         <h2 class="text-lg font-medium text-green-600 dark:text-green-400">Total CA Amount</h2>
                         <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="'₱' + Number(totalCashAdvances).toLocaleString()"></p>
@@ -48,9 +62,13 @@
 
                 <!-- Liquidated Amount -->
                 <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 flex items-center gap-4 border border-gray-300 dark:border-gray-700">
-                    <svg class="w-10 h-10 text-yellow-500 dark:text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    <svg class="w-12 h-12 text-yellow-600 dark:yellow-green-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" 
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="10" cy="10" r="8" stroke-linecap="round" stroke-linejoin="round"></circle>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h4M8 10h4M10 4v12"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 14l2 2 4-4"></path>
                     </svg>
+                        
                     <div>
                         <h2 class="text-lg font-medium text-yellow-600 dark:text-yellow-400">Liquidated Amount</h2>
                         <p class="text-2xl font-bold text-gray-900 dark:text-gray-100" x-text="'₱' + Number(totalLiquidatedCashAdvance).toLocaleString()">0</p>
@@ -59,8 +77,8 @@
 
                 <!-- Unliquidated Amount -->
                 <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 flex items-center gap-4 border border-gray-300 dark:border-gray-700">
-                    <svg class="w-10 h-10 text-red-500 dark:text-red-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+                    <svg class="w-12 h-12 text-red-500 dark:text-red-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c1.38 0 2.5 1.12 2.5 2.5S13.38 13 12 13s-2.5-1.12-2.5-2.5S10.62 8 12 8zM12 3c5 0 9 4 9 9s-4 9-9 9-9-4-9-9 4-9 9-9zM16.5 15h-9"></path>
                     </svg>
                     <div>
                         <h2 class="text-lg font-medium text-red-600 dark:text-red-400">Unliquidated Amount</h2>
@@ -86,7 +104,7 @@
                             </h2>
                         </div>
                         <p class="text-xl font-bold text-gray-800 dark:text-gray-100 w-28 text-center" x-text="totalCashAdvancesNumber"></p>
-                        <span class="text-blue-500 font-semibold text-md min-w-fit whitespace-nowrap">
+                        <span class="text-blue-500 font-semibold text-xl min-w-fit whitespace-nowrap">
                             100%
                         </span>
                     </div>
@@ -102,7 +120,7 @@
                             </h2>
                         </div>
                         <p class="text-xl font-bold text-gray-800 dark:text-gray-100 w-28 text-center" x-text="totalUnliquidatedNumber"></p>
-                        <span class="text-red-500 font-semibold text-md min-w-fit whitespace-nowrap">
+                        <span class="text-red-500 font-semibold text-xl min-w-fit whitespace-nowrap">
                             <span x-text="unliquidatedPercentage + '%'"></span>
                             <span class="inline-block" x-show="unliquidatedPercentage > 0 && unliquidatedPercentage < 100">▼</span>
                             <span class="inline-block" x-show="unliquidatedPercentage == 0 || unliquidatedPercentage == 100">—</span>
@@ -120,7 +138,7 @@
                             </h2>
                         </div>
                         <p class="text-xl font-bold text-gray-800 dark:text-gray-100 w-28 text-center" x-text="totalLiquidatedNumber"></p>
-                        <span class="text-green-500 font-semibold text-md min-w-fit whitespace-nowrap">
+                        <span class="text-green-500 font-semibold text-xl min-w-fit whitespace-nowrap">
                             <span x-text="liquidatedPercentage + '%'"></span>
                             <span class="inline-block" x-show="liquidatedPercentage > 0">▲</span>
                             <span class="inline-block" x-show="liquidatedPercentage == 0">—</span>

@@ -179,12 +179,12 @@
                             <p class=" border-black text-center font-semibold">GEMMA D. DELA CRUZ</p>
                         </div>
                         <div class="flex-1 px-6 p-2">
-                            <p class=" border-black text-center font-semibold">JEANY MAE C. BAUTISTA</p>
+                            <p class=" border-black text-center font-semibold">JEANLY MAE C. BAUTISTA</p>
                         </div>
                     </div>
                     <div class="flex w-full border border-black">
                         <div class="flex-1 border-r border-black px-6 pb-4 pt-2 flex flex-col justify-between space-y-4">
-                            <p class="text-center">SPECIAL DISBURSING OFFICER</p>
+                            <p class="text-center">SPECIAL DISBURSING OFFICER</p>   
                             <div class="flex items-center w-3/4 mx-auto gap-3 mt-auto">
                                 <span>Date:</span>
                                 <p class="border-b border-black flex-grow text-center">&nbsp;</p>

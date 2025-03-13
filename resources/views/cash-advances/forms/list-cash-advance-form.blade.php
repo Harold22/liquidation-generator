@@ -17,11 +17,15 @@
             <a href="{{ route('cash-advance.add') }}" 
                 class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-                <!-- Custom Add Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none">
-                    <path d="M15 12L12 12M12 12L9 12M12 12L12 9M12 12L12 15" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+              <!-- Custom Add Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Circular Outline -->
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <!-- Plus Symbol -->
+                    <path d="M12 8v8"></path>
+                    <path d="M8 12h8"></path>
                 </svg>
+
                 {{ __('Add') }}
             </a>
 
@@ -30,10 +34,14 @@
                 class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto w-full mt-2 sm:mt-0"
             >
                 <!-- Upload Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 5v14M5 12h14"></path>
-                    <path d="M12 5l4 4m-8 0l4-4"></path>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Box/Base -->
+                    <path d="M4 16v4h16v-4"></path>
+                    <!-- Up Arrow -->
+                    <path d="M12 3v12"></path>
+                    <path d="M8 7l4-4 4 4"></path>
                 </svg>
+
                 {{ __('Import') }}
             </a>
 
@@ -63,14 +71,16 @@
                         <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100" x-text="'₱' +(parseFloat(list.cash_advance_amount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })"></td>
                         <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100" x-text="list.cash_advance_date"></td>
                         <td class="px-6 py-4 text-xs font-medium">
-                            <span x-text="list.status"
+                            <span 
                                 :class="{
-                                    'bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white px-3 py-1 rounded-xl shadow-md': list.status === 'Unliquidated',
-                                    'bg-gradient-to-r from-emerald-700 via-green-600 to-green-500 text-white px-3 py-1 rounded-xl shadow-md': list.status === 'Liquidated'
+                                    'text-green-600 bg-green-100 px-2 py-1 rounded-lg': list.status === 'Liquidated',
+                                    'text-orange-600 bg-orange-100 px-2 py-1 rounded-lg': list.status === 'Unliquidated'
                                 }"
-                                class="inline-block">
+                                x-text="list.status">
                             </span>
                         </td>
+
+
 
 
                         <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100">

@@ -25,7 +25,7 @@ class CashAdvanceRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                'regex:/^[A-Za-z\s\-.]+$/',
+                'regex:/^[A-Za-zÑñ\s\-.]+$/',
                 Rule::unique('cash_advances')
                     ->ignore($this->id)
                     ->where(function ($query) {
