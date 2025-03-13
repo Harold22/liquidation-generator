@@ -53,7 +53,7 @@
                         </div>
                     </div>
                     <div x-data="{ tooltip: false }" class="relative flex items-center">
-                        <button @click="importedFilesTable = false, beneficiaryListTable = true; getFileDataPerFile(file.id), loading = true"
+                        <button @click="importedFilesTable = false, beneficiaryListTable = true; getFileDataPerFile(file.id), loading = true, file_name = file.file_name"
                             @mouseenter="tooltip = true" 
                             @mouseleave="tooltip = false"
                             class="p-2 text-gray-600 hover:text-blue-600 focus:outline-none transition duration-200 ease-in-out">
