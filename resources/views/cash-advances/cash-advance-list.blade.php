@@ -46,27 +46,46 @@
             searchCashAdvance: null,
             perPage: 5,
             
-            async getCashAdvancesList(page = 1, perPage = this.perPage) {
-                this.loading = true; 
+            sortBy: null,
+            sortOrder: 'ASC',
+            filterBy: null,
 
+            async getCashAdvancesList(page = 1) {
+                this.loading = true;
                 try {
-                    const response = await axios.get(`/cash-advance/index`, {
-                        params: {
-                            page: page,
-                            perPage: perPage,
-                            search: this.searchCashAdvance
-                        }
-                    });
+                    const response = await fetch(`/cash-advance/index?page=${page}&perPage=${this.perPage}&sortBy=${this.sortBy}&sortOrder=${this.sortOrder}&filterBy=${this.filterBy}`);
+                    const data = await response.json();
 
-                    const data = response.data;
                     this.cashAdvancesList = data.data;
                     this.currentPage = data.current_page;
                     this.totalPages = data.last_page;
                 } catch (error) {
                     console.error("Error fetching cash advances:", error);
                 } finally {
-                    this.loading = false; 
+                    this.loading = false;
                 }
+            },
+
+            toggleSort(field) {
+                if (this.sortBy === field) {
+                    this.sortOrder = this.sortOrder === 'ASC' ? 'DESC' : 'ASC'; 
+                } else {
+                    this.sortBy = field;
+                    this.sortOrder = 'ASC';
+                }
+                this.getCashAdvancesList(1);
+            },
+
+            applyFilter(filter) {
+                this.filterBy = filter;
+                this.getCashAdvancesList(1);
+            },
+
+            resetFilters() {
+                this.sortBy = null;
+                this.sortOrder = 'ASC';
+                this.filterBy = null;
+                this.getCashAdvancesList(1);
             },
 
             changePage(page) {

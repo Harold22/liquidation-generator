@@ -1,51 +1,103 @@
 <section>
-    <div class="mt-2 flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-4">
-        <!-- Header Section -->
-        <div class="flex items-center">
-            <h2 class="text-xl font-semibold text-blue-500 dark:text-gray-200">
-                {{ __('Cash Advance List') }}
-            </h2>
-        </div>
+    <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
+        <!-- Header -->
+        <h2 class="text-xl font-semibold text-blue-500 dark:text-gray-200">
+            {{ __('Cash Advance List') }}
+        </h2>
 
-        <!-- Controls (Search + Buttons) -->
-        <div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+        <!-- Filter Label + Filters + Search + Buttons (All in One Row) -->
+        <div class="flex items-center gap-3 flex-wrap">
+            <!-- Filter Label -->
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
+                Filter:
+            </span>
+
+           <!-- Filter Buttons -->
+            <div class="flex flex-wrap gap-2">
+               <!-- Amount Sort Button -->
+                <button 
+                    @click="toggleSort('cash_advance_amount')" 
+                    class="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-lg shadow 
+                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Amount 
+                    <span 
+                        x-show="sortBy === 'cash_advance_amount'" 
+                        x-text="sortOrder === 'ASC' ? '↑' : '↓'" 
+                        class="text-green-500">
+                    </span>
+                </button>
+
+                <!-- Date Sort Button -->
+                <button 
+                    @click="toggleSort('cash_advance_date')" 
+                    class="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-lg shadow 
+                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Date 
+                    <span 
+                        x-show="sortBy === 'cash_advance_date'" 
+                        x-text="sortOrder === 'ASC' ? '↑' : '↓'" 
+                        class="text-green-500">
+                    </span>
+                </button>
+
+                <!-- Filter Buttons -->
+                <button 
+                    @click="applyFilter('Liquidated')" 
+                    class="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-lg shadow 
+                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Liquidated
+                </button>
+                
+                <button 
+                    @click="applyFilter('Unliquidated')" 
+                    class="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-lg shadow 
+                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Unliquidated
+                </button>
+
+                <!-- All Button (Resets Filters & Sorting) -->
+                <button 
+                    @click="resetFilters()" 
+                    class="flex items-center gap-2 px-3 py-1.5 text-sm border  rounded-lg shadow 
+                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    All
+                </button>
+            </div>
+
             <!-- Search Input -->
             <input 
                 type="text" 
                 placeholder="Search..." 
                 x-model="searchCashAdvance"
                 @input.debounce.500ms="getCashAdvancesList(1)"
-                class="px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 
-                    dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 w-full sm:w-auto"
+                class="px-4 py-1.5 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 
+                    dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 w-48"
             />
 
-            <!-- Add Button -->
-            <a href="{{ route('cash-advance.add') }}" 
-                class="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg shadow 
-                    hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 w-full sm:w-auto"
-            >
-                <!-- Custom Add Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="9"></circle>
-                    <path d="M12 8v8"></path>
-                    <path d="M8 12h8"></path>
-                </svg>
-                {{ __('Add') }}
-            </a>
+            <!-- Action Buttons (Add + Import) -->
+            <div class="flex gap-2">
+                <a href="{{ route('cash-advance.add') }}" 
+                    class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-green-600 rounded-lg shadow 
+                        hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <path d="M12 8v8"></path>
+                        <path d="M8 12h8"></path>
+                    </svg>
+                    {{ __('Add') }}
+                </a>
 
-            <!-- Import Button -->
-            <a href="{{ route('import-files') }}" 
-                class="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow 
-                    hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-full sm:w-auto"
-            >
-                <!-- Upload Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 16v4h16v-4"></path>
-                    <path d="M12 3v12"></path>
-                    <path d="M8 7l4-4 4 4"></path>
-                </svg>
-                {{ __('Import') }}
-            </a>
+                <a href="{{ route('import-files') }}" 
+                    class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg shadow 
+                        hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 16v4h16v-4"></path>
+                        <path d="M12 3v12"></path>
+                        <path d="M8 7l4-4 4 4"></path>
+                    </svg>
+                    {{ __('Import') }}
+                </a>
+            </div>
         </div>
     </div>
 

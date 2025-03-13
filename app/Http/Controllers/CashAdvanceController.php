@@ -72,11 +72,15 @@ class CashAdvanceController extends Controller
 
     public function index(Request $request)
     {   
-        $perPage = $request->input('perPage'); 
+        $perPage = $request->input('perPage', 5); 
+        $sortBy = $request->input('sortBy', 'cash_advance_date'); 
+        $sortOrder = $request->input('sortOrder', 'ASC'); 
+        $filterBy = $request->input('filterBy'); 
     
         $query = CashAdvance::query();
     
-        if ($request->has('search') && !empty($request->search)) {
+        // Search Functionality
+        if ($request->filled('search')) {
             $search = trim($request->search);
             $terms = explode(' ', $search); 
     
@@ -91,7 +95,20 @@ class CashAdvanceController extends Controller
             });
         }
     
-        $cash_advances = $query->orderBy('cash_advance_date', 'DESC')->paginate($perPage);
+        // Filtering by Liquidated or Unliquidated
+        if ($filterBy === 'Liquidated') {
+            $query->where('status', 'Liquidated');
+        } elseif ($filterBy === 'Unliquidated') {
+            $query->where('status', 'Unliquidated');
+        }
+    
+        // Sorting with Dynamic Order
+        $validSortColumns = ['cash_advance_amount', 'cash_advance_date'];
+        if (in_array($sortBy, $validSortColumns)) {
+            $query->orderBy($sortBy, $sortOrder);
+        }
+    
+        $cash_advances = $query->paginate($perPage);
     
         return response()->json($cash_advances);
     }

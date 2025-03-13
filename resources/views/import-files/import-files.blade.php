@@ -121,7 +121,7 @@
                                         placeholder="Search..." 
                                         x-model="searchFile"
                                         @input.debounce.500ms="getFileList(selectedSdo, 1)"
-                                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100"
+                                        class="px-4 py-1.5 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100"
                                     />
                                 </div>
                             </div>
@@ -137,7 +137,7 @@
                                 <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full md:w-auto">
                                     <!-- Button -->
                                     <button @click="handleClick"
-                                        class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-400 rounded-lg shadow-sm 
+                                        class="flex items-center justify-center gap-2 px-4 py-1.5 text-sm font-semibold text-gray-700 border border-gray-400 rounded-lg shadow-sm 
                                             hover:bg-blue-100 hover:border-blue-500 hover:text-blue-600 hover:shadow-md 
                                             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
                                             transition-all duration-200 ease-in-out active:scale-95 w-full sm:w-auto">
@@ -151,7 +151,7 @@
                                         placeholder="Search..." 
                                         x-model="searchQuery"
                                         @input.debounce.500ms="getFileDataPerFile(fileId, 1)"
-                                        class="px-4 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 
+                                        class="px-4 py-1.5 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 
                                             dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 w-full sm:w-auto"
                                     />
                                 </div>
