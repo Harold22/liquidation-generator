@@ -53,8 +53,8 @@
             async getCashAdvancesList(page = 1) {
                 this.loading = true;
                 try {
-                    const response = await fetch(`/cash-advance/index?page=${page}&perPage=${this.perPage}&sortBy=${this.sortBy}&sortOrder=${this.sortOrder}&filterBy=${this.filterBy}`);
-                    const data = await response.json();
+                    const response = await axios.get(`/cash-advance/index?page=${page}&perPage=${this.perPage}&sortBy=${this.sortBy}&sortOrder=${this.sortOrder}&filterBy=${this.filterBy}`);
+                    const data = await response.data;
 
                     this.cashAdvancesList = data.data;
                     this.currentPage = data.current_page;

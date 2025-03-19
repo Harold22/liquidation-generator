@@ -206,8 +206,8 @@
                 // START SA BENEFICIARIES
                 async getBeneficiariesPerMonth(year) {
                     try {
-                        const response = await fetch(`/dashboard/get-beneficiaries/${year}`);
-                        const data = await response.json();
+                        const response = await axios.get(`/dashboard/get-beneficiaries/${year}`);
+                        const data = await response.data;
 
                         this.beneficiaries = this.beneficiariesMonths(data);
                         this.beneficiariesChart();
@@ -262,8 +262,8 @@
                 // SUGOD SA CASH ADVANCE
                 async getCashAdvancePerMonth(year) {
                     try {
-                        const response = await fetch(`/dashboard/get-cash-advances/${year}`);
-                        const data = await response.json();
+                        const response = await axios.get(`/dashboard/get-cash-advances/${year}`);
+                        const data = await response.data;
 
                         this.cashAdvances = this.cashAdvanceMonths(data);
                         this.cashAdvanceChart();
@@ -319,8 +319,8 @@
                 // START SDO STATUS
                 async getSDOStatusPerYear(year) {
                     try {
-                        const response = await fetch(`/dashboard/get-sdo-status/${year}`);
-                        const data = await response.json();
+                        const response = await axios.get(`/dashboard/get-sdo-status/${year}`);
+                        const data = await response.data;
 
                         // Aggregate totals for the whole year
                         const totalLiquidated = data.reduce((sum, item) => sum + parseInt(item.liquidated || 0), 0);
@@ -373,8 +373,8 @@
 
                 async fetchTotalBeneficiaries(year) {
                     try {
-                        const response = await fetch(`/dashboard/get-total-beneficiaries/${year}`);
-                        const data = await response.json();
+                        const response = await axios.get(`/dashboard/get-total-beneficiaries/${year}`);
+                        const data = await response.data;
                         this.totalBeneficiaries = data.total_beneficiaries; // Update Alpine property
                     } catch (error) {
                         console.error("Error fetching total beneficiaries:", error);
@@ -387,8 +387,8 @@
 
                 async fetchTotalCashAdvances(year) {
                     try {
-                        const response = await fetch(`/dashboard/get-total-cash-advances/${year}`);
-                        const data = await response.json();
+                        const response = await axios.get(`/dashboard/get-total-cash-advances/${year}`);
+                        const data = await response.data;
                         this.totalCashAdvances = data.total_cash_advances;
                         this.totalLiquidatedCashAdvance = data.total_liquidated;
                         this.totalUnliquidatedCashAdvance = data.total_unliquidated;
@@ -405,8 +405,8 @@
 
                 async getCashAdvanceSummary(year) {
                     try {
-                        const response = await fetch(`/dashboard/cash-advances-summary/${year}`);
-                        const data = await response.json();
+                        const response = await axios.get(`/dashboard/cash-advances-summary/${year}`);
+                        const data = await response.data;
 
                         this.totalCashAdvancesNumber = data.total_cash_advances_number;
                         this.totalLiquidatedNumber = data.total_liquidated_number;
