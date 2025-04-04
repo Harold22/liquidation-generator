@@ -100,7 +100,7 @@
                             </template>
 
                             <template x-if="liquidationMode === 'Bundle'">
-                                <div class="w-full md:w-1/4" x-data="{ searchTo: '', filteredNamesTo: [] }" @click.away="filteredNamesTo = [], filteredData()">
+                                <div class="w-full md:w-1/4 relative" x-data="{ searchTo: '', filteredNamesTo: [] }" @click.away="filteredNamesTo = [], filteredData()">
                                     <label for="nameTo" class="block text-sm font-medium text-gray-700 mb-1">
                                         To (Names) <span class="text-red-500">*</span>
                                     </label>
@@ -345,7 +345,6 @@
                             uacs_code: details.uacs_code,
                             status: details.status,
                         };
-                        console.log('Mapped details:', this.mapped_cash_advance_details);
                     } else {
                         console.log('No cash advance details found.');
                     }
@@ -362,7 +361,6 @@
                 try {
                     const response = await axios.get(`/files/rcd/${this.cash_advance_id}`);
                     this.file_list = response.data; 
-                    console.log('file list ni', this.file_list);
                     
                     await this.getFileData(this.file_list);
                 } catch (error) {
@@ -388,7 +386,6 @@
                     });
 
                     this.file_data = sortedData;
-                    console.log(this.file_data);
                     this.filteredData();
                     this.getDates();
                     this.loading = false;
@@ -428,7 +425,6 @@
             filtered_file_data: [],
 
             filteredData() {
-                console.log();
                 if(this.liquidationMode === 'Overall'){
                     this.filtered_file_data = this.file_data;
                     this.nameFrom = '';
@@ -440,7 +436,7 @@
                     console.log('No file data available for filtering.');
                     return;
                 }
-
+           
                 if (!this.nameFrom && !this.nameTo) {
                     console.log('Showing all data since nameFrom or nameTo is empty.');
                     this.filtered_file_data = this.file_data;
@@ -450,8 +446,8 @@
                 let fromIndex = -1;
                 let toIndex = -1;
 
-                const nameFromId = parseInt(this.nameFrom);
-                const nameToId = parseInt(this.nameTo);
+                const nameFromId = this.nameFrom;
+                const nameToId = this.nameTo;
 
                 this.file_data.forEach((file, index) => {
                     if (file.id === nameFromId) fromIndex = index;
@@ -464,8 +460,6 @@
                     this.filtered_file_data = [];
                 }
                 this.getDates();
-
-                console.log('Filtered data:', this.filtered_file_data);
             },
 
             firstDate: '',
@@ -475,6 +469,10 @@
                 this.firstDate = '';
                 this.lastDate = '';
                 let dates = Object.values(this.filtered_file_data).flat().map(file => new Date(file.date_time_claimed));
+
+                if (dates.length === 0) {
+                    return;
+                }
 
                 dates.sort((a, b) => a - b);
 
