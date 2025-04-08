@@ -353,7 +353,8 @@
                     axios.post(`/files/delete/${id}`)
                         .then(response => {
                             this.file_list = this.file_list.filter(file => file.id !== id); 
-                            alert('File deleted successfully!');    
+                            alert('File deleted successfully!');  
+                            this.getAllFile(this.selectedSdo);   
                             this.loading = false;
                             this.deleteFileModal = false; 
                         })

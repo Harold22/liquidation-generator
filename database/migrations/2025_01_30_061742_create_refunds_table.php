@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('refunds', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->uuid('cash_advance_id'); 
+            $table->ulid('id')->primary();
+            $table->ulid('cash_advance_id'); 
             $table->foreign('cash_advance_id')->references('id')->on('cash_advances')->onDelete('cascade');
             $table->decimal('amount_refunded', 10, 2);
             $table->date('date_refunded');

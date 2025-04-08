@@ -27,6 +27,7 @@ class CashAdvanceController extends Controller
             DB::transaction(function () use ($request) {
                 $this->cashAdvanceService->createCashAdvance($request->validated());
             });
+           
 
             return redirect()->back()->with('message', 'Added Successfully');
         } catch (\Exception $e) {

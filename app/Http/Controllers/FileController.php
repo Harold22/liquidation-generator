@@ -52,7 +52,6 @@ class FileController extends Controller
             $chunk = [];
 
             $storedFile = File::create([
-                'id' => Str::uuid()->toString(), 
                 'file_name' => $fileName,
                 'cash_advance_id' => $request->input('cash_advance'),
                 'total_amount' => 0,
@@ -64,9 +63,8 @@ class FileController extends Controller
                 try {
                     $validatedRecord = $this->validateRecord($record);
                     $formattedDateTimeClaimed = $this->formatDateTimeClaimed($record['TIME_CLAIMED']);
-
                         $data = [
-                        'id' => Str::uuid()->toString(), 
+                        'id' => Str::ulid(),
                         'file_id' => $storedFile->id,
                         'control_number' => $validatedRecord['CONTROL_NUMBER'],
                         'lastname' => $validatedRecord['LASTNAME'],
@@ -113,7 +111,6 @@ class FileController extends Controller
             return back()->with('error', 'An error occurred. Please try again. ' . $e->getMessage());
         }
     }
-
 
     private function validateRecord(array $record)
     {

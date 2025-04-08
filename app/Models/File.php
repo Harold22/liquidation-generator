@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,18 +11,17 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class File extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity, HasUuids;
+    use HasFactory, SoftDeletes, LogsActivity;
 
     protected $keyType = 'string';
 
     public $incrementing = false;
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
         static::creating(function ($model) {
-            if (!$model->id) { 
-                $model->id = (string) Str::uuid();
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::ulid();
             }
         });
     }

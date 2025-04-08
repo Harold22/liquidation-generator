@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class FileData extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity, HasUuids;
+    use HasFactory, SoftDeletes, LogsActivity;
 
     protected $table = 'file_data';
     
@@ -19,8 +19,7 @@ class FileData extends Model
 
     public $incrementing = false;
     
-    protected $fillable = [
-        'id', 
+    protected $fillable = [ 
         'file_id',
         'control_number',
         'lastname',
@@ -35,19 +34,15 @@ class FileData extends Model
         'assistance_type',
     ];
 
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()->logFillable();
-
-    }
-
-    public function file()
-    {
-        return $this->belongsTo(File::class);
-    }
-
     protected static function booted()
     {
+        // Assign ULID if not set
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::ulid();
+            }
+        });
+
         // When a new record is created
         static::created(function ($fileData) {
             $fileData->updateTotals();
@@ -67,6 +62,17 @@ class FileData extends Model
         static::restored(function ($fileData) {
             $fileData->updateTotals();
         });
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logFillable();
+
+    }
+
+    public function file()
+    {
+        return $this->belongsTo(File::class);
     }
 
     public function updateTotals()
