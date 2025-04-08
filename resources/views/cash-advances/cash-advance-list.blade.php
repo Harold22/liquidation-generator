@@ -197,7 +197,7 @@
                 }
             },
 
-
+            
             init() {
                 this.getCashAdvancesList();
             }

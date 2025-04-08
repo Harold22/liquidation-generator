@@ -189,6 +189,10 @@
                 },
 
                 async handleLoadingCharts(year) {
+
+                    if(!year){
+                        return;
+                    }
                     this.loading = true; 
 
                     await Promise.all([
