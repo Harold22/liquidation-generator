@@ -53,7 +53,14 @@
             async getCashAdvancesList(page = 1) {
                 this.loading = true;
                 try {
-                    const response = await axios.get(`/cash-advance/index?page=${page}&perPage=${this.perPage}&sortBy=${this.sortBy}&sortOrder=${this.sortOrder}&filterBy=${this.filterBy}`);
+                    
+                    let url = `/cash-advance/index?page=${page}&perPage=${this.perPage}&sortBy=${this.sortBy}&sortOrder=${this.sortOrder}&filterBy=${this.filterBy}`;
+
+                    if (this.searchCashAdvance) {
+                        url += `&search=${encodeURIComponent(this.searchCashAdvance)}`;
+                    }
+
+                    const response = await axios.get(url);
                     const data = await response.data;
 
                     this.cashAdvancesList = data.data;
