@@ -84,7 +84,9 @@
                                             }
                                         "
                                         class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                                        placeholder="Type to search..." />
+                                        placeholder="Type to search..."
+                                        autocomplete="off"
+                                         />
 
 
                                     <ul class="absolute z-50 border border-gray-300 mt-1 rounded-lg shadow-md bg-white max-h-40 overflow-y-auto w-full"
@@ -115,7 +117,9 @@
                                             }
                                         "
                                         class="text-sm mt-1 block w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-                                        placeholder="Type to search..." />
+                                        placeholder="Type to search..." 
+                                        autocomplete="off"
+                                        />
 
                                     <ul class="absolute z-50 border border-gray-300 mt-1 rounded-lg shadow-md bg-white max-h-40 overflow-y-auto w-full"
                                         x-show="filteredNamesTo.length > 0">
