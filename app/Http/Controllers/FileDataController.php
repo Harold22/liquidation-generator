@@ -63,10 +63,10 @@ class FileDataController extends Controller
     {
         $validatedData = $request->validate([
             'id' => 'required|exists:file_data,id',
-            'firstname' => 'required|string|max:255',
-            'middlename' => 'nullable|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'extension_name' => 'nullable|string|max:50',
+            'firstname' => "required|string|max:255|regex:/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-.]+$/",
+            'middlename' => "nullable|string|max:255|regex:/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-.]+$/",
+            'lastname' => "required|string|max:255|regex:/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-.]+$/",
+            'extension_name' => "nullable|string|max:50|regex:/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-.]+$/",
             'assistance_type' => 'required|string|max:255',
             'amount' => 'sometimes|numeric|min:0',
         ]);
