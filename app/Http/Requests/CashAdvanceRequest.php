@@ -33,9 +33,9 @@ class CashAdvanceRequest extends FormRequest
                             ->where('cash_advance_date', $this->cash_advance_date);
                     }),
             ],
-            'position' => 'required|string|max:255',
-            'station' => 'required|string|max:255',
-            'check_number' => 'required|string|max:255',
+            'position' => 'required|string|max:255|regex:/^[A-Za-z0-9\-\.\/\s]+$/',
+            'station' => 'required|string|max:255|regex:/^[A-Za-z0-9\-\.\/\s]+$/',
+            'check_number' => 'required|string|max:255|regex:/^[A-Za-z0-9\-\.\/\s]+$/',
             'cash_advance_amount' => [
                 'required',
                 'numeric',

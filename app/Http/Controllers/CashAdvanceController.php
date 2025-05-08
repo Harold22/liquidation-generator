@@ -21,17 +21,18 @@ class CashAdvanceController extends Controller
      * Display a listing of the resource.
      */ 
 
+
     public function store(CashAdvanceRequest $request)
     {
         try {
             DB::transaction(function () use ($request) {
                 $this->cashAdvanceService->createCashAdvance($request->validated());
             });
-           
 
             return redirect()->back()->with('message', 'Added Successfully');
+
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Error! Please try again.');
+           return redirect()->back()->with('error', 'Error! Please try again.');
         }
     }
 
