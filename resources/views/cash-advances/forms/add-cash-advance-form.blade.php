@@ -68,7 +68,7 @@
                 <x-input-label for="special_disbursing_officer">
                     {{ __('Special Disbursing Officer') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <p class="text-red-500 text-sm mt-1" x-show="errors.special_disbursing_officer">
+                <p class="text-red-500 text-xs mt-1" x-show="errors.special_disbursing_officer">
                     <span class="underline cursor-help" x-text="errors.special_disbursing_officer"
                           :title="errors.special_disbursing_officer"></span>
                 </p>
@@ -81,7 +81,7 @@
                 <x-input-label for="position">
                     {{ __('Position') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <p class="text-red-500 text-sm mt-1" x-show="errors.position">
+                <p class="text-red-500 text-xs mt-1" x-show="errors.position">
                     <span class="underline cursor-help" x-text="errors.position" :title="errors.position"></span>
                 </p>
                 <x-text-input id="position" name="position" type="text" class="mt-1 block w-full" required
@@ -93,7 +93,7 @@
                 <x-input-label for="station">
                     {{ __('Station') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <p class="text-red-500 text-sm mt-1" x-show="errors.station">
+                <p class="text-red-500 text-xs mt-1" x-show="errors.station">
                     <span class="underline cursor-help" x-text="errors.station" :title="errors.station"></span>
                 </p>
                 <x-text-input id="station" name="station" type="text" class="mt-1 block w-full" required
@@ -105,7 +105,7 @@
                 <x-input-label for="check_number">
                     {{ __('Check Number') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <p class="text-red-500 text-sm mt-1" x-show="errors.check_number">
+                <p class="text-red-500 text-xs mt-1" x-show="errors.check_number">
                     <span class="underline cursor-help" x-text="errors.check_number" :title="errors.check_number"></span>
                 </p>
                 <x-text-input id="check_number" name="check_number" type="text" class="mt-1 block w-full" required
@@ -117,7 +117,7 @@
                 <x-input-label for="cash_advance_amount">
                     {{ __('Cash Advance Amount') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <p class="text-red-500 text-sm mt-1" x-show="errors.cash_amount">
+                <p class="text-red-500 text-xs mt-1" x-show="errors.cash_amount">
                     <span class="underline cursor-help" x-text="errors.cash_amount" :title="errors.cash_amount"></span>
                 </p>
                 <x-text-input id="cash_advance_amount" name="cash_advance_amount" type="number"
@@ -129,7 +129,7 @@
                 <x-input-label for="cash_advance_date">
                     {{ __('Cash Advance Date') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <p class="text-red-500 text-sm mt-1" x-show="errors.cash_date">
+                <p class="text-red-500 text-xs mt-1" x-show="errors.cash_date">
                     <span class="underline cursor-help" x-text="errors.cash_date" :title="errors.cash_date"></span>
                 </p>
                 <x-text-input id="cash_advance_date" name="cash_advance_date" type="date" class="mt-1 block w-full"
@@ -141,7 +141,7 @@
                 <x-input-label for="dv_number">
                     {{ __('DV Number') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <p class="text-red-500 text-sm mt-1" x-show="errors.dv_number">
+                <p class="text-red-500 text-xs mt-1" x-show="errors.dv_number">
                     <span class="underline cursor-help" x-text="errors.dv_number" :title="errors.dv_number"></span>
                 </p>
                 <x-text-input id="dv_number" name="dv_number" type="text" class="mt-1 block w-full" required
@@ -153,7 +153,7 @@
                 <x-input-label for="ors_burs_number">
                     {{ __('ORS/BURS Number') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <p class="text-red-500 text-sm mt-1" x-show="errors.ors_number">
+                <p class="text-red-500 text-xs mt-1" x-show="errors.ors_number">
                     <span class="underline cursor-help" x-text="errors.ors_number" :title="errors.ors_number"></span>
                 </p>
                 <x-text-input id="ors_burs_number" name="ors_burs_number" type="text" class="mt-1 block w-full"
@@ -165,7 +165,7 @@
                 <x-input-label for="responsibility_code">
                     {{ __('Responsibility Code') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <p class="text-red-500 text-sm mt-1" x-show="errors.resp_code">
+                <p class="text-red-500 text-sm xs-1" x-show="errors.resp_code">
                     <span class="underline cursor-help" x-text="errors.resp_code" :title="errors.resp_code"></span>
                 </p>
                 <x-text-input id="responsibility_code" name="responsibility_code" type="text"
@@ -177,7 +177,7 @@
                 <x-input-label for="uacs_code">
                     {{ __('UACS Object Code') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <p class="text-red-500 text-sm mt-1" x-show="errors.uacs_code">
+                <p class="text-red-500 text-xs   mt-1" x-show="errors.uacs_code">
                     <span class="underline cursor-help" x-text="errors.uacs_code" :title="errors.uacs_code"></span>
                 </p>
                 <x-text-input id="uacs_code" name="uacs_code" type="text" class="mt-1 block w-full" required
@@ -248,6 +248,7 @@ document.addEventListener('alpine:init', () => {
                 case 'station':
                 case 'check_number':
                     if (!val) {
+                        delete this.errors[field];
                         break;
                     }
                     if (!this.isValidString(val, codePattern)) {
