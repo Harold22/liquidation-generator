@@ -127,7 +127,11 @@
 
         <!-- Submit Button -->
         <div class="flex items-center gap-4 mt-4">
-            <x-primary-button class="text-sm px-4 py-2">{{ __('Update Cash Advance') }}</x-primary-button>
+            <x-primary-button
+                x-bind:disabled="Object.keys(errors).length > 0"
+                x-bind:class="Object.keys(errors).length > 0 ? 'opacity-50 cursor-not-allowed' : ''"
+                class="text-sm px-4 py-2">{{ __('Update Cash Advance') }}
+            </x-primary-button>
         </div>
     </div>
 </form>
