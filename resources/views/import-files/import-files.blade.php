@@ -163,8 +163,9 @@
             </div>
         </div>
     </div>
+</x-app-layout>
 
-    <script>
+<script>
          document.addEventListener('alpine:init', () => {
             Alpine.data('importFiles', () => ({
                 importedFilesTable: true, beneficiaryListTable: false, deleteFileModal: false,
@@ -414,12 +415,90 @@
                     this.updateFileModal = true;
 
                 },
-            
-                init() {
-                    this.getSdoList();
+
+                form: {
+                    firstname: '',
+                    middlename: '',
+                    lastname: '',
+                    extension_name: '',
+                    assistance_type: '',
+                    amount: '',
                 },
+                errors: {},
+
+                isValidString(value, pattern) {
+                    return pattern.test(value);
+                },
+
+                validateField(field) {
+                    const val = this.form[field];
+                    const namePattern = /^[A-Za-zÑñ\s\-.]+$/;
+                    const codePattern =  /^[A-Za-z0-9\-\.\/\s]+$/;
+                    const today = new Date().toISOString().split('T')[0];
+                    const maxAmount = 75000000;
+
+                    switch (field) {
+                        case 'firstname':
+                        case 'middlename':
+                        case 'lastname':
+                        case 'extension_name':
+                            if (!val) {
+                                delete this.errors[field];
+                                break;
+                            }
+                            if (!this.isValidString(val, namePattern)) {
+                                this.errors[field] = 'Invalid characters used.';
+                            } else if (val.length > 255) {
+                                this.errors[field] = 'Must not exceed 255 characters.';
+                            } else {
+                                delete this.errors[field];
+                            }
+                            break;
+
+                        case 'amount':
+                            if (!val) {
+                                delete this.errors.amount;
+                                break;
+                            }
+                            if (isNaN(val)) {
+                                this.errors.amount = 'Must be a valid number.';
+                            } else if (+val < 0.01) {
+                                this.errors.amount = 'Minimum is ₱0.01.';
+                            } else if (+val > maxAmount) {
+                                this.errors.amount = `Maximum is ₱${maxAmount.toLocaleString()}.`;
+                            } else {
+                                delete this.errors.amount;
+                            }
+                            break;
+
+                        case 'assistance_type':
+                            if (!val) {
+                                delete this.errors.assistance_type;
+                                break;
+                            }
+                            if (!this.isValidString(val, codePattern)) {
+                                this.errors.assistance_type = 'Invalid characters used.';
+                            } else if (val.length > 255) {
+                                this.errors.assistance_type = 'Must not exceed 255 characters.';
+                            } else {
+                                delete this.errors.assistance_type;
+                            }
+                            break;
+                    }
+                },
+
+                validateForm() {
+                    this.errors = {};
+                    for (const field in this.form) {
+                        this.validateField(field);
+                    }
+                    return Object.keys(this.errors).length === 0;
+                },
+                
+                    init() {
+                        this.getSdoList();
+                    },
             }));
         });
 
     </script>
-</x-app-layout>
