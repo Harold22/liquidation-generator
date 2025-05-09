@@ -63,12 +63,12 @@ class FileDataController extends Controller
     {
         $validatedData = $request->validate([
             'id' => 'required|exists:file_data,id',
-            'firstname' => "required|string|max:255|regex:/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-.]+$/",
-            'middlename' => "nullable|string|max:255|regex:/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-.]+$/",
-            'lastname' => "required|string|max:255|regex:/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-.]+$/",
-            'extension_name' => "nullable|string|max:50|regex:/^[A-Za-zÀ-ÖØ-öø-ÿ\s'-.]+$/",
-            'assistance_type' => 'required|string|max:255',
-            'amount' => 'sometimes|numeric|min:0',
+            'firstname' => "required|string|max:255|regex:/^[A-Za-zÑñ\s\-.]+$/",
+            'middlename' => "nullable|string|max:255|regex:/^[A-Za-zÑñ\s\-.]+$/",
+            'lastname' => "required|string|max:255|regex:/^[A-Za-zÑñ\s\-.]+$/",
+            'extension_name' => "nullable|string|max:50|regex:/^[A-Za-zÑñ\s\-.]+$/",
+            'assistance_type' => 'required|string|max:255|regex: /^[A-Za-z0-9\-\.\/\s]+$/',
+            'amount' => 'sometimes|numeric|min:0|max:10000',
         ]);
 
         $fileData = FileData::findOrFail($validatedData['id']);

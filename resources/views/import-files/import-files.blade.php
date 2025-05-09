@@ -435,7 +435,7 @@
                     const namePattern = /^[A-Za-zÑñ\s\-.]+$/;
                     const codePattern =  /^[A-Za-z0-9\-\.\/\s]+$/;
                     const today = new Date().toISOString().split('T')[0];
-                    const maxAmount = 75000000;
+                    const maxAmount = 10000;
 
                     switch (field) {
                         case 'firstname':
