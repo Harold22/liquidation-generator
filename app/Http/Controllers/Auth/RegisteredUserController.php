@@ -48,4 +48,23 @@ class RegisteredUserController extends Controller
 
         return redirect(RouteServiceProvider::HOME);
     }
+
+    public function index(Request $request)
+    {
+        $perPage = $request->input('perPage', 10);
+        $search = $request->input('search');
+    
+        $query = User::with('roles');
+    
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+    
+        $users = $query->paginate($perPage);
+    
+        return response()->json($users);
+    }
 }

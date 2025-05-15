@@ -5,16 +5,12 @@
             {{ __('Cash Advance List') }}
         </h2>
 
-        <!-- Filter Label + Filters + Search + Buttons (All in One Row) -->
         <div class="flex items-center gap-3 flex-wrap">
             <!-- Filter Label -->
             <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
                 Filter:
             </span>
-
-           <!-- Filter Buttons -->
             <div class="flex flex-wrap gap-2">
-               <!-- Amount Sort Button -->
                 <button 
                     @click="toggleSort('cash_advance_amount')" 
                     class="flex items-center gap-2 px-3 py-1.5 text-sm border rounded-lg shadow 
@@ -222,7 +218,7 @@
                                             <button @click="refundCashAdvanceModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
                                                     <path d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
+                                                </svg>  
                                             </button>
                                         </header>
                                         @include('cash-advances.forms.refund-cash-advance-form')

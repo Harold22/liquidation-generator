@@ -30,6 +30,12 @@
                     <x-nav-link :href="route('cash-advance.list')" :active="request()->routeIs('cash-advance.list')">
                         {{ __('List of Cash Advance') }}
                     </x-nav-link>
+                    @role('Admin')
+                        <x-nav-link :href="route('users')" :active="request()->routeIs('users')">
+                            {{ __('Users') }}
+                        </x-nav-link>
+                    @endrole
+
                 </div>
 
                 <!-- User Dropdown -->

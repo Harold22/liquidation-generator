@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Activitylog\Models\Activity;
@@ -45,6 +46,12 @@ Route::get('/liquidation-report/{id}', function () {
     return view('liquidation-report');
 })->middleware(['auth', 'verified'])->name('liquidation-report');
 
+Route::middleware(['auth', 'role:Admin'])->group(function () {
+    Route::get('/users', function () {
+        return view('users'); 
+    })->name('users');
+    Route::get('/getUsers', [RegisteredUserController::class, 'index']);
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
