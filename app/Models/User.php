@@ -23,6 +23,11 @@ class User extends Authenticatable
     protected $keyType = 'string';
 
     public $incrementing = false;
+
+    protected $cast = [
+        'email_verified_at' => 'datetime',
+        'is_active' => 'boolean',
+    ];
     protected static function booted()
     {
         static::creating(function ($model) {

@@ -8,7 +8,7 @@
     <div x-data="importFiles()" class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <!-- Card Container -->
-            <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6">
+            <div class="dark:bg-gray-800 shadow-sm sm:rounded-lg">
                 <!-- Loading Indicator -->
                 <div x-show="loading">
                     <x-spinner />
@@ -16,11 +16,10 @@
                 <!-- Error Messages -->
                 @include('error-messages.messages')
 
-                <!-- Content Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Separated Layout -->
+                <div class="flex flex-col lg:flex-row lg:items-start gap-6">
                     <!-- Left Section: Upload Form -->
-                    <div class="col-span-1 space-y-6 mt-4">
-                        <!-- Header for Left Section -->
+                    <div class="w-full lg:w-1/3 bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 space-y-6 self-start">
                         <h2 class="text-xl font-semibold text-blue-500 dark:text-gray-200">
                             {{ __('Upload File') }}
                         </h2>
@@ -59,6 +58,7 @@
                                 </div>
                             </div>
 
+                            <!-- Location -->
                             <div>
                                 <x-input-label for="location" class="text-sm">
                                     {{ __('Location') }}<span class="text-red-500">*</span>
@@ -74,7 +74,6 @@
                                 </select>
                             </div>
 
-                            
                             <!-- File Upload -->
                             <div>
                                 <x-input-label for="file" class="text-sm">
@@ -87,47 +86,45 @@
                                     accept=".csv" 
                                     class="block w-full mt-2 p-2 border-gray-300 dark:border-gray-700 dark:bg-gray-900 rounded-md text-sm focus:ring-blue-500 dark:focus:ring-blue-600" 
                                     required>
-                                    <x-primary-button class="mt-4">{{ __('Upload') }}</x-primary-button>
+                                <x-primary-button class="mt-4 w-full flex justify-center">{{ __('Upload') }}</x-primary-button>
                             </div>
                         </form>
                     </div>
 
                     <!-- Right Section: Imported Files -->
-                    <div class="col-span-2 space-y-4 lg:mt-4">
-                        <!-- Header for Right Section -->
+                    <div class="w-full lg:w-2/3 bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 space-y-4">
                         <h2 class="text-xl font-semibold text-blue-500 dark:text-gray-200">
                             {{ __('Imported Files') }}
                         </h2>
+
+                        <!-- Totals -->
                         <div class="space-y-2 md:space-y-0 md:flex md:justify-between md:gap-4">
-                            <!-- Left  -->
                             <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow w-full md:w-1/2">
                                 <p class="text-sm font-semibold">{{ __('Overall Total Imported Amount:') }}</p>
                                 <p class="text-lg text-green-600" x-text="'₱' + (file_list_total?.overall_total_amount || 0).toLocaleString()"></p>
                             </div>
-
-                            <!-- Right -->
                             <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow w-full md:w-1/2 mt-2 md:mt-0">
                                 <p class="text-sm font-semibold">{{ __('Overall Total Imported Beneficiaries:') }}</p>
                                 <p class="text-lg text-green-600" x-text="(file_list_total?.overall_total_beneficiaries || 0).toLocaleString()"></p>
                             </div>
                         </div> 
-                       
+
+                        <!-- File List Table -->
                         <div class="space-y-4" x-show="importedFilesTable">
                             <div class="flex justify-between items-center">
                                 <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100">List of Files</h2>
-                                <div class="flex items-center space-x-2">
-                                    <input 
-                                        type="text" 
-                                        placeholder="Search..." 
-                                        x-model="searchFile"
-                                        @input.debounce.500ms="getFileList(selectedSdo, 1)"
-                                        class="px-4 py-1.5 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100"
-                                    />
-                                </div>
+                                <input 
+                                    type="text" 
+                                    placeholder="Search..." 
+                                    x-model="searchFile"
+                                    @input.debounce.500ms="getFileList(selectedSdo, 1)"
+                                    class="px-4 py-1.5 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100"
+                                />
                             </div>
                             @include('import-files.imported-files-table')
                         </div>
 
+                        <!-- Beneficiary List Table -->
                         <div class="space-y-4" x-show="beneficiaryListTable">
                             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                                 <div class="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -135,7 +132,6 @@
                                     <span class="text-gray-600 italic text-sm" x-text="'File: ' + file_name"></span>
                                 </div>
                                 <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full md:w-auto">
-                                    <!-- Button -->
                                     <button @click="handleClick"
                                         class="flex items-center justify-center gap-2 px-4 py-1.5 text-sm font-semibold text-gray-700 border border-gray-400 rounded-lg shadow-sm 
                                             hover:bg-blue-100 hover:border-blue-500 hover:text-blue-600 hover:shadow-md 
@@ -164,6 +160,7 @@
         </div>
     </div>
 </x-app-layout>
+
 
 <script>
          document.addEventListener('alpine:init', () => {

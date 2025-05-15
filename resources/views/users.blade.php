@@ -5,50 +5,68 @@
         </h2>
     </x-slot>
 
-    <div x-data="users()" data-user-id="{{ auth()->id() ?? 'null' }}" class="py-8">
+    <div x-data="users()" class="py-8">
         <div x-show="loading">
             <x-spinner />
         </div> 
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row gap-6">
+            <div class="flex flex-col lg:flex-row lg:items-start gap-6">
                 <!-- User Registration Form -->
-                <div class="w-full lg:w-1/3 bg-white dark:bg-gray-700 p-6 rounded-lg shadow">
+                <div class="w-full lg:w-1/3 bg-white dark:bg-gray-700 p-6 rounded-lg shadow self-start">
                     <h3 class="text-lg font-semibold mb-4 text-blue-500">Register New User</h3>
-                    <form>
-                        <div class="mb-4">
-                            <x-input-label for="name">
-                                {{ __('Name') }} <span class="text-red-500">*</span>
-                            </x-input-label>
-                            <x-text-input type="text" x-model="newUser.name" required
-                                class="mt-1 block w-full"/>
+                    <form method="POST" action="{{ route('register.store') }}">
+                        @csrf
+                        @include('error-messages.messages')
+                         <!-- Name -->
+                        <div>
+                            <div class="flex">
+                                <x-input-label for="name" :value="__('Name')" />
+                                <span class="text-red-500">*</span>
+                            </div>
+                            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
                         </div>
-                        <div class="mb-4">
-                            <x-input-label for="email">
-                                {{ __('Email') }} <span class="text-red-500">*</span>
-                            </x-input-label>
-                            <x-text-input type="email" x-model="newUser.email" required
-                                class="mt-1 block w-full"/>
+
+                        <!-- Email Address -->
+                        <div class="mt-4">
+                            <div class="flex">
+                                <x-input-label for="email" :value="__('Email')" />
+                                <span class="text-red-500">*</span>
+                            </div>
+                            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
                         </div>
-                        <div class="mb-4">
-                            <x-input-label for="password">
-                                {{ __('Password') }} <span class="text-red-500">*</span>
-                            </x-input-label>
-                            <x-text-input type="password" x-model="newUser.password" required
-                                class="mt-1 block w-full"/>
+
+                        <!-- Password -->
+                        <div class="mt-4">
+                            <div class="flex">
+                                <x-input-label for="password" :value="__('Password')" />
+                                <span class="text-red-500">*</span>
+                            </div>
+
+                            <x-text-input id="password" class="block mt-1 w-full"
+                                            type="password"
+                                            name="password"
+                                            required />
                         </div>
-                        <div class="mb-4">
-                            <x-input-label for="confirm_password">
-                                {{ __('Confirm Password') }} <span class="text-red-500">*</span>
-                            </x-input-label>
-                            <x-text-input type="password" x-model="newUser.password_confirmation" required
-                                class="mt-1 block w-full"/>
+
+                        <!-- Confirm Password -->
+                        <div class="mt-4">
+                            <div class="flex">
+                                <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                                <span class="text-red-500">*</span>
+                            </div>
+
+                            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                                            type="password"
+                                            name="password_confirmation" required/>
                         </div>
-                        <x-primary-button 
-                            type="submit"
-                            class="w-full flex justify-center">
-                            Register
-                        </x-primary-button>
+
+                        <div class="flex items-center justify-end mt-4">
+
+                            <x-primary-button class="w-full flex justify-center">
+                                {{ __('Register') }}
+                            </x-primary-button>
+                        </div>
                     </form>
                 </div>
 
@@ -87,7 +105,7 @@
                                                 <span class="inline-block bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded" x-text="role.name"></span>
                                             </template>
                                         </td>
-                                        <td class="px-4 py-2">Activated</td>
+                                        <td :class="user.is_active ? 'text-green-500' : 'text-red-500'" class="px-4 py-2" x-text="user.is_active ? 'Activated' : 'Not Activated'"></td>
                                         <td class="px-4 py-2">
                                             <div class="flex space-x-2">
                                                 <div x-data="{ tooltipEdit: false, tooltipDelete: false }" class="relative inline-flex space-x-2 text-left">
@@ -107,6 +125,19 @@
                                                             x-transition.opacity>
                                                             Update
                                                         </span>
+                                                    </div>
+                                                    <div x-show="updateUserModal" x-cloak x-transition.opacity class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-20">
+                                                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                                                            <header class="flex justify-between items-center">
+                                                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update User</h2>
+                                                                <button @click="updateUserModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                                                                        <path d="M6 18L18 6M6 6l12 12" />
+                                                                    </svg>
+                                                                </button>
+                                                            </header>
+                                                            @include('users.update-user-form')
+                                                        </div>
                                                     </div>
 
                                                     <!-- Delete Button -->
@@ -128,6 +159,20 @@
                                                             x-transition.opacity>
                                                             Delete
                                                         </span>
+                                                    </div>
+                                                    <!-- Delete Confirmation Modal -->
+                                                    <div x-show="deleteUserModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-20">
+                                                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
+                                                            <header class="flex justify-between items-center">
+                                                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Confirm Deletion</h2>
+                                                                <button @click="deleteUserModal = false" 
+                                                                    class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                                                                        <path d="M6 18L18 6M6 6l12 12" />
+                                                                    </svg>
+                                                                </button>
+                                                            </header>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -176,23 +221,15 @@
 <script>
 document.addEventListener('alpine:init', () => {
     Alpine.data('users', () => ({
-        userId:  null,
         loading: false,
         users: [],
         userCurrentPage: 1,
         userTotalPages: 1,
         perPageUser: 5,
         searchUser: '',
-        newUser: {
-            name: '',
-            email: '',
-            password: '',
-            password_confirmation: ''
-        },
 
         init() {
             this.getUsers();
-            console.log('Authenticated ID:', this.userId);
         },
 
         async getUsers() {
@@ -228,33 +265,27 @@ document.addEventListener('alpine:init', () => {
         },
 
         editUser(user) {
-            alert(`Edit user: ${user.name}`);
+            
+        },
+        updateUserModal: false,
+        selectedUser: [],
+        editUser(user){
+            this.selectedUser = { ...user };
+            this.updateUserModal = true;
+            
         },
 
+        deleteUserModal: false,
         async deleteUser(id) {
-            if (!confirm("Are you sure you want to delete this user?")) return;
+            deleteUserModal = true;
             try {
                 await axios.delete(`/users/${id}`);
                 this.getUsers();
             } catch (error) {
                 console.error('Error deleting user:', error);
-                alert("Failed to delete user.");
+                
             }
-        },
-
-        async registerUser() {
-            this.loading = true;
-            try {
-                await axios.post('/register', this.newUser);
-                alert('User registered successfully!');
-                this.resetForm();
-                this.getUsers();
-            } catch (error) {
-                console.error('Error registering user:', error);
-                alert('Failed to register user.');
-            } finally {
-                this.loading = false;
-            }
+            
         },
 
         resetForm() {

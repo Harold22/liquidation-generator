@@ -28,11 +28,11 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): mixed
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -42,26 +42,31 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $user->assignRole('User');
         event(new Registered($user));
 
-        Auth::login($user);
+        if (Auth::check()) {
+            return redirect()->route('users')->with('message', 'User registered successfully, Wait for activation.');
+        } 
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('register')->with('message', 'User registered successfully, Wait for activation.');
+
     }
 
     public function index(Request $request)
     {
         $perPage = $request->input('perPage', 10);
-        $search = $request->input('search');
+        $search = $request->input('search', '');
+        $authUserId = auth()->id(); 
     
-        $query = User::with('roles');
-    
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+        $query = User::with('roles')
+            ->where('id', '!=', $authUserId) 
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($sub) use ($search) {
+                    $sub->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
             });
-        }
     
         $users = $query->paginate($perPage);
     
