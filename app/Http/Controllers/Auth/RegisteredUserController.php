@@ -80,20 +80,34 @@ class RegisteredUserController extends Controller
             'is_active' => 'required|boolean',
             'role' => 'required|in:admin,user',
         ]);
-
+    
         $user = User::findOrFail($request->id);
-
+    
         if (auth()->id() === $user->id && $request->role !== $user->getRoleNames()->first()) {
             return back()->withErrors(['You cannot change your own role.']);
         }
-
-        $user->is_active = $request->is_active;
-        $user->save();
-
-        $user->syncRoles([$request->role]);
-
-        return back()->with('message', 'User status and role updated successfully.');
+    
+        $updated = false;
+    
+        if ((int) $user->is_active !== (int) $request->is_active) {
+            $user->is_active = $request->is_active;
+            $updated = true;
+        }
+    
+        $currentRole = strtolower($user->getRoleNames()->first() ?? '');
+        if ($currentRole !== strtolower($request->role)) {
+            $user->syncRoles([$request->role]);
+            $updated = true;
+        }
+    
+        if ($updated) {
+            $user->save();
+            return back()->with('message', 'User status and role updated successfully.');
+        }
+    
+        return back()->with('message', 'No changes detected.');
     }
+    
     public function destroy($id)
     {
         if (auth()->id() === $id) {

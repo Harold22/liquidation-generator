@@ -9,7 +9,7 @@
         <div x-show="loading">
             <x-spinner />
         </div> 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8"> 
         @include('error-messages.messages')
             <div class="flex flex-col lg:flex-row lg:items-start gap-6">
                 <!-- User Registration Form -->
