@@ -4,13 +4,13 @@
             {{ __('User Management') }}
         </h2>
     </x-slot>
-    @include('error-messages.messages')
 
     <div x-data="users()" class="py-8">
         <div x-show="loading">
             <x-spinner />
         </div> 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        @include('error-messages.messages')
             <div class="flex flex-col lg:flex-row lg:items-start gap-6">
                 <!-- User Registration Form -->
                 <div class="w-full lg:w-1/3 bg-white dark:bg-gray-700 p-6 rounded-lg shadow self-start">
@@ -277,7 +277,7 @@ document.addEventListener('alpine:init', () => {
             this.selectedUser = {
                 id: user.id,
                 name: user.name,
-                is_active: user.is_active === 1 ? '1' : '0',
+                is_active: user.is_active ? '1' : '0',
                 role: user.roles.length ? user.roles[0].name.toLowerCase() : 'user'
             };
             this.updateUserModal = true;

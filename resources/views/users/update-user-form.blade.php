@@ -20,8 +20,8 @@
                 name="is_active"
                 x-model="selectedUser.is_active"
                 class="block w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm">
-                <option value="1">Activated</option>
-                <option value="0">Not Activated</option>
+                <option :value="1">Activated</option>
+                <option :value="0">Not Activated</option>
             </select>
         </div>
 
