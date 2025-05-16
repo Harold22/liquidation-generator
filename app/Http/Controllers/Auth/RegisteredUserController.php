@@ -72,4 +72,37 @@ class RegisteredUserController extends Controller
     
         return response()->json($users);
     }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:users,id',
+            'is_active' => 'required|boolean',
+            'role' => 'required|in:admin,user',
+        ]);
+
+        $user = User::findOrFail($request->id);
+
+        if (auth()->id() === $user->id && $request->role !== $user->getRoleNames()->first()) {
+            return back()->withErrors(['You cannot change your own role.']);
+        }
+
+        $user->is_active = $request->is_active;
+        $user->save();
+
+        $user->syncRoles([$request->role]);
+
+        return back()->with('message', 'User status and role updated successfully.');
+    }
+    public function destroy($id)
+    {
+        if (auth()->id() === $id) {
+            return response()->json(['message' => 'You cannot delete your own account.'], 403);
+        }
+
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully.'], 200);
+    }
 }

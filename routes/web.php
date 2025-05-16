@@ -34,7 +34,8 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     Route::view('/users', 'users')->name('users');
     Route::get('/getUsers', [RegisteredUserController::class, 'index']);
     Route::post('user', [RegisteredUserController::class, 'store'])->name('register.store');
-    Route::post('user/id', [RegisteredUserController::class, 'delete']);
+    Route::delete('user/delete/{id}', [RegisteredUserController::class, 'destroy']);
+    Route::post('/users/update', [RegisteredUserController::class, 'update'])->name('users.update.status');
 });
 
 // Active user routes

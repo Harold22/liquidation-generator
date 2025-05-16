@@ -4,12 +4,12 @@
             {{ __('User Management') }}
         </h2>
     </x-slot>
+    @include('error-messages.messages')
 
     <div x-data="users()" class="py-8">
         <div x-show="loading">
             <x-spinner />
         </div> 
-
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex flex-col lg:flex-row lg:items-start gap-6">
                 <!-- User Registration Form -->
@@ -17,7 +17,6 @@
                     <h3 class="text-lg font-semibold mb-4 text-blue-500">Register New User</h3>
                     <form method="POST" action="{{ route('register.store') }}">
                         @csrf
-                        @include('error-messages.messages')
                          <!-- Name -->
                         <div>
                             <div class="flex">
@@ -142,7 +141,7 @@
 
                                                     <!-- Delete Button -->
                                                     <div class="relative">
-                                                        <button @click="deleteUser(user.id)"
+                                                        <button @click="confirmDeleteUser(user)"
                                                             @mouseenter="tooltipDelete = true" 
                                                             @mouseleave="tooltipDelete = false" 
                                                             class="p-2 text-gray-600 hover:text-red-600 focus:outline-none transition duration-200 ease-in-out">
@@ -163,7 +162,7 @@
                                                     <!-- Delete Confirmation Modal -->
                                                     <div x-show="deleteUserModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-20">
                                                         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
-                                                            <header class="flex justify-between items-center">
+                                                            <header class="flex justify-between items-center mb-4">
                                                                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Confirm Deletion</h2>
                                                                 <button @click="deleteUserModal = false" 
                                                                     class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
@@ -172,8 +171,16 @@
                                                                     </svg>
                                                                 </button>
                                                             </header>
+                                                            <p class="text-gray-600 dark:text-gray-300 mb-4">
+                                                                Are you sure you want to delete user <strong x-text="userToDelete?.name"></strong>?
+                                                            </p>
+                                                            <div class="flex justify-end space-x-3">
+                                                                <button @click="deleteUserModal = false" class="px-4 py-2 bg-gray-200 rounded text-sm">Cancel</button>
+                                                                <button @click="deleteConfirmed" class="px-4 py-2 bg-red-600 text-white rounded text-sm">Delete</button>
+                                                            </div>
                                                         </div>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </td>
@@ -264,38 +271,38 @@ document.addEventListener('alpine:init', () => {
             this.getUsers();
         },
 
-        editUser(user) {
-            
-        },
         updateUserModal: false,
         selectedUser: [],
-        editUser(user){
-            this.selectedUser = { ...user };
+        editUser(user) {
+            this.selectedUser = {
+                id: user.id,
+                name: user.name,
+                is_active: user.is_active === 1 ? '1' : '0',
+                role: user.roles.length ? user.roles[0].name.toLowerCase() : 'user'
+            };
             this.updateUserModal = true;
-            
         },
 
         deleteUserModal: false,
-        async deleteUser(id) {
-            deleteUserModal = true;
+        userToDelete: null,
+        confirmDeleteUser(user) {
+            this.userToDelete = user;
+            this.deleteUserModal = true;
+        },
+        async deleteConfirmed() {
+            console.log(this.userToDelete);
+            console.log('id', this.userToDelete.id);
+            if (!this.userToDelete) return;
             try {
-                await axios.delete(`/users/${id}`);
+                await axios.delete(`/user/delete/${this.userToDelete.id}`);
                 this.getUsers();
             } catch (error) {
                 console.error('Error deleting user:', error);
-                
+            } finally {
+                this.deleteUserModal = false;
+                this.userToDelete = null;
             }
-            
         },
-
-        resetForm() {
-            this.newUser = {
-                name: '',
-                email: '',
-                password: '',
-                password_confirmation: ''
-            };
-        }
     }));
 });
 </script>
