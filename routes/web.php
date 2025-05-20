@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,9 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     Route::post('user', [RegisteredUserController::class, 'store'])->name('register.store');
     Route::delete('user/delete/{id}', [RegisteredUserController::class, 'destroy']);
     Route::post('/users/update', [RegisteredUserController::class, 'update'])->name('users.update.status');
+    Route::get('/get-activity-logs', [ActivityLogController::class, 'index']);
+    Route::view('/activity-logs', 'activity-logs')->name('logs');
+
 });
 
 // Active user routes

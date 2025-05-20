@@ -162,7 +162,7 @@
                 id="perPage" 
                 x-model="perPage"
                 @change="updateImportedPerPage(perPage)"
-                class="px-3 py-2 pr-5  text-sm font-medium text-gray-700 rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 appearance-none">
+                class="px-6 py-2 text-sm font-medium text-gray-700 rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 appearance-none">
                 <option value="5" selected>5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>

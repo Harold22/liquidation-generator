@@ -209,7 +209,7 @@
                             <div class="flex items-center space-x-2">
                                 <label for="perPage" class="text-sm">Show</label>
                                 <select x-model="perPageUser" @change="updateUserPerPage(perPageUser)"
-                                    class="px-4 py-2 text-sm rounded">
+                                    class="px-6 py-2 text-sm rounded">
                                     <option value="5">5</option>
                                     <option value="10">10</option>
                                     <option value="20">20</option>

@@ -17,6 +17,7 @@
                 <x-nav-link :href="route('cash-advance.list')" :active="request()->routeIs('cash-advance.list')">List of Cash Advance</x-nav-link>
                 @role('Admin')
                     <x-nav-link :href="route('users')" :active="request()->routeIs('users')">Users</x-nav-link>
+                    <x-nav-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-nav-link>
                 @endrole
 
                 <!-- Dropdown -->
@@ -63,6 +64,7 @@
             <x-responsive-nav-link :href="route('cash-advance.list')" :active="request()->routeIs('cash-advance.list')">List of Cash Advance</x-responsive-nav-link>
             @role('Admin')
                 <x-responsive-nav-link :href="route('users')" :active="request()->routeIs('users')">Users</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-responsive-nav-link>
             @endrole
         </div>
 
