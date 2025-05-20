@@ -79,13 +79,13 @@
                                             </div>
                                            <!-- Modal Overlay -->
                                             <div x-show="properties_modal"
-                                                class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-20">
-                                                
-                                                 <div @click.away="properties_modal = false"
+                                                class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-20 px-4 sm:px-6">
+
+                                                <div @click.away="properties_modal = false"
                                                     class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
 
                                                     <!-- Sticky Header -->
-                                                    <header class="flex justify-between items-center px-6 py-4 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10">
+                                                    <header class="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10">
                                                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Activity Log Properties</h2>
                                                         <button @click="properties_modal = false"
                                                                 class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
@@ -99,11 +99,14 @@
                                                     <div class="px-6 overflow-y-auto">
                                                         @include('activity-log.activity-log-modal')
                                                     </div>
+
+                                                    <!-- Sticky Footer -->
                                                     <footer class="px-6 py-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky bottom-0 z-10">
                                                         <button @click="properties_modal = false" class="btn btn-primary">Close</button>
                                                     </footer>
                                                 </div>
                                             </div>
+
 
                                         </td>
                                     </tr>
