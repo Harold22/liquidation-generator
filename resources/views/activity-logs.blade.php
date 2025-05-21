@@ -40,78 +40,84 @@
                                     <th class="px-4 py-2">Actions</th>
                                 </tr>
                             </thead>
-                           <tbody>
+                            <tbody>
+                                <!-- When no activity logs exist -->
+                                <template x-if="activity_logs.length === 0">
+                                    <tr class="border-b">
+                                        <td colspan="6" class="px-4 py-2 text-red-500 font-semibold text-center">
+                                            No activity logs for today, but you can still search logs on previous dates.
+                                        </td>
+                                    </tr>
+                                </template>
+
+                                <!-- When activity logs exist -->
                                 <template x-for="log in activity_logs" :key="log.id">
                                     <tr class="border-b">
                                         <td class="px-4 py-2" x-text="log.causer?.name ?? 'System'"></td>
                                         <td class="px-4 py-2" x-text="log.causer?.email ?? 'System'"></td>
                                         <td class="px-4 py-2" x-text="log.event"></td>
-                                        <td class="px-4 py-2" 
+                                        <td class="px-4 py-2"
                                             x-text="
-                                                log.subject_type.split('\\').pop() === 'CashAdvance' ? 'Activity on Cash Advance' :
-                                                log.subject_type.split('\\').pop() === 'File' ? 'Activity on Imported File' :
-                                                log.subject_type.split('\\').pop() === 'FileData' ? 'Activity on File Data' :
-                                                log.subject_type.split('\\').pop() === 'Refund' ? 'Activity on Refund' :
-                                                log.subject_type.split('\\').pop() === 'User' ? 'Activity on User' :
-                                                '-'">
+                                                log.subject_type?.split('\\').pop() === 'CashAdvance' ? 'Activity on Cash Advance' :
+                                                log.subject_type?.split('\\').pop() === 'File' ? 'Activity on Imported File' :
+                                                log.subject_type?.split('\\').pop() === 'FileData' ? 'Activity on File Data' :
+                                                log.subject_type?.split('\\').pop() === 'Refund' ? 'Activity on Refund' :
+                                                log.subject_type?.split('\\').pop() === 'User' ? 'Activity on User' : '-'">
                                         </td>
                                         <td class="px-4 py-2" x-text="new Date(log.created_at).toLocaleString()"></td>
                                         <td class="px-4 py-2">
                                             <div x-data="{ tooltip: false }" class="relative flex items-center">
-                                                <button @click="showModal(log)" 
-                                                    @mouseenter="tooltip = true" 
-                                                    @mouseleave="tooltip = false" 
+                                                <button @click="showModal(log)"
+                                                    @mouseenter="tooltip = true"
+                                                    @mouseleave="tooltip = false"
                                                     class="p-2 text-gray-600 hover:text-green-500 focus:outline-none transition duration-200 ease-in-out">
-                                                    
-                                                 <!-- Eye Icon -->
+                                                    <!-- Eye Icon -->
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none">
                                                         <path d="M1.5 12C1.5 12 5.25 4.5 12 4.5C18.75 4.5 22.5 12 22.5 12C22.5 12 18.75 19.5 12 19.5C5.25 19.5 1.5 12 1.5 12Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                                         <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                                     </svg>
-
                                                 </button>
                                                 <!-- Tooltip -->
-                                                <span x-show="tooltip" 
+                                                <span x-show="tooltip"
                                                     class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md"
                                                     x-transition.opacity>
                                                     Details
                                                 </span>
                                             </div>
-                                           <!-- Modal Overlay -->
-                                            <div x-show="properties_modal"
-                                                class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-20 px-4 sm:px-6">
-
-                                                <div @click.away="properties_modal = false"
-                                                    class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
-
-                                                    <!-- Sticky Header -->
-                                                    <header class="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10">
-                                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Activity Log Properties</h2>
-                                                        <button @click="properties_modal = false"
-                                                                class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
-                                                            </svg>
-                                                        </button>
-                                                    </header>
-
-                                                    <!-- Scrollable Content -->
-                                                    <div class="px-6 overflow-y-auto">
-                                                        @include('activity-log.activity-log-modal')
-                                                    </div>
-
-                                                    <!-- Sticky Footer -->
-                                                    <footer class="px-6 py-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky bottom-0 z-10">
-                                                        <button @click="properties_modal = false" class="btn btn-primary">Close</button>
-                                                    </footer>
-                                                </div>
-                                            </div>
-
-
                                         </td>
                                     </tr>
                                 </template>
                             </tbody>
+
+                            <!-- Modal Overlay -->
+                            <div x-show="properties_modal"
+                                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4 sm:px-6">
+
+                                <div @click.away="properties_modal = false"
+                                    class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+
+                                    <!-- Sticky Header -->
+                                    <header class="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10">
+                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Activity Log Properties</h2>
+                                        <button @click="properties_modal = false"
+                                                class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                                            </svg>
+                                        </button>
+                                    </header>
+
+                                    <!-- Scrollable Content -->
+                                    <div class="px-6 overflow-y-auto">
+                                        @include('activity-log.activity-log-modal')
+                                    </div>
+
+                                    <!-- Sticky Footer -->
+                                    <footer class="px-6 py-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky bottom-0 z-10">
+                                        <button @click="properties_modal = false" class="btn btn-primary">Close</button>
+                                    </footer>
+                                </div>
+                            </div>
                         </table>
 
                         <!-- Pagination -->
