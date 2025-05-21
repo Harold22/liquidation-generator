@@ -46,7 +46,7 @@
     <body class="font-sans antialiased">
         <div x-data="rcd()" class="min-h-screen dark:bg-gray-900">
             <div class="p-6 text-sm">
-                <div class="max-w-4xl mx-auto">
+                <div class="max-w-7xl mx-auto">
                     <!-- filter -->
                     <div class="w-full no-print border border-gray-200 p-6 rounded-lg shadow-sm bg-white">
                         <div class="flex flex-col md:flex-row gap-6">

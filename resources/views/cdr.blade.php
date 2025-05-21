@@ -50,28 +50,37 @@
     <body class="font-sans antialiased">
         <div x-data="cdr()" class="min-h-screen bg-gray-100 dark:bg-gray-900">
             <div class="p-6 text-sm">
-                <div class="max-w-4xl mx-auto">
+                <div class="max-w-7xl mx-auto">
                     <!-- filtering -->
                     <div class="my-3  border rounded-lg p-3 no-print">
                         <p class="text-sm text-gray-500 mb-3">
                             Note: CDR is a monthly reporting.
                         </p>
-                        <div class="flex flex-col md:flex-row items-center gap-4">
-                            <label for="month" class="text-sm font-medium text-gray-700 w-full md:w-auto">
-                                Select Month:
-                            </label>
-                            <select id="month" name="month" x-model="selectedMonth" @change="handleSelectMonth(), loading = true"
-                                class="capitalize text-sm border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 w-full md:w-1/4">
-                                <option value="">Select Month</option>
-                                <template x-for="month in months" :key="month.month">
-                                    <option x-text="month.month" :value="month.month"></option>
-                                </template>
-                            </select>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-4 w-full">
+                                <label for="month" class="text-sm font-medium text-gray-700 w-full md:w-auto">
+                                    Select Month:
+                                </label>
+                                <select id="month" name="month" x-model="selectedMonth" @change="handleSelectMonth(), loading = true"
+                                    class="capitalize text-sm border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 w-full md:w-1/4">
+                                    <option value="">Select Month</option>
+                                    <template x-for="month in months" :key="month.month">
+                                        <option x-text="month.month" :value="month.month"></option>
+                                    </template>
+                                </select>
+                            </div>
+                            <div>
+                                <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 print:hidden">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 8h-2V6a2 2 0 00-2-2H9a2 2 0 00-2 2v2H5a2 2 0 00-2 2v8a2 2 0 002 2h14a2 2 0 002-2V10a2 2 0 00-2-2zm-6 0V6h-4v2H5v6h14V8h-4z" />
+                                    </svg>
+                                    <span class="text-sm font-medium">Print</span>
+                                </button>
+                            </div>
                         </div>
-
                     </div>
                 </div>
-                <div class="max-w-4xl mx-auto my-10">
+                <div class="max-w-7xl mx-auto my-10">
                     <!-- loading ni -->
                     <div x-show="loading">
                         <x-spinner />
