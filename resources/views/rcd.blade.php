@@ -202,8 +202,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div x-show="loading == false" class="pb-5 overflow-auto max-w-full">
-                            <table class="bg-white border border-gray-200 border-collapse mt-1 max-w-full">
+                        <div x-show="loading == false" class="pb-5 overflow-auto">
+                            <table class="bg-white border border-gray-200 border-collapse mt-1 w-full">
                                 <thead class="text-center text-xs">
                                     <tr>
                                         <th class="border border-black w-24">Date</th>
