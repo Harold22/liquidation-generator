@@ -91,7 +91,7 @@
 
                             <!-- Modal Overlay -->
                             <div x-show="properties_modal"
-                                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4 sm:px-6">
+                                x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
 
                                 <div @click.away="properties_modal = false"
                                     class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">

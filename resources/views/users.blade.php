@@ -10,7 +10,7 @@
             <x-spinner />
         </div> 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8"> 
-        @include('error-messages.messages')
+            @include('error-messages.messages')
             <div class="flex flex-col lg:flex-row lg:items-start gap-6">
                 <!-- User Registration Form -->
                 <div class="w-full lg:w-1/3 bg-white dark:bg-gray-700 p-6 rounded-lg shadow self-start">
@@ -146,27 +146,7 @@
                                                             Delete
                                                         </span>
                                                     </div>
-                                                    <!-- Delete Confirmation Modal -->
-                                                    <div x-show="deleteUserModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-20">
-                                                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
-                                                            <header class="flex justify-between items-center mb-4">
-                                                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Confirm Deletion</h2>
-                                                                <button @click="deleteUserModal = false" 
-                                                                    class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
-                                                                        <path d="M6 18L18 6M6 6l12 12" />
-                                                                    </svg>
-                                                                </button>
-                                                            </header>
-                                                            <p class="text-gray-600 dark:text-gray-300 mb-4">
-                                                                Are you sure you want to delete user <strong x-text="userToDelete?.name"></strong>?
-                                                            </p>
-                                                            <div class="flex justify-end space-x-3">
-                                                                <button @click="deleteUserModal = false" class="px-4 py-2 bg-gray-200 rounded text-sm">Cancel</button>
-                                                                <button @click="deleteConfirmed" class="px-4 py-2 bg-red-600 text-white rounded text-sm">Delete</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                   
 
                                                 </div>
                                             </div>
@@ -176,7 +156,7 @@
                                 </template>
                             </tbody>
                             <!-- modal for update -->
-                             <div x-show="updateUserModal" x-cloak x-transition.opacity class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-20">
+                             <div x-show="updateUserModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
                                 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
                                     <header class="flex justify-between items-center">
                                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update User</h2>
@@ -187,6 +167,27 @@
                                         </button>
                                     </header>
                                     @include('users.update-user-form')
+                                </div>
+                            </div>
+                              <!-- Delete Confirmation Modal -->
+                            <div x-show="deleteUserModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+                                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
+                                    <header class="flex justify-between items-center mb-4">
+                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Confirm Deletion</h2>
+                                        <button @click="deleteUserModal = false" 
+                                            class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                                                <path d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </header>
+                                    <p class="text-gray-600 dark:text-gray-300 mb-4">
+                                        Are you sure you want to delete user <strong x-text="userToDelete?.name"></strong>?
+                                    </p>
+                                    <div class="flex justify-end space-x-3">
+                                        <button @click="deleteUserModal = false" class="px-4 py-2 bg-gray-200 rounded text-sm">Cancel</button>
+                                        <button @click="deleteConfirmed" class="px-4 py-2 bg-red-600 text-white rounded text-sm">Delete</button>
+                                    </div>
                                 </div>
                             </div>
                         </table>
@@ -290,19 +291,22 @@ document.addEventListener('alpine:init', () => {
             this.userToDelete = user;
             this.deleteUserModal = true;
         },
-        async deleteConfirmed() {
-            console.log(this.userToDelete);
-            console.log('id', this.userToDelete.id);
+        deleteConfirmed() {
             if (!this.userToDelete) return;
-            try {
-                await axios.delete(`/user/delete/${this.userToDelete.id}`);
-                this.getUsers();
-            } catch (error) {
-                console.error('Error deleting user:', error);
-            } finally {
-                this.deleteUserModal = false;
-                this.userToDelete = null;
-            }
+
+            axios.delete(`/user/delete/${this.userToDelete.id}`)
+                .then(response => {
+                    alert('User deleted successfully!');
+                    this.getUsers();
+                })
+                .catch(error => {
+                    alert('Error Deletion of User');
+                    console.error('Error deleting user:', error);
+                })
+                .finally(() => {
+                    this.deleteUserModal = false;
+                    this.userToDelete = null;
+                });
         },
     }));
 });

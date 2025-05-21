@@ -200,9 +200,6 @@
                 this.getCashAdvancesList();
             },
 
-
-
-
         form: {
             position: '',
             station: '',
