@@ -266,12 +266,10 @@
                         if (this.searchFile?.trim()) {
                             params.search = this.searchFile;
                         }
-                        console.log('seach',this.searchFile);
 
                         const response = await axios.get(`/files/index/${this.selectedSdo}`, { params });
 
                         this.file_list = response.data.data;
-                        console.log("file list:", this.file_list);
                         this.currentPage = response.data.current_page;
                         this.totalPages = response.data.last_page;
                     } catch (error) {
