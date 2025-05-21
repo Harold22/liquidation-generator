@@ -1,4 +1,4 @@
-<div class="w-full overflow-x-auto px-4">
+<div class="w-full overflow-x-auto">
     <table class="min-w-full text-sm text-left text-gray-500 dark:text-gray-300 border rounded-lg">
         <thead class="bg-gray-100 dark:bg-gray-600">
             <tr class="border">
@@ -116,7 +116,7 @@
     </div>
 
     <!-- Update File Modal -->
-    <div x-show="updateFileModal" x-cloak x-transition class="fixed top-0 left-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+    <div x-show="updateFileModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
             <header class="flex justify-between items-center">
                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Edit Location</h2>
@@ -131,7 +131,7 @@
     </div>
 
     <!-- Delete File Modal -->
-    <div x-show="deleteFileModal" x-cloak x-transition class="fixed top-0 left-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+    <div x-show="deleteFileModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md shadow-lg">
             <header class="flex justify-between items-center">
                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Confirm Deletion</h2>

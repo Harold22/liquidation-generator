@@ -8,7 +8,7 @@
     <div x-data="importFiles()" class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <!-- Card Container -->
-            <div class="dark:bg-gray-800 shadow-sm sm:rounded-lg">
+            <div class="dark:bg-gray-800  sm:rounded-lg">
                 <!-- Loading Indicator -->
                 <div x-show="loading">
                     <x-spinner />
@@ -384,11 +384,23 @@
                     } 
                 },
 
-                deleteBeneficiary(id){
-                    this.loading = true;
-                    axios.post(`/data/delete/${id}`)
+                deletion_bene_id: null,
+                selectedBeneToDelete: [],
+                deleteBene(beneficiary) {
+                    this.selectedBeneToDelete = { ...beneficiary };
+                    if (!beneficiary.id) return;
+                    this.deletion_bene_id = beneficiary.id;
+                    this.deleteBeneficiaryModal = true;
+                },
+                cancelBeneDeletion(){
+                    this.deletion_bene_id = null;
+                    this.deleteBeneficiaryModal = false;
+                },
+
+                confirmedBeneDeletion(){
+                    axios.post(`/data/delete/${this.deletion_bene_id}`)
                     .then(response => {
-                        this.beneficiaryList = this.beneficiaryList.filter(beneficiary => beneficiary.id !== id); 
+                        this.beneficiaryList = this.beneficiaryList.filter(beneficiary => beneficiary.id !== this.deletion_bene_id); 
                         alert('Beneficiary deleted successfully!');  
                         this.getAllFile(this.selectedSdo); 
                     })
