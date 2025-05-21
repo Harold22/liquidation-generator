@@ -346,21 +346,29 @@
                     this.getFileDataPerFile(this.fileId, 1, this.perPageBene); 
                 },
 
+                deletion_file_id: null,
                 deleteFile(id) {
-                    this.loading = true;
-                    axios.post(`/files/delete/${id}`)
+                    if (!id) return;
+                    this.deletion_file_id = id;
+                    this.deleteFileModal = true;
+                },
+                confirmedFileDeletion() {
+                    axios.post(`/files/delete/${this.deletion_file_id}`)
                         .then(response => {
-                            this.file_list = this.file_list.filter(file => file.id !== id); 
-                            alert('File deleted successfully!');  
-                            this.getAllFile(this.selectedSdo);   
-                            this.loading = false;
-                            this.deleteFileModal = false; 
+                            this.file_list = this.file_list.filter(file => file.id !== this.deletion_file_id);
+                            alert('File deleted successfully!');
+                            this.getAllFile(this.selectedSdo);
+                            this.deleteFileModal = false;
+                            this.deletion_file_id = null;
                         })
                         .catch(error => {
-                            this.loading = false;
                             console.error("Error deleting file:", error);
                             alert('Error deleting file!');
                         });
+                },
+                cancelFileDeletion(){
+                    this.deletion_file_id = null;
+                    this.deleteFileModal = false;
                 },
 
                 async getAllFile(selectedSdo)
@@ -492,9 +500,9 @@
                     return Object.keys(this.errors).length === 0;
                 },
                 
-                    init() {
-                        this.getSdoList();
-                    },
+                init() {
+                    this.getSdoList();
+                },
             }));
         });
 
