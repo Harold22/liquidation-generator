@@ -101,8 +101,8 @@
 
     <!-- Loading Indicator -->
     <div x-show="loading">
-            <x-spinner />
-        </div>
+        <x-spinner />
+    </div>
     <div class="mt-4">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-100 dark:bg-gray-900">
@@ -211,19 +211,6 @@
                                         Refund
                                     </span>
                                 </div>
-                                <div x-show="refundCashAdvanceModal && loading == false" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-20">
-                                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
-                                        <header class="flex justify-between items-center">
-                                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cash Advance Refund</h2>
-                                            <button @click="refundCashAdvanceModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
-                                                    <path d="M6 18L18 6M6 6l12 12" />
-                                                </svg>  
-                                            </button>
-                                        </header>
-                                        @include('cash-advances.forms.refund-cash-advance-form')
-                                    </div>
-                                </div>
                                 <!-- Update Button with Tooltip -->
                                 <div x-data="{ tooltip: false }" class="relative flex items-center">
                                     <button @click="updateModalData(list)" 
@@ -244,21 +231,6 @@
                                         Update
                                     </span>
                                 </div>
-
-                                <div x-show="updateCashAdvanceModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-20">
-                                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
-                                        <header class="flex justify-between items-center">
-                                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update Cash Advance</h2>
-                                            <button @click="updateCashAdvanceModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
-                                                    <path d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        </header>
-                                        @include('cash-advances.forms.update-cash-advance-form')
-                                    </div>
-                                </div>
-                            
                                 <!-- Delete Button with Tooltip -->
                                 <div x-data="{ tooltip: false }" class="relative flex items-center">
                                     <button @click="deleteModalData(list)" 
@@ -283,22 +255,6 @@
                                         Delete
                                     </span>
                                 </div>
-
-                                <!-- Delete Confirmation Modal -->
-                                <div x-show="deleteCashAdvanceModal" class="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-20">
-                                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
-                                        <header class="flex justify-between items-center">
-                                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Confirm Deletion</h2>
-                                            <button @click="deleteCashAdvanceModal = false" 
-                                                class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
-                                                    <path d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        </header>
-                                        @include('cash-advances.forms.delete-cash-advance-form')
-                                    </div>
-                                </div>
                             </div>
                         </td>
                     </tr>
@@ -307,51 +263,96 @@
         </table>
 
             <!-- Pagination -->
-            <div class="flex items-center justify-center mt-6 space-x-4 mb-4">
-                <button 
-                    @click="changePage(currentPage - 1)" 
-                    :disabled="currentPage === 1" 
-                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
-                    &laquo; Previous
-                </button>
+        <div class="flex items-center justify-center mt-6 space-x-4 mb-4">
+            <button 
+                @click="changePage(currentPage - 1)" 
+                :disabled="currentPage === 1" 
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
+                &laquo; Previous
+            </button>
 
-                <!-- Page Indicator -->
-                <span class="text-sm text-gray-600">
-                    Page <span x-text="currentPage"></span> of <span x-text="totalPages"></span>
-                </span>
+            <!-- Page Indicator -->
+            <span class="text-sm text-gray-600">
+                Page <span x-text="currentPage"></span> of <span x-text="totalPages"></span>
+            </span>
 
-                <!-- Next Button -->
-                <button 
-                    @click="changePage(currentPage + 1)" 
-                    :disabled="currentPage === totalPages" 
-                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
-                    Next &raquo;
-                </button>
+            <!-- Next Button -->
+            <button 
+                @click="changePage(currentPage + 1)" 
+                :disabled="currentPage === totalPages" 
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed">
+                Next &raquo;
+            </button>
 
-                <!-- Items per Page Dropdown -->
-                <div class="flex items-center space-x-2">
-                    <label for="perPage" class="text-sm font-medium text-gray-700 dark:text-gray-300">Show</label>
-                    <div class="relative">
-                        <select 
-                            id="perPage" 
-                            x-model="perPage"
-                            @change="updatePerPage(perPage)"
-                            class="px-6 py-2 text-sm font-medium text-gray-700 rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 appearance-none">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                        </select>
-                        <!-- Custom Dropdown Arrow -->
-                        <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
+            <!-- Items per Page Dropdown -->
+            <div class="flex items-center space-x-2">
+                <label for="perPage" class="text-sm font-medium text-gray-700 dark:text-gray-300">Show</label>
+                <div class="relative">
+                    <select 
+                        id="perPage" 
+                        x-model="perPage"
+                        @change="updatePerPage(perPage)"
+                        class="px-6 py-2 text-sm font-medium text-gray-700 rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 appearance-none">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                    <!-- Custom Dropdown Arrow -->
+                    <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">entries</span>
                 </div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">entries</span>
             </div>
+        </div>
+        <!-- Refund Modal -->
+        <div x-show="refundCashAdvanceModal && loading == false" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                <header class="flex justify-between items-center">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cash Advance Refund</h2>
+                    <button @click="refundCashAdvanceModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                            <path d="M6 18L18 6M6 6l12 12" />
+                        </svg>  
+                    </button>
+                </header>
+                @include('cash-advances.forms.refund-cash-advance-form')
+            </div>
+        </div>
+
+        <!-- Update cash advance modal -->
+         <div x-show="updateCashAdvanceModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                <header class="flex justify-between items-center">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update Cash Advance</h2>
+                    <button @click="updateCashAdvanceModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                            <path d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </header>
+                @include('cash-advances.forms.update-cash-advance-form')
+            </div>
+        </div>
+        <!-- Delete Cash advance modal -->
+        <div x-show="deleteCashAdvanceModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
+                <header class="flex justify-between items-center">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Confirm Deletion</h2>
+                    <button @click="deleteCashAdvanceModal = false" 
+                        class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                            <path d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </header>
+                @include('cash-advances.forms.delete-cash-advance-form')
+            </div>
+        </div>                
+
         </div>
     </div>
 </section>
