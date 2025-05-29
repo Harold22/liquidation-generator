@@ -50,13 +50,13 @@
         </div>
         <div class="mt-4 flex items-center justify-center">
             {!! NoCaptcha::display() !!}
-            @error('g-recaptcha-response')
+        </div>
+        <div class="mt-4 flex items-center justify-center">
+             @error('g-recaptcha-response')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
         </div>
-
-
-
+        
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
