@@ -48,6 +48,13 @@
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
+        <div class="mt-4 flex items-center justify-center">
+            {!! NoCaptcha::display() !!}
+            @error('g-recaptcha-response')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
+
 
 
         <div class="flex items-center justify-end mt-4">
@@ -62,6 +69,8 @@
             </x-primary-button>
         </div>
     </form>
+    {!! NoCaptcha::renderJs() !!}
+
 
     <!-- Register Button -->
     <div class="mt-6 text-center">
