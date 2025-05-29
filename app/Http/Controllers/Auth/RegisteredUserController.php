@@ -34,6 +34,7 @@ class RegisteredUserController extends Controller
         $request->validate([
         'name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-zÑñ\s\-.]+$/'],
         'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+        'g-recaptcha-response' => ['required', 'captcha'],
         'password' => [
             'required',
             'confirmed',

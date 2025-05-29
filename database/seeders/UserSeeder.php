@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
         $user = User::create([
             'name' => 'Test',
             'email' => 'test@gmail.com',
-            'password' => Hash::make('dswd12345'),
+            'password' => Hash::make('Dswd@12345'),
             'is_active' => true,
         ]);
 

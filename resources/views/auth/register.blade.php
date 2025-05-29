@@ -95,7 +95,9 @@
             </div>
         </div>
 
-
+        <div class="mt-4 flex items-center justify-center">
+            {!! NoCaptcha::display() !!}
+        </div>
         <div class="flex items-center justify-end mt-4">
             @guest
                 <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
@@ -108,4 +110,5 @@
             </x-primary-button>
         </div>
     </form>
+     {!! NoCaptcha::renderJs() !!}
 </x-guest-layout>
