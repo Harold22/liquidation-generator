@@ -39,6 +39,7 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     Route::post('/users/update', [RegisteredUserController::class, 'update'])->name('users.update.status');
     Route::get('/get-activity-logs', [ActivityLogController::class, 'index']);
     Route::view('/activity-logs', 'activity-logs')->name('logs');
+    Route::post('/user/reset/{id}', [RegisteredUserController::class, 'resetPassword']);
 
 });
 

@@ -129,4 +129,15 @@ class RegisteredUserController extends Controller
 
         return response()->json(['message' => 'User deleted successfully.']);
     }
+
+    public function resetPassword($id)
+    {
+        $user = User::findOrFail($id);
+        
+        $user->update([
+            'password' => Hash::make('Dswd@12345'),
+        ]);
+
+        return back()->with('status', 'Password has been reset to the default.');
+    }
 }

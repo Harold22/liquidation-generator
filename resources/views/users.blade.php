@@ -174,7 +174,7 @@
 
                                                     <!-- Reset Password button -->
                                                     <div class="relative">
-                                                        <button @click="confirmDeleteUser(user)"
+                                                        <button @click="resetPassword(user)"
                                                             @mouseenter="tooltipReset = true" 
                                                             @mouseleave="tooltipReset = false" 
                                                             class="p-2 text-gray-500 hover:text-green-600 focus:outline-none transition duration-200 ease-in-out">
@@ -229,6 +229,29 @@
                                     @include('users.update-user-form')
                                 </div>
                             </div>
+                            <!-- modal for reset password -->
+                             <div x-show="resetPasswordModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+                                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                                    <header class="flex justify-between items-center">
+                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Reset User Password</h2>
+                                        <button @click="resetPasswordModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                                                <path d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </header>
+                                    <p class="mt-4 text-gray-600 dark:text-gray-300 mb-4">
+                                        Reset User password <strong x-text="userToReset?.name"></strong>?
+                                        <br>
+                                        Default Password: <span class="text-green-500">Dswd@12345</span>
+                                    </p>
+                                    <div class="flex justify-end space-x-3">
+                                        <button @click="resetPasswordModal = false" class="px-4 py-2 bg-gray-200 rounded text-sm">Cancel</button>
+                                        <button @click="resetPasswordConfirmed" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm">Reset Password</button>
+                                    </div>
+
+                                </div>
+                            </div>
                               <!-- Delete Confirmation Modal -->
                             <div x-show="deleteUserModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
                                 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
@@ -246,7 +269,7 @@
                                     </p>
                                     <div class="flex justify-end space-x-3">
                                         <button @click="deleteUserModal = false" class="px-4 py-2 bg-gray-200 rounded text-sm">Cancel</button>
-                                        <button @click="deleteConfirmed" class="px-4 py-2 bg-red-600 text-white rounded text-sm">Delete</button>
+                                        <button @click="deleteConfirmed" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm">Delete</button>
                                     </div>
                                 </div>
                             </div>
@@ -350,6 +373,7 @@ document.addEventListener('alpine:init', () => {
         confirmDeleteUser(user) {
             this.userToDelete = user;
             this.deleteUserModal = true;
+            
         },
         deleteConfirmed() {
             if (!this.userToDelete) return;
@@ -368,6 +392,33 @@ document.addEventListener('alpine:init', () => {
                     this.userToDelete = null;
                 });
         },
+        resetPasswordModal: false,
+        userToReset: null,
+        resetPassword(user){
+            this.userToReset = user;
+            this.resetPasswordModal = true;
+            
+        },
+        resetPasswordConfirmed(){
+            console.log('reset id', this.userToReset.id);
+            if (!this.userToReset) return;
+
+            axios.post(`/user/reset/${this.userToReset.id}`)
+                .then(response => {
+                    alert('User Password Resetted successfully!');
+                    this.getUsers();
+                })
+                .catch(error => {
+                    alert('Error to Reset of User Password');
+                    console.error('Error Resetting  user password:', error);
+                })
+                .finally(() => {
+                    this.resetPasswordModal = false;
+                    this.userToReset = null;
+                });
+        }
+
+
     }));
 });
 </script>
