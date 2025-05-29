@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -31,10 +32,18 @@ class RegisteredUserController extends Controller
     public function store(Request $request): mixed
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-zÑñ\s\-.]+$/'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        'name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-zÑñ\s\-.]+$/'],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+        'password' => [
+            'required',
+            'confirmed',
+            Password::min(8)
+                ->mixedCase()  // Requires at least one upper & one lower case letter
+                ->numbers()    // Requires at least one number
+                ->symbols(),   // Requires at least one special character
+        ],
+    ]);
+
 
         $user = User::create([
             'name' => $request->name,
