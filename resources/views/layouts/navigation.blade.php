@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+<nav x-data="{ open: false, showLogoutModal: false }" class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
             <!-- Logo and Title -->
@@ -33,10 +33,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">Profile</x-dropdown-link>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <x-dropdown-link href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">Log Out</x-dropdown-link>
-                        </form>
+                        <x-dropdown-link href="#" @click.prevent="showLogoutModal = true">Log Out</x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
             </div>
@@ -76,9 +73,30 @@
             </div>
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">Profile</x-responsive-nav-link>
+                <x-responsive-nav-link href="#" @click.prevent="showLogoutModal = true">Log Out</x-responsive-nav-link>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div x-show="showLogoutModal" x-cloak x-transition
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-sm w-full">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Confirm Logout</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
+                Are you sure you want to log out?
+            </p>
+            <div class="flex justify-end space-x-3">
+                <button @click="showLogoutModal = false"
+                    class="px-4 py-2 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded">
+                    Cancel
+                </button>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <x-responsive-nav-link href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();">Log Out</x-responsive-nav-link>
+                    <button type="submit"
+                        class="px-4 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition">
+                        Log Out
+                    </button>
                 </form>
             </div>
         </div>
