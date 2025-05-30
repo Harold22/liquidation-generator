@@ -176,19 +176,21 @@
                                                     <div class="relative">
                                                         <button @click="resetPassword(user)"
                                                             @mouseenter="tooltipReset = true" 
-                                                            @mouseleave="tooltipReset = false" 
+                                                            @mouseleave="tooltipReset = false"
+                                                            :disabled="isAdmin(user)" 
                                                             class="p-2 text-gray-500 hover:text-green-600 focus:outline-none transition duration-200 ease-in-out">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
                                                             </svg>
 
                                                         </button>
-                                                        <span x-show="tooltipReset"
+                                                        <span 
+                                                            x-show="tooltipReset"
+                                                            x-text="isAdmin(user) ? 'Admin password cannot be reset' : 'Reset Password'"
                                                             class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md whitespace-nowrap"
-                                                            x-transition.opacity>
-                                                            Reset Password
-                                                        </span>
-                                                    </div>
+                                                            x-transition.opacity
+                                                        ></span>
+                                                        </div>
                                                     <!-- Delete Button -->
                                                     <div class="relative">
                                                         <button @click="confirmDeleteUser(user)"
@@ -206,8 +208,6 @@
                                                             Delete
                                                         </span>
                                                     </div>
-                                                   
-
                                                 </div>
                                             </div>
                                         </td>
@@ -416,7 +416,10 @@ document.addEventListener('alpine:init', () => {
                     this.resetPasswordModal = false;
                     this.userToReset = null;
                 });
-        }
+        }, 
+        isAdmin(user) {
+            return user.roles.some(role => role.name === 'Admin');
+        },
 
 
     }));
