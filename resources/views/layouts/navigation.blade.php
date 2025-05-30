@@ -9,18 +9,34 @@
                 <span class="text-lg font-semibold text-gray-700 dark:text-gray-300">Liquidation Generator</span>
             </div>
 
-            <!-- Desktop Menu -->
+         <!-- Desktop Menu -->
             <div class="hidden sm:flex items-center space-x-8 ml-auto">
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-nav-link>
                 <x-nav-link :href="route('cash-advance.add')" :active="request()->routeIs('cash-advance.add')">Add Cash Advance</x-nav-link>
                 <x-nav-link :href="route('import-files')" :active="request()->routeIs('import-files')">Import Files</x-nav-link>
                 <x-nav-link :href="route('cash-advance.list')" :active="request()->routeIs('cash-advance.list')">List of Cash Advance</x-nav-link>
+
                 @role('Admin')
-                    <x-nav-link :href="route('users')" :active="request()->routeIs('users')">Users</x-nav-link>
-                    <x-nav-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-nav-link>
+                    <!-- Admin Dropdown -->
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button class="flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                                <span class="mr-2 text-sm font-medium">Admin</span>
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('users')">Users</x-dropdown-link>
+                            <x-dropdown-link :href="route('logs')">Logs</x-dropdown-link>
+                            <x-dropdown-link >SDO Management</x-dropdown-link> <!-- Add your actual route name here -->
+                        </x-slot>
+                    </x-dropdown>
                 @endrole
 
-                <!-- Dropdown -->
+                <!-- User Dropdown -->
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
@@ -37,7 +53,6 @@
                     </x-slot>
                 </x-dropdown>
             </div>
-
             <!-- Mobile Hamburger -->
             <div class="sm:hidden">
                 <button @click="open = !open" class="inline-flex items-center justify-center p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none">
@@ -52,16 +67,19 @@
         </div>
     </div>
 
-    <!-- Mobile Menu -->
+   <!-- Mobile Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-responsive-nav-link>
             <x-responsive-nav-link :href="route('cash-advance.add')" :active="request()->routeIs('cash-advance.add')">Add Cash Advance</x-responsive-nav-link>
             <x-responsive-nav-link :href="route('import-files')" :active="request()->routeIs('import-files')">Import Files</x-responsive-nav-link>
             <x-responsive-nav-link :href="route('cash-advance.list')" :active="request()->routeIs('cash-advance.list')">List of Cash Advance</x-responsive-nav-link>
+
             @role('Admin')
+                <div class="px-4 pt-3 text-sm font-semibold text-gray-500 dark:text-gray-400">Admin</div>
                 <x-responsive-nav-link :href="route('users')" :active="request()->routeIs('users')">Users</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-responsive-nav-link>
+                <x-responsive-nav-link>SDO Management</x-responsive-nav-link>
             @endrole
         </div>
 
@@ -77,6 +95,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Logout Confirmation Modal -->
     <div x-show="showLogoutModal" x-cloak x-transition
