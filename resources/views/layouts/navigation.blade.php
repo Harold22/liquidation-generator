@@ -29,9 +29,9 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <x-dropdown-link :href="route('users')">Users</x-dropdown-link>
-                            <x-dropdown-link :href="route('logs')">Logs</x-dropdown-link>
-                            <x-dropdown-link >SDO Management</x-dropdown-link> <!-- Add your actual route name here -->
+                            <x-dropdown-link :href="route('users')" :active="request()->routeIs('users')">Users</x-dropdown-link>
+                            <x-dropdown-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-dropdown-link>
+                            <x-dropdown-link :href="route('sdo')" :active="request()->routeIs('sdo')" >SDO Management</x-dropdown-link> <!-- Add your actual route name here -->
                         </x-slot>
                     </x-dropdown>
                 @endrole
@@ -79,7 +79,7 @@
                 <div class="px-4 pt-3 text-sm font-semibold text-gray-500 dark:text-gray-400">Admin</div>
                 <x-responsive-nav-link :href="route('users')" :active="request()->routeIs('users')">Users</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-responsive-nav-link>
-                <x-responsive-nav-link>SDO Management</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('sdo')" :active="request()->routeIs('sdo')">SDO Management</x-responsive-nav-link>
             @endrole
         </div>
 
