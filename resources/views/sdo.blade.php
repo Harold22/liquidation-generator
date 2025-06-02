@@ -14,33 +14,33 @@
             <div class="flex flex-col lg:flex-row lg:items-start gap-6">
                 <!-- User Registration Form -->
                 <div class="w-full lg:w-1/3 bg-white dark:bg-gray-700 p-6 rounded-lg shadow self-start">
-                    <h3 class="text-lg font-semibold mb-4 text-blue-500">Register New Special Disbursesing Officer</h3>
-                    <form method="POST" action="{{ route('register.store') }}">
+                    <h3 class="text-lg font-semibold mb-4 text-blue-500">Register New Special Disbursing Officer</h3>
+                    <form method="POST" action="{{ route('sdo.store') }}">
                         @csrf
                         <!-- Firstname -->
                         <div>
                             <div class="flex">
-                                <x-input-label for="first_name" :value="__('First Name')" />
+                                <x-input-label for="firstname" :value="__('First Name')" />
                                 <span class="text-red-500">*</span>
                             </div>
-                            <x-text-input id="first_name" class="block mt-1 w-full" type="text" name="first_name" :value="old('first_name')" required autofocus />
+                            <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname')" required autofocus />
                         </div>
 
                         <!-- Middlename -->
                         <div class="mt-4">
                             <div class="flex">
-                                <x-input-label for="middle_name" :value="__('Middle Name')" />
+                                <x-input-label for="middlename" :value="__('Middle Name')" />
                             </div>
-                            <x-text-input id="middle_name" class="block mt-1 w-full" type="text" name="middle_name" :value="old('middle_name')" />
+                            <x-text-input id="middlename" class="block mt-1 w-full" type="text" name="middlename" :value="old('middle_name')" />
                         </div>
 
                         <!-- Lastname -->
                         <div class="mt-4">
                             <div class="flex">
-                                <x-input-label for="last_name" :value="__('Last Name')" />
+                                <x-input-label for="lastname" :value="__('Last Name')" />
                                 <span class="text-red-500">*</span>
                             </div>
-                            <x-text-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')" required />
+                            <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname')" required />
                         </div>
 
                         <!-- Extension Name -->
@@ -64,7 +64,7 @@
                         <!-- Station -->
                         <div class="mt-4">
                             <div class="flex">
-                                <x-input-label for="station" :value="__('station')" />
+                                <x-input-label for="station" :value="__('Station')" />
                                 <span class="text-red-500">*</span>
                             </div>
                             <x-text-input id="station" class="block mt-1 w-full" type="text" name="station" :value="old('station')" required />
@@ -276,11 +276,7 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('sdo', () => ({
         loading: false,
-        users: [],
-        userCurrentPage: 1,
-        userTotalPages: 1,
-        perPageUser: 5,
-        searchUser: '',
+    
 
         init() {
             

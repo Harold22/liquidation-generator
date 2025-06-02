@@ -3,6 +3,7 @@
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SDOController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,6 +42,7 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     Route::view('/activity-logs', 'activity-logs')->name('logs');
     Route::post('/user/reset/{id}', [RegisteredUserController::class, 'resetPassword']);
     Route::view('/sdo', 'sdo')->name('sdo');
+    Route::post('/sdo', [SDOController::class, 'store'])->name('sdo.store');
 
 });
 
