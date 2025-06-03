@@ -18,59 +18,127 @@
                     <form method="POST" action="{{ route('sdo.store') }}">
                         @csrf
                         <!-- Firstname -->
-                        <div>
-                            <div class="flex">
-                                <x-input-label for="firstname" :value="__('First Name')" />
-                                <span class="text-red-500">*</span>
-                            </div>
-                            <x-text-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname')" required autofocus />
+                        <div x-init="$watch('form.firstname', () => validateField('firstname'))">
+                            <x-input-label for="firstname">
+                                {{ __('Firstname') }} <span class="text-red-500">*</span>
+                            </x-input-label>
+                            <p class="text-red-500 text-xs mt-1" x-show="errors.firstname">
+                                <span class="underline cursor-help" x-text="errors.firstname"
+                                    :title="errors.firstname"></span>
+                            </p>
+                            <x-text-input id="firstname" name="firstname" type="text"
+                                        class="mt-1 block w-full" required x-model="form.firstname"/>
                         </div>
 
                         <!-- Middlename -->
-                        <div class="mt-4">
-                            <div class="flex">
-                                <x-input-label for="middlename" :value="__('Middle Name')" />
-                            </div>
-                            <x-text-input id="middlename" class="block mt-1 w-full" type="text" name="middlename" :value="old('middle_name')" />
+                         
+                        <div class="mt-4" x-init="$watch('form.middlename', () => validateField('middlename'))">
+                            <x-input-label for="middlename">
+                                {{ __('Middlename') }} <span class="text-sm text-gray-400">(optional)</span>
+                            </x-input-label>
+                            <p class="text-red-500 text-xs mt-1" x-show="errors.middlename">
+                                <span class="underline cursor-help" x-text="errors.middlename"
+                                    :title="errors.middlename"></span>
+                            </p>
+                            <x-text-input id="middlename" name="middlename" type="text"
+                                        class="mt-1 block w-full"  x-model="form.middlename"/>
                         </div>
-
                         <!-- Lastname -->
-                        <div class="mt-4">
-                            <div class="flex">
-                                <x-input-label for="lastname" :value="__('Last Name')" />
-                                <span class="text-red-500">*</span>
-                            </div>
-                            <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname')" required />
+                        <div class="mt-4" x-init="$watch('form.lastname', () => validateField('lastname'))">
+                            <x-input-label for="lastname">
+                                {{ __('Lastname') }} <span class="text-red-500">*</span>
+                            </x-input-label>
+                            <p class="text-red-500 text-xs mt-1" x-show="errors.lastname">
+                                <span class="underline cursor-help" x-text="errors.lastname"
+                                    :title="errors.lastname"></span>
+                            </p>
+                            <x-text-input id="lastname" name="lastname" type="text"
+                                        class="mt-1 block w-full" required x-model="form.lastname"/>
                         </div>
 
                         <!-- Extension Name -->
-                        <div class="mt-4">
-                            <div class="flex">
+                        <div class="mt-4" x-init="$watch('form.extension_name', () => validateField('extension_name'))">
+                            <div class="flex items-center">
                                 <x-input-label for="extension_name" :value="__('Extension Name')" />
-                                <span class="text-sm text-gray-400 ml-1">(e.g., Jr., Sr., III — optional)</span>
+                                <span class="text-sm text-gray-400 ml-1">(optional)</span>
                             </div>
-                            <x-text-input id="extension_name" class="block mt-1 w-full" type="text" name="extension_name" :value="old('extension_name')" />
+
+                            <!-- Error message -->
+                            <p class="text-red-500 text-xs mt-1" x-show="errors.extension_name">
+                                <span class="underline cursor-help" x-text="errors.extension_name" :title="errors.extension_name"></span>
+                            </p>
+
+                            <!-- Select -->
+                            <select id="extension_name" name="extension_name"
+                                x-model="form.extension_name"
+                                class="block mt-1 w-full text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring focus:ring-blue-300">
+                                <option value="">-- Select Extension --</option>
+                                <option value="Jr.">Jr.</option>
+                                <option value="Sr.">Sr.</option>
+                                <option value="II">II</option>
+                                <option value="III">III</option>
+                                <option value="IV">IV</option>
+                            </select>
                         </div>
-
-
-                        <!-- Position -->
-                        <div class="mt-4">
+                       <!-- Position -->
+                        <div class="mt-4" x-init="$watch('form.position', () => validateField('position'))">
                             <div class="flex">
-                                <x-input-label for="position" :value="__('Position')" />
-                                <span class="text-red-500">*</span>
+                                <x-input-label for="position">
+                                    {{ __('Position') }} <span class="text-red-500">*</span>
+                                </x-input-label>
                             </div>
-                            <x-text-input id="position" class="block mt-1 w-full" type="text" name="position" :value="old('position')" required />
+                            <p class="text-red-500 text-xs mt-1" x-show="errors.position">
+                                <span class="underline cursor-help" x-text="errors.position" :title="errors.position"></span>
+                            </p>
+                            <x-text-input id="position" name="position" type="text"
+                                x-model="form.position"
+                                class="block mt-1 w-full" required />
                         </div>
+
+                        <!-- Designation -->
+                        <div class="mt-4" x-init="$watch('form.designation', () => validateField('designation'))">
+                            <div class="flex">
+                                <x-input-label for="designation">
+                                    {{ __('Designation') }} <span class="text-red-500">*</span>
+                                </x-input-label>
+                            </div>
+                            <p class="text-red-500 text-xs mt-1" x-show="errors.designation">
+                                <span class="underline cursor-help" x-text="errors.designation" :title="errors.designation"></span>
+                            </p>
+                            <x-text-input id="designation" name="designation" type="text"
+                                x-model="form.designation"
+                                class="block mt-1 w-full" required />
+                        </div>
+
                         <!-- Station -->
-                        <div class="mt-4">
+                        <div class="mt-4" x-init="$watch('form.station', () => validateField('station'))">
                             <div class="flex">
-                                <x-input-label for="station" :value="__('Station')" />
+                                <x-input-label for="station">
+                                    {{ __('Station') }} <span class="text-red-500">*</span>
+                                </x-input-label>
+                            </div>
+                            <p class="text-red-500 text-xs mt-1" x-show="errors.station">
+                                <span class="underline cursor-help" x-text="errors.station" :title="errors.station"></span>
+                            </p>
+                            <x-text-input id="station" name="station" type="text"
+                                x-model="form.station"
+                                class="block mt-1 w-full" required />
+                        </div>
+
+                        <!-- Status -->
+                        <div hidden class="mt-4">
+                            <div class="flex">
+                                <x-input-label for="status"  />
                                 <span class="text-red-500">*</span>
                             </div>
-                            <x-text-input id="station" class="block mt-1 w-full" type="text" name="station" :value="old('station')" required />
+                            <x-text-input id="status" class="block mt-1 w-full" type="text" name="status" value="Active" required />
                         </div>
                         <div class="flex items-center justify-end mt-4">
-                            <x-primary-button class="w-full flex justify-center">
+                            <x-primary-button class="w-full flex justify-center"
+                                x-bind:disabled="Object.keys(errors).length > 0"
+                                x-bind:class="Object.keys(errors).length > 0 ? 'opacity-50 cursor-not-allowed' : ''"
+                                >
+                                
                                 {{ __('Register') }}
                             </x-primary-button>
                         </div>
@@ -81,12 +149,12 @@
                 <div class="w-full lg:w-2/3 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-xl font-bold text-blue-500">List of Special Disbursing Officer</h3>
+                            <h3 class="text-lg font-bold text-blue-500">List of Special Disbursing Officer</h3>
                             <input 
                                 type="text" 
                                 placeholder="Search..." 
-                                x-model="searchUser"
-                                @input.debounce.500ms="getUsers"
+                                x-model="searchSdo"
+                                @input.debounce.500ms="getSDO"
                                 class="px-4 py-1.5 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 
                                     dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 w-48"
                             />
@@ -96,29 +164,27 @@
                             <thead class="bg-gray-100 dark:bg-gray-600">
                                 <tr class="border">
                                     <th class="px-4 py-2">Name</th>
-                                    <th class="px-4 py-2">Email</th>
-                                    <th class="px-4 py-2">Roles</th>
+                                    <th class="px-4 py-2">Position</th>
+                                    <th class="px-4 py-2">Designation</th>
+                                    <th class="px-4 py-2">Station</th>
                                     <th class="px-4 py-2">Status</th>
                                     <th class="px-4 py-2">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <template x-for="user in users" :key="user.id">
+                                <template x-for="sdo in sdos" :key="sdo.id">
                                     <tr class="border-b">
-                                        <td class="px-4 py-2" x-text="user.name"></td>
-                                        <td class="px-4 py-2" x-text="user.email"></td>
-                                        <td class="px-4 py-2">
-                                            <template x-for="role in user.roles" :key="role.id">
-                                                <span class="inline-block bg-blue-200 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded" x-text="role.name"></span>
-                                            </template>
-                                        </td>
-                                        <td :class="user.is_active ? 'text-green-500' : 'text-red-500'" class="px-4 py-2" x-text="user.is_active ? 'Activated' : 'Not Activated'"></td>
+                                        <td class="px-4 py-2" x-text="`${sdo.firstname} ${sdo.middlename ?? ''} ${sdo.lastname} ${sdo.extension_name ?? ''}`.trim()"></td>
+                                        <td class="px-4 py-2" x-text="sdo.position"></td>
+                                        <td class="px-4 py-2" x-text="sdo.designation"></td>
+                                        <td class="px-4 py-2" x-text="sdo.station"></td>
+                                        <td class="px-4 py-2" x-text="sdo.status"></td>
                                         <td class="px-4 py-2">
                                             <div class="flex space-x-2">
                                                 <div x-data="{ tooltipEdit: false, tooltipDelete: false, tooltipReset: false}" class="relative inline-flex space-x-2 text-left">
                                                     <!-- Edit Button -->
                                                     <div class="relative">
-                                                        <button @click="editUser(user)"
+                                                        <button @click="editSdo(sdo)"
                                                             @mouseenter="tooltipEdit = true" 
                                                             @mouseleave="tooltipEdit = false" 
                                                             class="py-2 pr-2 text-yellow-400 hover:text-yellow-600 focus:outline-none transition duration-200 ease-in-out">
@@ -133,29 +199,9 @@
                                                             Update
                                                         </span>
                                                     </div>
-
-                                                    <!-- Reset Password button -->
-                                                    <div class="relative">
-                                                        <button @click="resetPassword(user)"
-                                                            @mouseenter="tooltipReset = true" 
-                                                            @mouseleave="tooltipReset = false"
-                                                            :disabled="isAdmin(user)" 
-                                                            class="p-2 text-gray-500 hover:text-green-600 focus:outline-none transition duration-200 ease-in-out">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-                                                            </svg>
-
-                                                        </button>
-                                                        <span 
-                                                            x-show="tooltipReset"
-                                                            x-text="isAdmin(user) ? 'Admin password cannot be reset' : 'Reset Password'"
-                                                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md whitespace-nowrap"
-                                                            x-transition.opacity
-                                                        ></span>
-                                                        </div>
                                                     <!-- Delete Button -->
                                                     <div class="relative">
-                                                        <button @click="confirmDeleteUser(user)"
+                                                        <button @click="confirmDeleteSdo(sdo)"
                                                             @mouseenter="tooltipDelete = true" 
                                                             @mouseleave="tooltipDelete = false" 
                                                             class="p-2 text-gray-500 hover:text-red-600 focus:outline-none transition duration-200 ease-in-out">
@@ -173,53 +219,31 @@
                                                 </div>
                                             </div>
                                         </td>
-
                                     </tr>
                                 </template>
                             </tbody>
-                            <!-- modal for update -->
-                             <div x-show="updateUserModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
-                                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
-                                    <header class="flex justify-between items-center">
-                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update User</h2>
-                                        <button @click="updateUserModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
-                                                <path d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </header>
-                                    @include('users.update-user-form')
-                                </div>
-                            </div>
-                            <!-- modal for reset password -->
-                             <div x-show="resetPasswordModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
-                                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
-                                    <header class="flex justify-between items-center">
-                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Reset User Password</h2>
-                                        <button @click="resetPasswordModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
-                                                <path d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </header>
-                                    <p class="mt-4 text-gray-600 dark:text-gray-300 mb-4">
-                                        Reset User password <strong x-text="userToReset?.name"></strong>?
-                                        <br>
-                                        Default Password: <span class="text-green-500">Dswd@12345</span>
-                                    </p>
-                                    <div class="flex justify-end space-x-3">
-                                        <button @click="resetPasswordModal = false" class="px-4 py-2 bg-gray-200 rounded text-sm">Cancel</button>
-                                        <button @click="resetPasswordConfirmed" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm">Reset Password</button>
-                                    </div>
+                        </table>
 
-                                </div>
+                        <!-- modal for update -->
+                        <div x-show="updateSdoModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+                            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                                <header class="flex justify-between items-center">
+                                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update Special Disbursing Officer</h2>
+                                    <button @click="updateSdoModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                                            <path d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </header>
+                                @include('sdo.update-sdo')
                             </div>
-                              <!-- Delete Confirmation Modal -->
-                            <div x-show="deleteUserModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+                        </div>
+                         <!-- Delete Confirmation Modal -->
+                            <div x-show="deleteSdoModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
                                 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
                                     <header class="flex justify-between items-center mb-4">
                                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Confirm Deletion</h2>
-                                        <button @click="deleteUserModal = false" 
+                                        <button @click="deleteSdoModal = false" 
                                             class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
                                                 <path d="M6 18L18 6M6 6l12 12" />
@@ -227,27 +251,27 @@
                                         </button>
                                     </header>
                                     <p class="text-gray-600 dark:text-gray-300 mb-4">
-                                        Are you sure you want to delete user <strong x-text="userToDelete?.name"></strong>?
+                                        Are you sure you want to delete Special Disbursing Officer
+                                        <strong x-text="`${sdoToDelete?.firstname} ${sdoToDelete?.middlename ?? ''} ${sdoToDelete?.lastname} ${sdoToDelete?.extension_name ?? ''}`.trim()"></strong>?
                                     </p>
                                     <div class="flex justify-end space-x-3">
-                                        <button @click="deleteUserModal = false" class="px-4 py-2 bg-gray-200 rounded text-sm">Cancel</button>
-                                        <button @click="deleteConfirmed" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm">Delete</button>
+                                        <button @click="deleteSdoModal = false" class="px-4 py-2 bg-gray-200 rounded text-sm">Cancel</button>
+                                        <button @click="deleteSdoConfirmed" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm">Delete</button>
                                     </div>
                                 </div>
                             </div>
-                        </table>
 
                         <!-- Pagination -->
                         <div class="flex items-center justify-center mt-6">
                             <div class="space-x-2">
-                                <button @click="changePageUser(userCurrentPage - 1)" :disabled="userCurrentPage === 1"
+                                <button @click="changePageSdo(sdoCurrentPage - 1)" :disabled="sdoCurrentPage === 1"
                                     class="px-4 py-2 text-sm bg-gray-200 rounded disabled:opacity-50">
                                     &laquo; Prev
                                 </button>
                                 <span class="text-sm text-gray-600 dark:text-gray-300">
-                                    Page <span x-text="userCurrentPage"></span> of <span x-text="userTotalPages"></span>
+                                    Page <span x-text="sdoCurrentPage"></span> of <span x-text="sdoTotalPages"></span>
                                 </span>
-                                <button @click="changePageUser(userCurrentPage + 1)" :disabled="userCurrentPage === userTotalPages"
+                                <button @click="changePageSdo(sdoCurrentPage + 1)" :disabled="sdoCurrentPage === sdoTotalPages"
                                     class="px-4 py-2 text-sm bg-gray-200 rounded disabled:opacity-50">
                                     Next &raquo;
                                 </button>
@@ -255,9 +279,8 @@
 
                             <div class="flex items-center space-x-2">
                                 <label for="perPage" class="text-sm">Show</label>
-                                <select x-model="perPageUser" @change="updateUserPerPage(perPageUser)"
+                                <select x-model="perPageSdo" @change="updateSdoPerPage(perPageSdo)"
                                     class="px-6 py-2 text-sm rounded">
-                                    <option value="5">5</option>
                                     <option value="10">10</option>
                                     <option value="20">20</option>
                                     <option value="50">50</option>
@@ -276,16 +299,201 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('sdo', () => ({
         loading: false,
-    
+        sdos: [],
+        sdoToDelete: null,
+        sdoToReset: null,
+        sdoToUpdate: [],
+        sdoCurrentPage: 1,
+        sdoTotalPages: 1,
+        perPageSdo: 10,
+        searchSdo: '',
+        sortBy: 'created_at',        
+        sortOrder: 'asc',      
+        filterBy: '',          
+        updateSdoModal: false,
+        deleteSdoModal: false,
 
         init() {
+            this.getSDO();
+        },
+
+        async getSDO(page = 1) {
+            this.loading = true;
+            try {
+                let url = `/getSDO/index?page=${page}&perPage=${this.perPageSdo}&sortBy=${this.sortBy}&sortOrder=${this.sortOrder}&filterBy=${this.filterBy}`;
+
+                if (this.searchSdo) {
+                    url += `&search=${encodeURIComponent(this.searchSdo)}`;
+                }
+
+                const response = await axios.get(url);
+                const data = response.data;
+
+                this.sdos = data.data;
+                this.sdoCurrentPage = data.current_page;
+                this.sdoTotalPages = data.last_page;
+            } catch (error) {
+                console.error("Error fetching SDOs:", error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        changePageSdo(page) {
+            if (page < 1 || page > this.sdoTotalPages) return;
+            this.sdoCurrentPage = page;
+            this.getSDO(page);
+        },
+
+        updateSdoPerPage(limit) {
+            this.perPageSdo = limit;
+            this.getSDO();
+        },
+
+        editSdo(sdo) {
+            this.sdoToUpdate = sdo;
+            this.updateSdoModal = true;
+        },
+
+        sdoToDelete: null,
+        confirmDeleteSdo(sdo) {
+            this.sdoToDelete = sdo;
+            this.deleteSdoModal = true;
             
         },
 
+        deleteSdoConfirmed() {
+            if (!this.sdoToDelete) return;
+
+            axios.delete(`/sdo/delete/${this.sdoToDelete.id}`)
+                .then(response => {
+                    alert('SDO deleted successfully!');
+                    this.getSDO();
+                })
+                .catch(error => {
+                    alert('Error Deletion of SDO');
+                    console.error('Error deleting SDO:', error);
+                })
+                .finally(() => {
+                    this.deleteSdoModal = false;
+                    this.sdoToDelete = null;
+                });
+        },
+
+        isAdmin(sdo) {
+            return sdo.roles?.some(role => role.name === 'Admin');
+        },
+
+         form: {
+            id: '', 
+            firstname: '',
+            middlename: '',
+            lastname: '',
+            extension_name: '',
+            position: '',
+            designation: '',
+            station: '',
+            status: 'Active',
+        },
+        errors: {},
+
+        get hasErrors() {
+            return Object.keys(this.errors).length > 0;
+        },
+
+        isValidString(value, pattern) {
+            return pattern.test(value.trim());
+        },
+
+        validateField(field) {
+            const val = this.form[field] ?? '';
+            const namePattern = /^[A-Za-z\- ]+$/;
+            const extensionPattern = /^[A-Za-z\-\. ]+$/;
+            const maxLengths = {
+                firstname: 100,
+                middlename: 100,
+                lastname: 100,
+                extension_name: 20,
+                position: 100,
+                designation: 100,
+                station: 100,
+            };
+
+            switch (field) {
+                case 'firstname':
+                case 'lastname':
+                    if (!val.trim()) {
+                        this.errors[field] = 'This field is required.';
+                    } else if (!this.isValidString(val, namePattern)) {
+                        this.errors[field] = 'Invalid characters.';
+                    } else if (val.length > maxLengths[field]) {
+                        this.errors[field] = `Must not exceed ${maxLengths[field]} characters.`;
+                    } else {
+                        delete this.errors[field];
+                    }
+                    break;
+
+                case 'middlename':
+                    if (val.trim() && !this.isValidString(val, namePattern)) {
+                        this.errors[field] = 'Invalid characters.';
+                    } else if (val.length > maxLengths[field]) {
+                        this.errors[field] = `Must not exceed ${maxLengths[field]} characters.`;
+                    } else {
+                        delete this.errors[field];
+                    }
+                    break;
+
+                case 'extension_name':
+                    if (val.trim() && !this.isValidString(val, extensionPattern)) {
+                        this.errors[field] = 'Invalid characters.';
+                    } else if (val.length > maxLengths[field]) {
+                        this.errors[field] = `Must not exceed ${maxLengths[field]} characters.`;
+                    } else {
+                        delete this.errors[field];
+                    }
+                    break;
+
+                case 'position':
+                case 'designation':
+                case 'station':
+                    if (!val.trim()) {
+                        this.errors[field] = 'This field is required.';
+                    } else if (val.length > maxLengths[field]) {
+                        this.errors[field] = `Must not exceed ${maxLengths[field]} characters.`;
+                    } else {
+                        delete this.errors[field];
+                    }
+                    break;
+
+                case 'status':
+                    if (!val.trim()) {
+                        this.errors.status = 'Status is required.';
+                    } else if (!['Active', 'Inactive'].includes(val)) {
+                        this.errors.status = 'Invalid status.';
+                    } else {
+                        delete this.errors.status;
+                    }
+                    break;
+            }
+        },
+
+        validateAllFields() {
+            ['firstname', 'middlename', 'lastname', 'extension_name', 'position', 'designation', 'station', 'status']
+                .forEach(field => this.validateField(field));
+        },
+
+        submitForm() {
+            this.validateAllFields();
+
+            if (!this.hasErrors) {
+                $el.submit(); // if using Alpine's `$el` reference
+            }
+        },
 
     }));
 });
 </script>
+
 
 
 

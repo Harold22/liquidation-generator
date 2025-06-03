@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('lastname');
             $table->string('extension_name')->nullable();
             $table->string('position');
+            $table->string('designation')->nullable();
             $table->string('station');
+            $table->enum('status', ['Active', 'Inactive']);
             $table->timestamps();
             $table->softDeletes();
         });

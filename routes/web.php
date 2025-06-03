@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SDOController;
 use Illuminate\Support\Facades\Route;
@@ -34,15 +34,20 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
 // Admin-only routes
 Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     Route::view('/users', 'users')->name('users');
-    Route::get('/getUsers', [RegisteredUserController::class, 'index']);
-    Route::post('user', [RegisteredUserController::class, 'store'])->name('register.store');
-    Route::delete('user/delete/{id}', [RegisteredUserController::class, 'destroy']);
-    Route::post('/users/update', [RegisteredUserController::class, 'update'])->name('users.update.status');
+    Route::get('/getUsers', [UserController::class, 'index']);
+    Route::post('user', [UserController::class, 'store'])->name('register.store');
+    Route::delete('user/delete/{id}', [UserController::class, 'destroy']);
+    Route::post('/users/update', [UserController::class, 'update'])->name('users.update.status');
     Route::get('/get-activity-logs', [ActivityLogController::class, 'index']);
     Route::view('/activity-logs', 'activity-logs')->name('logs');
-    Route::post('/user/reset/{id}', [RegisteredUserController::class, 'resetPassword']);
+    Route::post('/user/reset/{id}', [UserController::class, 'resetPassword']);
+
+    // sdo routes
     Route::view('/sdo', 'sdo')->name('sdo');
     Route::post('/sdo', [SDOController::class, 'store'])->name('sdo.store');
+    Route::get('/getSDO/index', [SDOController::class, 'index']);
+    Route::post('/sdo/update', [SDOController::class, 'update'])->name('sdo.update');
+    Route::delete('sdo/delete/{id}', [SDOController::class, 'destroy']);
 
 });
 
