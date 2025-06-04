@@ -54,4 +54,8 @@ class CashAdvance extends Model
     {
         return $this->hasMany(File::class);
     }
+     public function sdo()
+    {
+        return $this->belongsTo(SDO::class, 'sdos_id');
+    }
 }

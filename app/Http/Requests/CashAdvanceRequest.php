@@ -20,15 +20,17 @@ class CashAdvanceRequest extends FormRequest
      */
     public function rules(): array
     {
+        $cashAdvanceId = $this->input('id');
         return [
             'sdos_id' => [
-                'required',
-                'exists:s_d_o_s,id',
-                Rule::unique('cash_advances', 'sdos_id')->where(function ($query) {
+            'required',
+            'exists:s_d_o_s,id',
+            Rule::unique('cash_advances', 'sdos_id')
+                ->ignore($cashAdvanceId)
+                ->where(function ($query) {
                     return $query->where('status', 'Unliquidated');
                 }),
-            ],
-
+        ],
             'check_number' => 'required|string|max:255|regex:/^[A-Za-z0-9\-\.\/\s]+$/',
             'cash_advance_amount' => [
                 'required',

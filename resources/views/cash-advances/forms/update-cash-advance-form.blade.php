@@ -1,32 +1,24 @@
-<form method="POST" action="{{ route('cash_advance.update') }} ">
+<form method="POST"  :action="`/cash-advance/update/${selectedList.id}`">
     <div class="mt-4 space-y-4">
         @csrf
-        <div class="hidden">        
+        <div hidden>        
             <x-text-input id="id" name="id" class="mt-1 block w-full" x-bind:value="selectedList.id" />
         </div>
-
+        <div hidden>        
+            <x-text-input id="sdos_id" name="sdos_id" class="mt-1 block w-full" x-bind:value="selectedList.sdos_id" />
+        </div>
         <!-- Special Disbursing Officer (Full Width) -->
         <div>
             <x-input-label for="special_disbursing_officer" class="text-sm">
                 {{ __('Special Disbursing Officer') }} <span class="text-red-500">*</span>
             </x-input-label>
-            <x-text-input readonly id="special_disbursing_officer" name="special_disbursing_officer" type="text" class="mt-1 block w-full text-sm" x-bind:value="selectedList.special_disbursing_officer" />
+            <x-text-input readonly type="text" class="mt-1 block w-full text-sm" x-bind:value="selectedList.special_disbursing_officer" />
         </div>
 
         <!-- Left and Right Column Layout -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <!-- Left Column -->
             <div class="space-y-4">
-                <div x-init="$watch('form.position', () => validateField('position'))">
-                    <x-input-label for="position" class="text-sm">
-                        {{ __('Position') }} <span class="text-red-500">*</span>
-                    </x-input-label>
-                    <p class="text-red-500 text-xs mt-1" x-show="errors.position">
-                        <span class="underline cursor-help" x-text="errors.position" :title="errors.position"></span>
-                    </p>
-                    <x-text-input required  id="position" name="position" x-model="form.position" type="text" class="mt-1 block w-full text-sm" x-bind:value="selectedList.position" />
-                </div>
-
                 <div x-init="$watch('form.cash_advance_amount', () => validateField('cash_advance_amount'))">
                     <x-input-label for="cash_advance_amount" class="text-sm">
                         {{ __('Cash Advance Amount') }} <span class="text-red-500">*</span>
@@ -60,16 +52,6 @@
 
             <!-- Right Column -->
             <div class="space-y-4">
-                <div x-init="$watch('form.station', () => validateField('station'))">
-                    <x-input-label for="station" class="text-sm">
-                        {{ __('Station') }} <span class="text-red-500">*</span>
-                    </x-input-label>
-                    <p class="text-red-500 text-xs mt-1" x-show="errors.station">
-                        <span class="underline cursor-help" x-text="errors.station" :title="errors.station"></span>
-                    </p>
-                    <x-text-input required id="station" name="station" type="text" x-model="form.station" class="mt-1 block w-full text-sm" x-bind:value="selectedList.station" />
-                </div>
-
                 <div x-init="$watch('form.cash_advance_date', () => validateField('cash_advance_date'))">
                     <x-input-label for="cash_advance_date" class="text-sm">
                         {{ __('Cash Advance Date') }} <span class="text-red-500">*</span>

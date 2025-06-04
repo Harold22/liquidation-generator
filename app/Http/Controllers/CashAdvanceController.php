@@ -7,7 +7,6 @@ use App\Services\CashAdvanceService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CashAdvanceRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class CashAdvanceController extends Controller
 {
@@ -73,48 +72,56 @@ class CashAdvanceController extends Controller
     }
 
     public function index(Request $request)
-    {   
-        $perPage = $request->input('perPage', 5); 
-        $sortBy = $request->input('sortBy', 'cash_advance_date'); 
-        $sortOrder = $request->input('sortOrder', 'ASC'); 
-        $filterBy = $request->input('filterBy'); 
-    
-        $query = CashAdvance::query();
-    
-        // Search Functionality
+    {
+        $perPage = $request->input('perPage', 5);
+        $sortBy = $request->input('sortBy', 'cash_advance_date');
+        $sortOrder = $request->input('sortOrder', 'ASC');
+        $filterBy = $request->input('filterBy');
+
+        $query = CashAdvance::with('sdo');
+
         if ($request->filled('search')) {
             $search = trim($request->search);
-            $terms = explode(' ', $search); 
-    
-            $query->where(function($q) use ($terms) {
+            $terms = explode(' ', $search);
+
+            $query->where(function ($q) use ($terms) {
                 foreach ($terms as $term) {
                     $q->where(function ($subQuery) use ($term) {
-                        $subQuery->where('special_disbursing_officer', 'LIKE', "%{$term}%")
+                        $subQuery
+                            ->orWhereHas('sdo', function ($sdoQuery) use ($term) {
+                                $sdoQuery->where('firstname', 'LIKE', "%{$term}%")
+                                         ->orWhere('middlename', 'LIKE', "%{$term}%")
+                                         ->orWhere('lastname', 'LIKE', "%{$term}%");
+                            })
                             ->orWhere('dv_number', 'LIKE', "%{$term}%")
                             ->orWhere('cash_advance_amount', 'LIKE', "%{$term}%");
                     });
                 }
             });
         }
-    
-        // Filtering by Liquidated or Unliquidated
+
         if ($filterBy === 'Liquidated') {
             $query->where('status', 'Liquidated');
         } elseif ($filterBy === 'Unliquidated') {
             $query->where('status', 'Unliquidated');
         }
-    
-        // Sorting with Dynamic Order
+
         $validSortColumns = ['cash_advance_amount', 'cash_advance_date'];
         if (in_array($sortBy, $validSortColumns)) {
             $query->orderBy($sortBy, $sortOrder);
         }
-    
+
         $cash_advances = $query->paginate($perPage);
-    
+
+        foreach ($cash_advances as $item) {
+            $item->special_disbursing_officer = $item->sdo
+                ? trim("{$item->sdo->firstname} {$item->sdo->middlename} {$item->sdo->lastname} {$item->sdo->extension_name}")
+                : null;
+                $item->makeHidden('sdo');
+        }
+
         return response()->json($cash_advances);
     }
-    
 
     public function showSdo()
     {

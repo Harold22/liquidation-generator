@@ -22,9 +22,7 @@
    document.addEventListener('alpine:init', () => {
     Alpine.data('cashAdvances', () => ({
         fields: [
-            { id: 'special_disbursing_officer', name: 'special_disbursing_officer', label: 'Special Disbursing Officer', type: 'text', value: '' },
-            { id: 'position', name: 'position', label: 'Position', type: 'text', value: '' },
-            { id: 'station', name: 'station', label: 'Station', type: 'text', value: '' },
+            { id: 'sdos_id', name: 'sdos_id', label: 'Special Disbursing Officer', type: 'text', value: '' },
             { id: 'check_number', name: 'check_number', label: 'Check Number', type: 'text', value: '' },
             { id: 'cash_advance_amount', name: 'cash_advance_amount', label: 'Cash Advance Amount', type: 'number', value: '' },
             { id: 'cash_advance_date', name: 'cash_advance_date', label: 'Cash Advance Date', type: 'date', value: '' },
@@ -201,8 +199,6 @@
             },
 
         form: {
-            position: '',
-            station: '',
             check_number: '',
             cash_advance_amount: '',
             cash_advance_date: '',
@@ -225,9 +221,6 @@
             const maxAmount = 75000000;
 
             switch (field) {
-
-                case 'position':
-                case 'station':
                 case 'check_number':
                     if (!val) {
                         delete this.errors[field];
