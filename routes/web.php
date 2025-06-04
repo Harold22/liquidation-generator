@@ -27,7 +27,6 @@ Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::view('/cash-advances/list', 'cash-advances.cash-advance-list')->name('cash-advance.list');
     Route::view('/import-files', 'import-files.import-files')->name('import-files');
     Route::view('/rcd/{id}', 'rcd')->name('rcd');
-    Route::view('/cdr/{id}', 'cdr')->name('cdr');
     Route::view('/liquidation-report/{id}', 'liquidation-report')->name('liquidation-report');
 });
 
@@ -48,6 +47,9 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     Route::get('/getSDO/index', [SDOController::class, 'index']);
     Route::post('/sdo/update', [SDOController::class, 'update'])->name('sdo.update');
     Route::delete('sdo/delete/{id}', [SDOController::class, 'destroy']);
+
+    // cdr
+    Route::view('/cdr/{id}', 'cdr')->name('cdr');
 
 });
 
