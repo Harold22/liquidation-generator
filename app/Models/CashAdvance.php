@@ -58,4 +58,24 @@ class CashAdvance extends Model
     {
         return $this->belongsTo(SDO::class, 'sdos_id');
     }
+
+    protected $appends = ['special_disbursing_officer'];
+    protected $hidden = ['sdo'];
+
+    public function getSpecialDisbursingOfficerAttribute()
+    {
+        if (!$this->relationLoaded('sdo') || !$this->sdo) {
+            return null;
+        }
+
+        $parts = [
+            $this->sdo->firstname,
+            $this->sdo->middlename,
+            $this->sdo->lastname,
+            $this->sdo->extension_name,
+        ];
+
+        return trim(implode(' ', array_filter($parts)));
+    }
+
 }

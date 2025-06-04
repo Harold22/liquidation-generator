@@ -42,7 +42,7 @@ class SDO extends Model
     
     public function cashAdvances()
     {
-        return $this->hasMany(CashAdvance::class, 'cash_advance_id');
+        return $this->hasMany(CashAdvance::class, 'sdos_id');
     }
 
 }

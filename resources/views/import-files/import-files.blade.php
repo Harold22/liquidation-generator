@@ -298,6 +298,7 @@
                     try {
                         const response = await axios.get('/cash-advance/sdo');
                         this.sdo_list = response.data;
+                        console.log(this.sdo_list);
                         this.loading = false;
                     } catch (error) {
                         console.error('Error fetching SDO list:', error);

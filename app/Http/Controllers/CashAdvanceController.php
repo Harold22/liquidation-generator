@@ -112,7 +112,7 @@ class CashAdvanceController extends Controller
         }
 
         $cash_advances = $query->paginate($perPage);
-
+     
         foreach ($cash_advances as $item) {
             $item->special_disbursing_officer = $item->sdo
                 ? trim("{$item->sdo->firstname} {$item->sdo->middlename} {$item->sdo->lastname} {$item->sdo->extension_name}")
@@ -122,22 +122,15 @@ class CashAdvanceController extends Controller
 
         return response()->json($cash_advances);
     }
+    
 
     public function showSdo()
     {
-
-        $sdo_list = CashAdvance::where('status', 'unliquidated')
-            ->select('id', 'special_disbursing_officer', 'cash_advance_amount', 'cash_advance_date') 
+        $cash_advance = CashAdvance::with('sdo')
+            ->where('status', 'Unliquidated')
             ->get();
 
-        return response()->json($sdo_list);
-    }
-
-    public function getDetails($id)
-    {
-        $details = CashAdvance::where('id', $id)
-            ->get();
-        return response()->json($details);
+        return response()->json($cash_advance);
     }
 
     
