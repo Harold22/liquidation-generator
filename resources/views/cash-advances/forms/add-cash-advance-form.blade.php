@@ -298,18 +298,17 @@ document.addEventListener('alpine:init', () => {
         },
 
         getSDOList() {
-            fetch('/getSDOList') 
-                .then(response => response.json())
-                .then(data => {
-                    this.sdoList = data.map(sdo => {
-                        return {
-                            id: sdo.id,
-                            name: `${sdo.firstname} ${sdo.middlename ?? ''} ${sdo.lastname}`
-                        };
-                    });
-                })
-                .catch(error => console.error('Error fetching SDO list:', error));
-        }
+        axios.get('/getSDOList')
+            .then(response => {
+                this.sdoList = response.data.map(sdo => {
+                    return {
+                        id: sdo.id,
+                        name: `${sdo.firstname} ${sdo.middlename ?? ''} ${sdo.lastname} ${sdo.extension_name ?? ''}`.trim()
+                    };
+                });
+            })
+            .catch(error => console.error('Error fetching SDO list:', error));
+    }
 
     
     }));
