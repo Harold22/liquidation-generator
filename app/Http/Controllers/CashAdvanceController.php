@@ -70,8 +70,9 @@ class CashAdvanceController extends Controller
             return back()->with('error', 'An error occurred. Please try again.');
         }
     }
+    
 
-    public function index(Request $request)
+   public function index(Request $request)
     {
         $perPage = $request->input('perPage', 5);
         $sortBy = $request->input('sortBy', 'cash_advance_date');
@@ -79,6 +80,16 @@ class CashAdvanceController extends Controller
         $filterBy = $request->input('filterBy');
 
         $query = CashAdvance::with('sdo');
+
+        if (auth()->user()->getRoleNames()->first() === 'User') {
+            $query->where('status', 'Unliquidated');
+        } else {
+            if ($filterBy === 'Liquidated') {
+                $query->where('status', 'Liquidated');
+            } elseif ($filterBy === 'Unliquidated') {
+                $query->where('status', 'Unliquidated');
+            }
+        }
 
         if ($request->filled('search')) {
             $search = trim($request->search);
@@ -90,8 +101,8 @@ class CashAdvanceController extends Controller
                         $subQuery
                             ->orWhereHas('sdo', function ($sdoQuery) use ($term) {
                                 $sdoQuery->where('firstname', 'LIKE', "%{$term}%")
-                                         ->orWhere('middlename', 'LIKE', "%{$term}%")
-                                         ->orWhere('lastname', 'LIKE', "%{$term}%");
+                                        ->orWhere('middlename', 'LIKE', "%{$term}%")
+                                        ->orWhere('lastname', 'LIKE', "%{$term}%");
                             })
                             ->orWhere('dv_number', 'LIKE', "%{$term}%")
                             ->orWhere('cash_advance_amount', 'LIKE', "%{$term}%");
@@ -100,29 +111,23 @@ class CashAdvanceController extends Controller
             });
         }
 
-        if ($filterBy === 'Liquidated') {
-            $query->where('status', 'Liquidated');
-        } elseif ($filterBy === 'Unliquidated') {
-            $query->where('status', 'Unliquidated');
-        }
-
         $validSortColumns = ['cash_advance_amount', 'cash_advance_date'];
         if (in_array($sortBy, $validSortColumns)) {
             $query->orderBy($sortBy, $sortOrder);
         }
 
         $cash_advances = $query->paginate($perPage);
-     
+
         foreach ($cash_advances as $item) {
             $item->special_disbursing_officer = $item->sdo
                 ? trim("{$item->sdo->firstname} {$item->sdo->middlename} {$item->sdo->lastname} {$item->sdo->extension_name}")
                 : null;
-                $item->makeHidden('sdo');
+            $item->makeHidden('sdo');
         }
 
         return response()->json($cash_advances);
     }
-    
+
 
     public function showSdo()
     {

@@ -13,6 +13,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+  /**
+ * @property-read \Illuminate\Support\Collection $roles
+ * @method \Illuminate\Support\Collection getRoleNames()
+ */
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes, LogsActivity;
@@ -23,6 +28,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
 
+         /**
+         * @method \Spatie\Permission\Permission getRoleNames()
+         */
     protected $keyType = 'string';
 
     public $incrementing = false;
