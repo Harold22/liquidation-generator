@@ -10,15 +10,10 @@
         <div class="space-y-4 text-sm">
             <div class="flex justify-between items-center border-b pb-2">
                 <strong class="text-gray-700 dark:text-gray-300">SDO:</strong>
-                <span class="font-medium text-green-600 dark:text-gray-100 break-words max-w-[60%]" x-text="form.special_disbursing_officer || '-'"></span>
-            </div>
-            <div class="flex justify-between items-center border-b pb-2">
-                <strong class="text-gray-700 dark:text-gray-300">Position:</strong>
-                <span class="font-medium text-green-600 dark:text-gray-100 break-words max-w-[60%]" x-text="form.position || '-'"></span>
-            </div>
-            <div class="flex justify-between items-center border-b pb-2">
-                <strong class="text-gray-700 dark:text-gray-300">Station:</strong>
-                <span class="font-medium text-green-600 dark:text-gray-100 break-words max-w-[60%]" x-text="form.station || '-'"></span>
+                <span 
+                    class="font-medium text-green-600 dark:text-gray-100 break-words max-w-[60%]" 
+                    x-text="sdoList.find(s => s.id == form.sdos_id)?.name || '-'">
+                </span>
             </div>
             <div class="flex justify-between items-center border-b pb-2">
                 <strong class="text-gray-700 dark:text-gray-300">Check Number:</strong>
@@ -64,41 +59,21 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Special Disbursing Officer -->
-            <div x-init="$watch('form.special_disbursing_officer', () => validateField('special_disbursing_officer'))">
-                <x-input-label for="special_disbursing_officer">
+           <div>
+                <x-input-label for="sdos_id">
                     {{ __('Special Disbursing Officer') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <p class="text-red-500 text-xs mt-1" x-show="errors.special_disbursing_officer">
-                    <span class="underline cursor-help" x-text="errors.special_disbursing_officer"
-                          :title="errors.special_disbursing_officer"></span>
-                </p>
-                <x-text-input id="special_disbursing_officer" name="special_disbursing_officer" type="text"
-                              class="mt-1 block w-full" required x-model="form.special_disbursing_officer"/>
+                
+                <select id="sdos_id" name="sdos_id" required
+                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        x-model="form.sdos_id">
+                    <option value="" disabled selected>Select an officer</option>
+                    <template x-for="sdo in sdoList" :key="sdo.id">
+                        <option :value="sdo.id" x-text="sdo.name"></option>
+                    </template>
+                </select>
             </div>
 
-            <!-- Position -->
-            <div x-init="$watch('form.position', () => validateField('position'))">
-                <x-input-label for="position">
-                    {{ __('Position') }} <span class="text-red-500">*</span>
-                </x-input-label>
-                <p class="text-red-500 text-xs mt-1" x-show="errors.position">
-                    <span class="underline cursor-help" x-text="errors.position" :title="errors.position"></span>
-                </p>
-                <x-text-input id="position" name="position" type="text" class="mt-1 block w-full" required
-                              x-model="form.position"/>
-            </div>
-
-            <!-- Station -->
-            <div x-init="$watch('form.station', () => validateField('station'))">
-                <x-input-label for="station">
-                    {{ __('Station') }} <span class="text-red-500">*</span>
-                </x-input-label>
-                <p class="text-red-500 text-xs mt-1" x-show="errors.station">
-                    <span class="underline cursor-help" x-text="errors.station" :title="errors.station"></span>
-                </p>
-                <x-text-input id="station" name="station" type="text" class="mt-1 block w-full" required
-                              x-model="form.station"/>
-            </div>
 
             <!-- Check Number -->
             <div x-init="$watch('form.check_number', () => validateField('check_number'))">
@@ -206,9 +181,7 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('cashAdvanceForm', () => ({
         form: {
-            special_disbursing_officer: '',
-            position: '',
-            station: '',
+            sdos_id: '',
             check_number: '',
             cash_amount: '',
             cash_date: '',
@@ -225,27 +198,11 @@ document.addEventListener('alpine:init', () => {
 
         validateField(field) {
             const val = this.form[field];
-            const namePattern = /^[A-Za-zÑñ\s\-.]+$/;
             const codePattern =  /^[A-Za-z0-9\-\.\/\s]+$/;
             const today = new Date().toISOString().split('T')[0];
             const maxAmount = 75000000;
 
             switch (field) {
-                case 'special_disbursing_officer':
-                    if (!val) {
-                        break;
-                    }
-                    if (!this.isValidString(val, namePattern)) {
-                        this.errors.special_disbursing_officer = 'Invalid characters used.';
-                    } else if (val.length > 255) {
-                        this.errors.special_disbursing_officer = 'Must not exceed 255 characters.';
-                    } else {
-                        delete this.errors.special_disbursing_officer;
-                    }
-                    break;
-
-                case 'position':
-                case 'station':
                 case 'check_number':
                     if (!val) {
                         delete this.errors[field];
@@ -311,6 +268,50 @@ document.addEventListener('alpine:init', () => {
             }
             return Object.keys(this.errors).length === 0;
         },
+
+        async getCashAdvancesList(page = 1) {
+            this.loading = true;
+            try {
+                
+                let url = `/cash-advance/index?page=${page}&perPage=${this.perPage}&sortBy=${this.sortBy}&sortOrder=${this.sortOrder}&filterBy=${this.filterBy}`;
+
+                if (this.searchCashAdvance) {
+                    url += `&search=${encodeURIComponent(this.searchCashAdvance)}`;
+                }
+
+                const response = await axios.get(url);
+                const data = await response.data;
+
+                this.cashAdvancesList = data.data;
+                this.currentPage = data.current_page;
+                this.totalPages = data.last_page;
+            } catch (error) {
+                console.error("Error fetching cash advances:", error);
+            } finally {
+                this.loading = false;
+            }
+        },
+         sdoList: [],
+
+        init() {
+            this.getSDOList();
+        },
+
+        getSDOList() {
+            fetch('/getSDOList') 
+                .then(response => response.json())
+                .then(data => {
+                    this.sdoList = data.map(sdo => {
+                        return {
+                            id: sdo.id,
+                            name: `${sdo.firstname} ${sdo.middlename ?? ''} ${sdo.lastname}`
+                        };
+                    });
+                })
+                .catch(error => console.error('Error fetching SDO list:', error));
+        }
+
+    
     }));
 });
 </script>

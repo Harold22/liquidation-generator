@@ -35,6 +35,15 @@ class SDOController extends Controller
         return response()->json($sdoRecords);
     }
 
+    public function getSDOList()
+    {
+        $sdos = SDO::select('id', 'firstname', 'middlename', 'lastname', 'extension_name')
+            ->where('status', 'Active')
+            ->get();
+        
+        return response()->json($sdos);
+    }
+
     public function update(SDORequest $request)
     {   
         $id = $request->id;

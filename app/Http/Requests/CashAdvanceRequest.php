@@ -21,20 +21,14 @@ class CashAdvanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'special_disbursing_officer' => [
+            'sdos_id' => [
                 'required',
-                'string',
-                'max:255',
-                'regex:/^[A-Za-zÑñ\s\-.]+$/',
-                Rule::unique('cash_advances')
-                    ->ignore($this->id)
-                    ->where(function ($query) {
-                        $query->where('cash_advance_amount', $this->cash_advance_amount)
-                            ->where('cash_advance_date', $this->cash_advance_date);
-                    }),
+                'exists:s_d_o_s,id',
+                Rule::unique('cash_advances', 'sdos_id')->where(function ($query) {
+                    return $query->where('status', 'Unliquidated');
+                }),
             ],
-            'position' => 'required|string|max:255|regex:/^[A-Za-z0-9\-\.\/\s]+$/',
-            'station' => 'required|string|max:255|regex:/^[A-Za-z0-9\-\.\/\s]+$/',
+
             'check_number' => 'required|string|max:255|regex:/^[A-Za-z0-9\-\.\/\s]+$/',
             'cash_advance_amount' => [
                 'required',
@@ -58,11 +52,9 @@ class CashAdvanceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'special_disbursing_officer.required' => 'The Special Disbursing Officer field is required.',
-            'special_disbursing_officer.regex' => 'The Special Disbursing Officer field must only contain letters,numbers, spaces, hyphens, and periods.',
-            'special_disbursing_officer.string' => 'The Special Disbursing Officer must be a string.',
-            'special_disbursing_officer.max' => 'The Special Disbursing Officer must not exceed 255 characters.',
-            'special_disbursing_officer.unique' => 'This Special Disbursing Officer already exists with the same Cash Advance Amount and Date.',
+            'sdos_id.required' => 'The Special Disbursing Officer field is required.',
+            'sdos_id.exists' => 'The selected Special Disbursing Officer does not exist.',
+            'sdos_id.unique' => 'This Special Disbursing Officer already has an unliquidated cash advance.',
 
             'position.required' => 'The Position field is required.',
             'position.string' => 'The Position must be a string.',

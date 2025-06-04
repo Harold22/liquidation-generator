@@ -27,6 +27,7 @@ class CashAdvance extends Model
     }
 
     protected $fillable = [
+        'sdos_id',
         'check_number',
         'cash_advance_amount',
         'cash_advance_date',

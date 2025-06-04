@@ -57,6 +57,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/getSDOList', [SDOController::class, 'getSDOList']);
 
     // Feature route files
     require __DIR__.'/cash_advance.php';
