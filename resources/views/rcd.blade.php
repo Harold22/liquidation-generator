@@ -339,8 +339,13 @@
                     const details = response.data[0]; 
                     if (details) {
                         this.mapped_cash_advance_details = {
-                            special_disbursing_officer: details.special_disbursing_officer,
-                            position: details.position,
+                            special_disbursing_officer: [
+                                details.sdo.firstname,
+                                details.sdo.middlename,
+                                details.sdo.lastname,
+                                details.sdo.extension_name
+                            ].filter(Boolean).join(' '),
+                            position: details.sdo.position,
                             cash_advance_amount: parseFloat(details.cash_advance_amount).toFixed(2),
                             cash_advance_date: details.cash_advance_date,
                             dv_number: details.dv_number,
