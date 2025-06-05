@@ -1,11 +1,8 @@
-<form method="POST"  :action="`/cash-advance/update/${selectedList.id}`">
+<form method="POST" action="{{ route('cash_advance.update') }}">
     <div class="mt-4 space-y-4">
         @csrf
         <div hidden>        
             <x-text-input id="id" name="id" class="mt-1 block w-full" x-bind:value="selectedList.id" />
-        </div>
-        <div hidden>        
-            <x-text-input id="sdos_id" name="sdos_id" class="mt-1 block w-full" x-bind:value="selectedList.sdos_id" />
         </div>
         <!-- Special Disbursing Officer (Full Width) -->
         <div>

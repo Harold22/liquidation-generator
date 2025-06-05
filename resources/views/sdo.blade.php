@@ -71,7 +71,7 @@
                             <!-- Select -->
                             <select id="extension_name" name="extension_name"
                                 x-model="form.extension_name"
-                                class="block mt-1 w-full text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring focus:ring-blue-300">
+                                class="block mt-1 w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                                 <option value="">-- Select Extension --</option>
                                 <option value="Jr.">Jr.</option>
                                 <option value="Sr.">Sr.</option>

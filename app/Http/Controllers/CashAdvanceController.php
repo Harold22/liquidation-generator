@@ -6,6 +6,7 @@ use App\Models\CashAdvance;
 use App\Services\CashAdvanceService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CashAdvanceRequest;
+use App\Http\Requests\CashAdvanceUpdateRequest;
 use Illuminate\Http\Request;
 
 class CashAdvanceController extends Controller
@@ -35,7 +36,7 @@ class CashAdvanceController extends Controller
         }
     }
 
-    public function update(CashAdvanceRequest $request)
+    public function update(CashAdvanceUpdateRequest $request)
     {   
         try {
             DB::transaction(function () use ($request) {
@@ -49,7 +50,6 @@ class CashAdvanceController extends Controller
         }
     }
 
-    // Method to delete a cash advance
 
     public function destroy(Request $request)
     {
