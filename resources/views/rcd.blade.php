@@ -7,8 +7,8 @@
 
         <title>{{ config('app.name', 'Liquidation Generator') }}</title>
 
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -338,16 +338,20 @@
                     const response = await axios.get(`/cash-advance/details/${this.cash_advance_id}`);
                     const details = response.data[0]; 
                     if (details) {
+                        const middlename = details.sdo.middlename;
+                        const middleInitial = middlename ? middlename.charAt(0) + '.' : '';
+
                         this.mapped_cash_advance_details = {
                             special_disbursing_officer: [
                                 details.sdo.firstname,
-                                details.sdo.middlename,
+                                middleInitial,
                                 details.sdo.lastname,
                                 details.sdo.extension_name
                             ].filter(Boolean).join(' '),
                             position: details.sdo.position,
                             cash_advance_amount: parseFloat(details.cash_advance_amount).toFixed(2),
                             cash_advance_date: details.cash_advance_date,
+                            check_number:details.check_number,
                             dv_number: details.dv_number,
                             ors_burs_number: details.ors_burs_number,
                             responsibility_code: details.responsibility_code,

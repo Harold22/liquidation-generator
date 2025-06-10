@@ -4,6 +4,9 @@
         <div hidden>        
             <x-text-input id="id" name="id" class="mt-1 block w-full" x-bind:value="selectedList.id" />
         </div>
+        <div hidden>        
+            <x-text-input id="sdos_id" name="sdos_id" class="mt-1 block w-full" x-bind:value="selectedList.sdos_id" />
+        </div>
         <!-- Special Disbursing Officer (Full Width) -->
         <div>
             <x-input-label for="special_disbursing_officer" class="text-sm">

@@ -63,7 +63,18 @@ class SDOController extends Controller
 
         return response()->json(['message' => 'SDO deleted successfully.']);
     }
-    
+
+    public function getCashAdvances($id, $year)
+    {
+        $sdo = SDO::with([
+            'cashAdvances' => function ($query) use ($year) {
+                $query->whereYear('cash_advance_date', $year)
+                     ->with(['files.file_data']);
+            }
+        ])->find($id);
+
+        return response()->json($sdo);
+    }
 
    
 }

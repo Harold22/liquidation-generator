@@ -171,7 +171,7 @@
                                     <th class="px-4 py-2">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="capitalize">
                                 <template x-for="sdo in sdos" :key="sdo.id">
                                     <tr class="border-b">
                                         <td class="px-4 py-2" x-text="`${sdo.firstname} ${sdo.middlename ?? ''} ${sdo.lastname} ${sdo.extension_name ?? ''}`.trim()"></td>

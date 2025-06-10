@@ -47,6 +47,7 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     Route::get('/getSDO/index', [SDOController::class, 'index']);
     Route::post('/sdo/update', [SDOController::class, 'update'])->name('sdo.update');
     Route::delete('sdo/delete/{id}', [SDOController::class, 'destroy']);
+    Route::get('sdo/get-cash-advances/{id}/{year}', [SDOController::class, 'getCashAdvances']);
 
     // cdr
     Route::view('/cdr/{id}', 'cdr')->name('cdr');
