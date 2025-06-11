@@ -52,6 +52,9 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     // cdr
     Route::view('/cdr/{id}', 'cdr')->name('cdr');
 
+    // offices
+    Route::view('/offices', 'offices')->name('offices');
+
 });
 
 // Active user routes
