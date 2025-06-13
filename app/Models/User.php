@@ -51,6 +51,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'office_id',
     ];
 
     /**
@@ -72,5 +73,10 @@ class User extends Authenticatable
     {
         return LogOptions::defaults()->logFillable();
     }
+    public function office()
+    {
+        return $this->belongsTo(Office::class);
+    }
+
 
 }

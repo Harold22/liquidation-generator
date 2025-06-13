@@ -59,6 +59,7 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     Route::post('offices', [OfficeController::class, 'store'])->name('office.store');
     Route::post('offices/update', [OfficeController::class, 'update'])->name('office.update');
     Route::delete('/offices/delete/{id}', [OfficeController::class, 'destroy']);
+    Route::get('/offices/dropdown', [OfficeController::class, 'getOffice']);
 
 
 });

@@ -38,6 +38,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'office_id' => $request->office,
         ]);
 
         $user->assignRole('User');
@@ -57,7 +58,7 @@ class UserController extends Controller
         $search = $request->input('search', '');
         $authUserId = auth()->id(); 
     
-        $query = User::with('roles')
+        $query = User::with('roles','office:id,office_name')
             ->where('id', '!=', $authUserId) 
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($sub) use ($search) {
@@ -73,38 +74,49 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        $request->validate([
-            'id' => 'required|exists:users,id',
-            'is_active' => 'required|boolean',
-            'role' => 'required|in:admin,user',
-        ]);
-    
-        $user = User::findOrFail($request->id);
-    
-        if (auth()->id() === $user->id && $request->role !== $user->getRoleNames()->first()) {
-            return back()->withErrors(['You cannot change your own role.']);
+        try {
+            $request->validate([
+                'id' => 'required|exists:users,id',
+                'is_active' => 'required|boolean',
+                'role' => 'required|in:admin,user',
+                'office_id' => 'nullable|exists:offices,id',
+            ]);
+
+            $user = User::findOrFail($request->id);
+
+            if (auth()->id() === $user->id && $request->role !== $user->getRoleNames()->first()) {
+                return back()->withErrors(['You cannot change your own role.']);
+            }
+
+            $updated = false;
+
+            if ((int) $user->is_active !== (int) $request->is_active) {
+                $user->is_active = $request->is_active;
+                $updated = true;
+            }
+
+            $currentRole = strtolower($user->getRoleNames()->first() ?? '');
+            if ($currentRole !== strtolower($request->role)) {
+                $user->syncRoles([$request->role]);
+                $updated = true;
+            }
+
+            if ($user->office_id !== $request->office_id) {
+                $user->office_id = $request->office_id;
+                $updated = true;
+            }
+
+            if ($updated) {
+                $user->save();
+                return back()->with('message', 'User updated successfully.');
+            }
+
+            return back()->with('message', 'No changes detected.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error updating user. Please try again.');
         }
-    
-        $updated = false;
-    
-        if ((int) $user->is_active !== (int) $request->is_active) {
-            $user->is_active = $request->is_active;
-            $updated = true;
-        }
-    
-        $currentRole = strtolower($user->getRoleNames()->first() ?? '');
-        if ($currentRole !== strtolower($request->role)) {
-            $user->syncRoles([$request->role]);
-            $updated = true;
-        }
-    
-        if ($updated) {
-            $user->save();
-            return back()->with('message', 'User status and role updated successfully.');
-        }
-    
-        return back()->with('message', 'No changes detected.');
     }
+
     
     public function destroy($id)
     {

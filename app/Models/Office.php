@@ -41,4 +41,9 @@ class Office extends Model
     {
           return $this->belongsTo(CashAdvance::class);
     }
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
 }

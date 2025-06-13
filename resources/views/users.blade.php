@@ -34,9 +34,22 @@
                             </div>
                             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
                         </div>
+                        <!-- Office -->
+                        <div class="mt-4">
+                            <div class="flex">
+                                <x-input-label for="office" :value="__('Office')" />
+                            </div>
+                            <select name="office" class="text-sm block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                <option value="">Select Office</option>
+                                <template x-for="office in offices" :key="office.id">
+                                    <option :value="office.id" x-text="office.office_name"></option>
+                                </template>
+                            </select>
+
+                        </div>
 
                         <!-- Password -->
-                        <div class="mt-4" x-data="{ showPassword: false }">
+                        <div hidden class="mt-4" x-data="{ showPassword: false }">
                             <div class="flex">
                                 <x-input-label for="password" :value="__('Password')" />
                                 <span class="text-red-500">*</span>
@@ -46,6 +59,7 @@
                                 <input :type="showPassword ? 'text' : 'password'"
                                     id="password"
                                     name="password"
+                                    value="Dswd@12345"
                                     required
                                     class="block mt-1 w-full pr-10 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" />
 
@@ -64,14 +78,15 @@
                                     <svg x-show="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.975 9.975 0 012.378-3.568m3.236-2.06A9.99 9.99 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.976 9.976 0 01-4.122 5.152M15 12a3 3 0 00-3-3m0 0a3 3 0 013 3m-3-3L3 3" />
+                                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.975 9.975 0 012.378-3.568m3.236-2.06A9.99 9.99 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.976 9.976 0 01-4.122 5.152M15 12a3 3 0 00-3-3m0 0a3 3 0 013 3m-3-3L3 3" />Register New User
+                                            
                                     </svg>
                                 </button>
                             </div>
                         </div>
 
                         <!-- Confirm Password -->
-                        <div class="mt-4" x-data="{ showConfirmPassword: false }">
+                        <div hidden class="mt-4" x-data="{ showConfirmPassword: false }">
                             <div class="flex">
                                 <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
                                 <span class="text-red-500">*</span>
@@ -81,6 +96,7 @@
                                 <input :type="showConfirmPassword ? 'text' : 'password'"
                                     id="password_confirmation"
                                     name="password_confirmation"
+                                    value="Dswd@12345"
                                     required
                                     class="block mt-1 w-full pr-10 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" />
 
@@ -104,7 +120,6 @@
                                 </button>
                             </div>
                         </div>
-
 
                         <div class="flex items-center justify-end mt-4">
 
@@ -180,7 +195,7 @@
                                                             :disabled="isAdmin(user)" 
                                                             class="p-2 text-gray-500 hover:text-green-600 focus:outline-none transition duration-200 ease-in-out">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                                                             </svg>
 
                                                         </button>
@@ -315,6 +330,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('users', () => ({
         loading: false,
         users: [],
+        offices: [],
         userCurrentPage: 1,
         userTotalPages: 1,
         perPageUser: 5,
@@ -322,6 +338,21 @@ document.addEventListener('alpine:init', () => {
 
         init() {
             this.getUsers();
+            this.getOffices();
+        },
+
+        async getOffices() {
+            this.loading = true;
+            try {
+                axios.get('/offices/dropdown')
+                .then(response => {
+                    this.offices = response.data;
+                });
+            } catch (error) {
+                console.error('Error fetching offices:', error);
+            } finally {
+                this.loading = false;
+            }
         },
 
         async getUsers() {
@@ -362,6 +393,7 @@ document.addEventListener('alpine:init', () => {
             this.selectedUser = {
                 id: user.id,
                 name: user.name,
+                office_id: user.office?.id || '',
                 is_active: user.is_active ? '1' : '0',
                 role: user.roles.length ? user.roles[0].name.toLowerCase() : 'user'
             };

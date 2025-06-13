@@ -94,5 +94,12 @@ class OfficeController extends Controller
         }
     }
 
+    public function getOffice()
+    {
+        $offices = Office::select('id', 'office_name')->orderBy('office_name')->get();
+        return response()->json($offices);
+    }
+
+
 
 }

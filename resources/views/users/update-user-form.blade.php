@@ -12,6 +12,21 @@
                 x-bind:value="selectedUser.name"
                 class="mt-1 block w-full text-sm" />
         </div>
+        <!-- Office Dropdown -->
+        <div>
+            <x-input-label for="office_id" class="text-sm">Office of Assignment</x-input-label>
+            <select 
+                name="office_id"
+                x-model="selectedUser.office_id" 
+                class="block w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm"
+            >
+                <option value="" disabled>Select an office</option>
+                <template x-for="office in offices" :key="office.id">
+                    <option :value="office.id" x-text="office.office_name"></option>
+                </template>
+            </select>
+        </div>
+
 
       <!-- Activation Dropdown -->
         <div>
