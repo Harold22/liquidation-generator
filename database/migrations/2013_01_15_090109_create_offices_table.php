@@ -15,6 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->string('office_name');
             $table->string('office_location');
+            $table->string('swado');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SDOController;
@@ -54,6 +55,11 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
 
     // offices
     Route::view('/offices', 'offices')->name('offices');
+    Route::get('/getOffices', [OfficeController::class, 'index']);
+    Route::post('offices', [OfficeController::class, 'store'])->name('office.store');
+    Route::post('offices/update', [OfficeController::class, 'update'])->name('office.update');
+    Route::delete('/offices/delete/{id}', [OfficeController::class, 'destroy']);
+
 
 });
 

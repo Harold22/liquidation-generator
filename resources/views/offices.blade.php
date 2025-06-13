@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div x-data="users()" class="py-8">
+    <div x-data="offices()" class="py-8">
         <div x-show="loading">
             <x-spinner />
         </div> 
@@ -15,9 +15,8 @@
                 <!-- User Registration Form -->
                 <div class="w-full lg:w-1/3 bg-white dark:bg-gray-700 p-6 rounded-lg shadow self-start">
                     <h3 class="text-lg font-semibold mb-4 text-blue-500">Register New Office</h3>
-                    <form method="POST" action="{{ route('register.store') }}">
+                    <form method="POST" action="{{ route('office.store') }}">
                         @csrf
-                         <!-- Name -->
                         <div>
                             <div class="flex">
                                 <x-input-label for="office_name" :value="__('Office Name')" />
@@ -26,16 +25,21 @@
                             <x-text-input id="office_name" class="block mt-1 w-full" type="text" name="office_name" :value="old('office_name')" required autofocus />
                         </div>
 
-                        <!-- Email Address -->
                         <div class="mt-4">
                             <div class="flex">
                                 <x-input-label for="office_location" :value="__('Office Location')" />
                                 <span class="text-red-500">*</span>
                             </div>
-                            <x-text-input id="office_location" class="block mt-1 w-full" type="email" name="office_location" :value="old('office_location')" required />
+                            <x-text-input id="office_location" class="block mt-1 w-full" type="text" name="office_location" :value="old('office_location')" required />
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex">
+                                <x-input-label for="swado" :value="__('Swado / Team Leader')" />
+                                <span class="text-red-500">*</span>
+                            </div>
+                            <x-text-input id="swado" class="block mt-1 w-full" type="text" name="swado" :value="old('swado')" required />
                         </div>
                         <div class="flex items-center justify-end mt-4">
-
                             <x-primary-button class="w-full flex justify-center">
                                 {{ __('Register') }}
                             </x-primary-button>
@@ -51,8 +55,8 @@
                             <input 
                                 type="text" 
                                 placeholder="Search..." 
-                                x-model="searchUser"
-                                @input.debounce.500ms="getUsers"
+                                x-model="searchOffice"
+                                @input.debounce.500ms="getOffices"
                                 class="px-4 py-1.5 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 
                                     dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-100 w-48"
                             />
@@ -63,20 +67,22 @@
                                 <tr class="border">
                                     <th class="px-4 py-2">Office Name</th>
                                     <th class="px-4 py-2">Office Location</th>
+                                    <th class="px-4 py-2">Swado / Team Leader</th>
                                     <th class="px-4 py-2">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <template x-for="user in users" :key="user.id">
-                                    <tr class="border-b">
-                                        <td class="px-4 py-2 capitalize" x-text="user.name"></td>
-                                        <td class="px-4 py-2" x-text="user.email"></td>
+                                <template x-for="office in offices" :key="office.id">
+                                    <tr class="border-b capitalize">
+                                        <td class="px-4 py-2 capitalize" x-text="office.office_name"></td>
+                                        <td class="px-4 py-2" x-text="office.office_location"></td>
+                                        <td class="px-4 py-2" x-text="office.swado"></td>
                                         <td class="px-4 py-2">
                                             <div class="flex space-x-2">
                                                 <div x-data="{ tooltipEdit: false, tooltipDelete: false, tooltipReset: false}" class="relative inline-flex space-x-2 text-left">
                                                     <!-- Edit Button -->
                                                     <div class="relative">
-                                                        <button @click="editUser(user)"
+                                                        <button @click="editOffice(office)"
                                                             @mouseenter="tooltipEdit = true" 
                                                             @mouseleave="tooltipEdit = false" 
                                                             class="py-2 pr-2 text-yellow-400 hover:text-yellow-600 focus:outline-none transition duration-200 ease-in-out">
@@ -92,28 +98,9 @@
                                                         </span>
                                                     </div>
 
-                                                    <!-- Reset Password button -->
-                                                    <div class="relative">
-                                                        <button @click="resetPassword(user)"
-                                                            @mouseenter="tooltipReset = true" 
-                                                            @mouseleave="tooltipReset = false"
-                                                            :disabled="isAdmin(user)" 
-                                                            class="p-2 text-gray-500 hover:text-green-600 focus:outline-none transition duration-200 ease-in-out">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-                                                            </svg>
-
-                                                        </button>
-                                                        <span 
-                                                            x-show="tooltipReset"
-                                                            x-text="isAdmin(user) ? 'Admin password cannot be reset' : 'Reset Password'"
-                                                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md whitespace-nowrap"
-                                                            x-transition.opacity
-                                                        ></span>
-                                                        </div>
                                                     <!-- Delete Button -->
                                                     <div class="relative">
-                                                        <button @click="confirmDeleteUser(user)"
+                                                        <button @click="confirmDeleteOffice(office)"
                                                             @mouseenter="tooltipDelete = true" 
                                                             @mouseleave="tooltipDelete = false" 
                                                             class="p-2 text-gray-500 hover:text-red-600 focus:outline-none transition duration-200 ease-in-out">
@@ -136,48 +123,26 @@
                                 </template>
                             </tbody>
                             <!-- modal for update -->
-                             <div x-show="updateUserModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+                             <div x-show="updateOfficeModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
                                 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
                                     <header class="flex justify-between items-center">
-                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update User</h2>
-                                        <button @click="updateUserModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update Office</h2>
+                                        <button @click="updateOfficeModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
                                                 <path d="M6 18L18 6M6 6l12 12" />
                                             </svg>
                                         </button>
                                     </header>
-                                    @include('users.update-user-form')
+                             @include('offices.update-office-form')
                                 </div>
                             </div>
-                            <!-- modal for reset password -->
-                             <div x-show="resetPasswordModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
-                                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
-                                    <header class="flex justify-between items-center">
-                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Reset User Password</h2>
-                                        <button @click="resetPasswordModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
-                                                <path d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </header>
-                                    <p class="mt-4 text-gray-600 dark:text-gray-300 mb-4">
-                                        Reset User password <strong x-text="userToReset?.name"></strong>?
-                                        <br>
-                                        Default Password: <span class="text-green-500">Dswd@12345</span>
-                                    </p>
-                                    <div class="flex justify-end space-x-3">
-                                        <button @click="resetPasswordModal = false" class="px-4 py-2 bg-gray-200 rounded text-sm">Cancel</button>
-                                        <button @click="resetPasswordConfirmed" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm">Reset Password</button>
-                                    </div>
 
-                                </div>
-                            </div>
                               <!-- Delete Confirmation Modal -->
-                            <div x-show="deleteUserModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+                            <div x-show="deleteOfficeModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
                                 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
                                     <header class="flex justify-between items-center mb-4">
                                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Confirm Deletion</h2>
-                                        <button @click="deleteUserModal = false" 
+                                        <button @click="deleteOfficeModal = false" 
                                             class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
                                                 <path d="M6 18L18 6M6 6l12 12" />
@@ -185,10 +150,10 @@
                                         </button>
                                     </header>
                                     <p class="text-gray-600 dark:text-gray-300 mb-4">
-                                        Are you sure you want to delete user <strong x-text="userToDelete?.name"></strong>?
+                                        Are you sure you want to delete Office <strong x-text="officeToDelete?.office_name"></strong>?
                                     </p>
                                     <div class="flex justify-end space-x-3">
-                                        <button @click="deleteUserModal = false" class="px-4 py-2 bg-gray-200 rounded text-sm">Cancel</button>
+                                        <button @click="deleteOfficeModal = false" class="px-4 py-2 bg-gray-200 rounded text-sm">Cancel</button>
                                         <button @click="deleteConfirmed" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm">Delete</button>
                                     </div>
                                 </div>
@@ -198,14 +163,14 @@
                         <!-- Pagination -->
                         <div class="flex items-center justify-center mt-6">
                             <div class="space-x-2">
-                                <button @click="changePageUser(userCurrentPage - 1)" :disabled="userCurrentPage === 1"
+                                <button @click="changePageOffice(officeCurrentPage - 1)" :disabled="officeCurrentPage === 1"
                                     class="px-4 py-2 text-sm bg-gray-200 rounded disabled:opacity-50">
                                     &laquo; Prev
                                 </button>
                                 <span class="text-sm text-gray-600 dark:text-gray-300">
-                                    Page <span x-text="userCurrentPage"></span> of <span x-text="userTotalPages"></span>
+                                    Page <span x-text="officeCurrentPage"></span> of <span x-text="officeTotalPages"></span>
                                 </span>
-                                <button @click="changePageUser(userCurrentPage + 1)" :disabled="userCurrentPage === userTotalPages"
+                                <button @click="changePageOffice(officeCurrentPage + 1)" :disabled="officeCurrentPage === officeTotalPages"
                                     class="px-4 py-2 text-sm bg-gray-200 rounded disabled:opacity-50">
                                     Next &raquo;
                                 </button>
@@ -213,7 +178,7 @@
 
                             <div class="flex items-center space-x-2">
                                 <label for="perPage" class="text-sm">Show</label>
-                                <select x-model="perPageUser" @change="updateUserPerPage(perPageUser)"
+                                <select x-model="perPageOffice" @change="updateOfficePerPage(perPageOffice)"
                                     class="px-6 py-2 text-sm rounded">
                                     <option value="5">5</option>
                                     <option value="10">10</option>
@@ -232,116 +197,86 @@
 
 <script>
 document.addEventListener('alpine:init', () => {
-    Alpine.data('users', () => ({
+    Alpine.data('offices', () => ({
         loading: false,
-        users: [],
-        userCurrentPage: 1,
-        userTotalPages: 1,
-        perPageUser: 5,
-        searchUser: '',
+        offices: [],
+        officeCurrentPage: 1,
+        officeTotalPages: 1,
+        perPageOffice: 5,
+        searchOffice: '',
 
         init() {
-            this.getUsers();
+            this.getOffices();
         },
 
-        async getUsers() {
+        async getOffices() {
             this.loading = true;
             try {
-                const response = await axios.get('/getUsers', {
+                const response = await axios.get('/getOffices', {
                     params: {
-                        page: this.userCurrentPage,
-                        perPage: this.perPageUser,
-                        search: this.searchUser,
+                        page: this.officeCurrentPage,
+                        perPage: this.perPageOffice,
+                        search: this.searchOffice,
                     }
                 });
-                this.users = response.data.data;
-                this.userCurrentPage = response.data.current_page;
-                this.userTotalPages = response.data.last_page;
+                this.offices = response.data.data;
+                this.officeCurrentPage = response.data.current_page;
+                this.officeTotalPages = response.data.last_page;
             } catch (error) {
-                console.error('Error fetching users:', error);
+                console.error('Error fetching offices:', error);
             } finally {
                 this.loading = false;
             }
         },
 
-        changePageUser(page) {
-            if (page < 1 || page > this.userTotalPages) return;
-            this.userCurrentPage = page;
-            this.getUsers();
+        changePageOffice(page) {
+            if (page < 1 || page > this.officeTotalPages) return;
+            this.officeCurrentPage = page;
+            this.getOffices();
         },
 
-        updateUserPerPage(perPage) {
-            this.perPageUser = perPage;
-            this.userCurrentPage = 1;
-            this.getUsers();
+        updateOfficePerPage(perPage) {
+            this.perPageOffice = perPage;
+            this.officeCurrentPage = 1;
+            this.getOffices();
         },
 
-        updateUserModal: false,
-        selectedUser: [],
-        editUser(user) {
-            this.selectedUser = {
-                id: user.id,
-                name: user.name,
-                is_active: user.is_active ? '1' : '0',
-                role: user.roles.length ? user.roles[0].name.toLowerCase() : 'user'
+        updateOfficeModal: false,
+        selectedOffice: {},
+        editOffice(office) {
+            this.selectedOffice = {
+                id: office.id,
+                office_name: office.office_name,
+                office_location: office.office_location,
+                swado: office.swado
             };
-            this.updateUserModal = true;
+            this.updateOfficeModal = true;
         },
 
-        deleteUserModal: false,
-        userToDelete: null,
-        confirmDeleteUser(user) {
-            this.userToDelete = user;
-            this.deleteUserModal = true;
-            
+        deleteOfficeModal: false,
+        officeToDelete: null,
+        confirmDeleteOffice(office) {
+            this.officeToDelete = office;
+            this.deleteOfficeModal = true;
         },
+
         deleteConfirmed() {
-            if (!this.userToDelete) return;
+            if (!this.officeToDelete) return;
 
-            axios.delete(`/user/delete/${this.userToDelete.id}`)
-                .then(response => {
-                    alert('User deleted successfully!');
-                    this.getUsers();
+            axios.delete(`/offices/delete/${this.officeToDelete.id}`)
+                .then(() => {
+                    alert('Office deleted successfully!');
+                    this.getOffices();
                 })
                 .catch(error => {
-                    alert('Error Deletion of User');
-                    console.error('Error deleting user:', error);
+                    alert('Error deleting office.');
+                    console.error(error);
                 })
                 .finally(() => {
-                    this.deleteUserModal = false;
-                    this.userToDelete = null;
+                    this.deleteOfficeModal = false;
+                    this.officeToDelete = null;
                 });
         },
-        resetPasswordModal: false,
-        userToReset: null,
-        resetPassword(user){
-            this.userToReset = user;
-            this.resetPasswordModal = true;
-            
-        },
-        resetPasswordConfirmed(){
-            console.log('reset id', this.userToReset.id);
-            if (!this.userToReset) return;
-
-            axios.post(`/user/reset/${this.userToReset.id}`)
-                .then(response => {
-                    alert('User Password Resetted successfully!');
-                    this.getUsers();
-                })
-                .catch(error => {
-                    alert('Error to Reset of User Password');
-                    console.error('Error Resetting  user password:', error);
-                })
-                .finally(() => {
-                    this.resetPasswordModal = false;
-                    this.userToReset = null;
-                });
-        }, 
-        isAdmin(user) {
-            return user.roles.some(role => role.name === 'Admin');
-        },
-
-
     }));
 });
 </script>
