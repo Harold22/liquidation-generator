@@ -31,7 +31,7 @@
                         <x-slot name="content">
                             <x-dropdown-link :href="route('users')" :active="request()->routeIs('users')">Users</x-dropdown-link>
                             <x-dropdown-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-dropdown-link>
-                            <x-dropdown-link :href="route('sdo')" :active="request()->routeIs('sdo')" >SDO Management</x-dropdown-link> <!-- Add your actual route name here -->
+                            <x-dropdown-link :href="route('sdo')" :active="request()->routeIs('sdo')" >SDOs</x-dropdown-link> <!-- Add your actual route name here -->
                             <x-dropdown-link :href="route('offices')" :active="request()->routeIs('offices')" >Offices</x-dropdown-link> <!-- Add your actual route name here -->
                         </x-slot>
                     </x-dropdown>

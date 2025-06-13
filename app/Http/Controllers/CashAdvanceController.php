@@ -36,7 +36,7 @@ class CashAdvanceController extends Controller
         }
     }
 
-    public function update(CashAdvanceUpdateRequest $request)
+    public function update(CashAdvanceRequest $request)
     {   
         try {
             DB::transaction(function () use ($request) {

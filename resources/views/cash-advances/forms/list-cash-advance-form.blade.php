@@ -291,7 +291,7 @@
             </div>
         </div>
         <!-- Refund Modal -->
-        <div x-show="refundCashAdvanceModal && loading == false" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+        <div x-show="refundCashAdvanceModal && loading ===false" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
                 <header class="flex justify-between items-center">
                     <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cash Advance Refund</h2>
