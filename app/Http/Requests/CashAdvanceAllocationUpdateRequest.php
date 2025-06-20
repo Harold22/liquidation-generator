@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
-class CashAdvanceUpdateRequest extends FormRequest
+class CashAdvanceAllocationUpdateRequest extends FormRequest
 {
     public function authorize()
     {

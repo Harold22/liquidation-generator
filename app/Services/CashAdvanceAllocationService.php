@@ -28,7 +28,7 @@ class CashAdvanceAllocationService
                     $allocation->update([
                         'office_id' => $alloc['office_id'],
                         'amount'    => $alloc['amount'],
-                        'status'    => 'unliquidated',
+                        'status'    => $alloc['status'],
                     ]);
                 } else {
                     $cashAdvance->allocations()->create([

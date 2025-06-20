@@ -315,9 +315,9 @@
             class="fixed inset-0 z-[999] bg-black bg-opacity-50 overflow-y-auto"
         >
             <div class="min-h-screen flex flex-col justify-start items-center py-10 px-4">
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-2xl"> 
                     <!-- header -->
-                    <header class="flex justify-between items-center">
+                    <header class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                             Cash Advance Allocation
                         </h2>
@@ -330,10 +330,10 @@
 
                     <!-- content -->
                     @include('cash-advances.fund-allocation.add-allocation-cash-advance')
-
                 </div>
             </div>
         </div>
+
 
         <!-- Refund Modal -->
         <div 

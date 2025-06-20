@@ -41,131 +41,160 @@
                 />
             </div>
         </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-        <!-- Special Disbursing Officer -->
-        <div>
-            <x-input-label for="special_disbursing_officer" class="text-sm">
-                {{ __('Special Disbursing Officer') }} <span class="text-red-500">*</span>
-            </x-input-label>
-            <x-text-input readonly type="text" class="mt-1 block w-full text-sm" 
-                          x-bind:value="selectedAllocationList.special_disbursing_officer" />
-        </div>
-
-        <!-- Cash Advance Amount -->
-        <div>
-            <x-input-label for="cash_advance_amount" class="text-sm">
-                {{ __('Cash Advance Amount') }} <span class="text-red-500">*</span>
-            </x-input-label>
-            <x-text-input 
-                readonly 
-                type="text" 
-                class="mt-1 block w-full text-sm" 
-                x-bind:value="selectedAllocationList.cash_advance_amount 
-                    ? '₱' + parseFloat(selectedAllocationList.cash_advance_amount)
-                        .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
-                    : '₱0.00'" 
-            />
-        </div>
-
-        <!-- Office Allocations -->
-        <div class="space-y-2 mt-4">
-            <x-input-label for="allocations" class="text-sm">
-                {{ __('Allocate to Office(s)') }} <span class="text-red-500">*</span>
-            </x-input-label>
-
-            <template x-for="(allocation, index) in allocations" :key="index">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 relative  py-2 rounded-md group">
-                    
-                    <!-- Hidden ID input -->
-                    <input type="hidden" :name="`allocations[${index}][id]`" :value="allocation.id || ''">
-                    <input type="hidden" :name="`allocations[${index}][cash_advance_id]`" :value="allocation.cash_advance_id || ''">
-
-                    <!-- Office -->
-                    <select
-                        :name="`allocations[${index}][office_id]`"
-                        @change="allocation.office_id = $event.target.value"
-                        class="block w-full text-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                        required
-                    >
-                        <option value="">Select Office</option>
-                        <template x-for="office in offices" :key="office.id">
-                            <option
-                                :value="office.id"
-                                x-text="office.office_name"
-                                :selected="office.id === allocation.office_id"
-                            ></option>
-                        </template>
-                    </select>
-
-                    <!-- Amount -->
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 text-sm pointer-events-none">₱</span>
-                        <input 
-                            :name="`allocations[${index}][amount]`" 
-                            x-model="allocation.amount" 
-                            type="number" 
-                            step="0.01" 
-                            min="0" 
-                            class="block w-full text-sm pl-7 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" 
-                            placeholder="0.00" 
-                            required 
-                        />
-                    </div>
-
-
-                    <!-- Remove Button -->
-                    <button 
-                        type="button"
-                        @click="allocations.splice(index, 1);
-                                hasRemovedAllocation = true;
-                        "
-                        x-show="allocations.length > 1"
-                        class="absolute -top-2 -right-2 bg-white border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all rounded-full w-6 h-6 flex items-center justify-center shadow-md"
-                        title="Remove this allocation"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-2 h-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-
-                </div>
-            </template>
-
-
-            <!-- Add Office Button -->
-            <div class="flex items-center justify-between mt-2">
-                <button 
-                    type="button" 
-                    @click="allocations.push({ office_id: '', amount: '', status: '' })"
-                    class="text-sm text-blue-600 hover:underline"
-                >
-                    + Add Office Allocation
-                </button>
-
-                <!-- Totals -->
-                <div class="text-sm font-medium text-right space-y-1">
-                    <div>
-                        Total Allocated: 
-                        <span 
-                            x-text="'₱' + totalAllocated.toLocaleString(undefined, {minimumFractionDigits: 2})"
-                            x-bind:class="overAllocated ? 'text-red-600 font-bold' : 'text-green-600'"
-                        ></span>
-                    </div>
-                    <div>
-                        Remaining to Allocate:
-                        <span 
-                            x-text="'₱' + remainingAmount.toLocaleString(undefined, {minimumFractionDigits: 2})"
-                            x-bind:class="overAllocated ? 'text-red-600 font-bold' : 'text-gray-700'"
-                        ></span>
-                    </div>
-                </div>
+            <!-- Special Disbursing Officer -->
+            <div>
+                <x-input-label for="special_disbursing_officer" class="text-sm">
+                    {{ __('Special Disbursing Officer') }} <span class="text-red-500">*</span>
+                </x-input-label>
+                <x-text-input readonly type="text" class="mt-1 block w-full text-sm" 
+                            x-bind:value="selectedAllocationList.special_disbursing_officer" />
             </div>
 
-            <!-- Over Allocation Warning -->
-            <div x-show="overAllocated" class="text-red-600 text-sm mt-1">
-                ⚠️ Allocated amount exceeds the available cash advance.
+            <!-- Cash Advance Amount -->
+            <div>
+                <x-input-label for="cash_advance_amount" class="text-sm">
+                    {{ __('Cash Advance Amount') }} <span class="text-red-500">*</span>
+                </x-input-label>
+                <x-text-input 
+                    readonly 
+                    type="text" 
+                    class="mt-1 block w-full text-sm" 
+                    x-bind:value="selectedAllocationList.cash_advance_amount 
+                        ? '₱' + parseFloat(selectedAllocationList.cash_advance_amount)
+                            .toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
+                        : '₱0.00'" 
+                />
             </div>
         </div>
+
+
+     <!-- Office Allocations -->
+<div class="mt-4">
+    <x-input-label for="allocations" class="text-sm mb-2 block">
+        {{ __('Allocate to Office(s)') }} <span class="text-red-500">*</span>
+    </x-input-label>
+
+    <div class="overflow-x-auto border rounded-md">
+        <!-- Table -->
+        <table class="min-w-full text-sm text-left border-separate border-spacing-y-2">
+            <thead class="text-gray-700 dark:text-gray-300">
+                <tr>
+                    <th class="px-4 text-left">Office</th>
+                    <th class="px-4 text-left">Amount</th>
+                    <th class="px-4 text-left">Status <span class="text-xs text-red-400">(Readonly)</span></th>
+                    <th class="px-4 w-8"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="(allocation, index) in allocations" :key="index">
+                    <tr class="bg-white dark:bg-gray-800 rounded shadow">
+                        <!-- Hidden Inputs -->
+                        <input type="hidden" :name="`allocations[${index}][id]`" :value="allocation.id || ''">
+                        <input type="hidden" :name="`allocations[${index}][cash_advance_id]`" :value="allocation.cash_advance_id || ''">
+
+                        <!-- Office -->
+                        <td class="px-4">
+                            <select
+                                :name="`allocations[${index}][office_id]`"
+                                @change="allocation.office_id = $event.target.value"
+                                class="w-full text-sm border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                required
+                            >
+                                <option value="">Select Office</option>
+                                <template x-for="office in offices" :key="office.id">
+                                    <option
+                                        :value="office.id"
+                                        x-text="office.office_name"
+                                        :selected="office.id === allocation.office_id"
+                                    ></option>
+                                </template>
+                            </select>
+                        </td>
+
+                        <!-- Amount -->
+                        <td class="px-4 py-2">
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-2 flex items-center text-gray-500">₱</span>
+                                <input 
+                                    :name="`allocations[${index}][amount]`" 
+                                    x-model="allocation.amount" 
+                                    type="number" 
+                                    step="0.01" 
+                                    min="0" 
+                                    class="pl-6 w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" 
+                                    placeholder="0.00" 
+                                    required 
+                                />
+                            </div>
+                        </td>
+
+                        <!-- Status -->
+                        <td class="px-4 py-2">
+                            <input
+                                readonly
+                                :name="`allocations[${index}][status]`" 
+                                x-model="allocation.status" 
+                                class="w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            />
+                        </td>
+
+                        <!-- Remove Button -->
+                        <td class="px-2 py-2">
+                            <button 
+                                type="button"
+                                @click="allocations.splice(index, 1); hasRemovedAllocation = true"
+                                x-show="allocations.length > 1"
+                                class="text-red-500 hover:text-red-700"
+                                title="Remove"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Office Button -->
+    <div class="flex items-center justify-between mt-2">
+        <button 
+            type="button" 
+            @click="allocations.push({ office_id: '', amount: '', status: 'unliquidated' })"
+            class="text-sm text-blue-600 hover:underline"
+        >
+            + Add Office Allocation
+        </button>
+
+        <!-- Totals -->
+        <div class="text-sm font-medium text-right space-y-1">
+            <div>
+                Total Allocated: 
+                <span 
+                    x-text="'₱' + totalAllocated.toLocaleString(undefined, {minimumFractionDigits: 2})"
+                    x-bind:class="overAllocated ? 'text-red-600 font-bold' : 'text-green-600'"
+                ></span>
+            </div>
+            <div>
+                Remaining to Allocate:
+                <span 
+                    x-text="'₱' + remainingAmount.toLocaleString(undefined, {minimumFractionDigits: 2})"
+                    x-bind:class="overAllocated ? 'text-red-600 font-bold' : 'text-gray-700'"
+                ></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Over Allocation Warning -->
+    <div x-show="overAllocated" class="text-red-600 text-sm mt-1">
+        ⚠️ Allocated amount exceeds the available cash advance.
+    </div>
+</div>
 
         <!-- Submit Button -->
         <div class="flex items-center justify-end gap-4 mt-4">

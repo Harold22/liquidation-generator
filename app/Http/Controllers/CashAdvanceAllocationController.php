@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CashAdvanceUpdateRequest;
+use App\Http\Requests\CashAdvanceAllocationUpdateRequest;
 use App\Services\CashAdvanceAllocationService;
 use Illuminate\Http\Request;
 
 class CashAdvanceAllocationController extends Controller
 {
-    public function update(CashAdvanceUpdateRequest $request, CashAdvanceAllocationService $service)
+    public function update(CashAdvanceAllocationUpdateRequest $request, CashAdvanceAllocationService $service)
     {
         $validated = $request->validated();
         $updatedCashAdvance = $service->storeOrUpdate($validated);
