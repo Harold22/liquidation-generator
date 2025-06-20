@@ -9,9 +9,9 @@ use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class CashAdvance extends Model
+class CashAdvanceAllocation extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity;
+   use HasFactory, SoftDeletes, LogsActivity;
 
     protected $keyType = 'string';
 
@@ -25,43 +25,26 @@ class CashAdvance extends Model
             }
         });
     }
-
+    
     protected $fillable = [
-        'sdos_id',
-        'check_number',
-        'cash_advance_amount',
-        'cash_advance_date',
-        'dv_number',
-        'ors_burs_number',
-        'responsibility_code',
-        'uacs_code',
+        'cash_advance_id',
+        'office_id',
+        'amount',
         'status',
     ];
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logFillable();
     }
-    public function setCashAdvanceAmountAttribute($value)
+
+    public function cash_advance()
     {
-        $this->attributes['cash_advance_amount'] = (int) str_replace(',', '', $value);
+        return $this->belongsTo(CashAdvance::class, 'cash_advance_id');
     }
 
-    public function refund()
+    public function office()
     {
-        return $this->hasOne(Refund::class);
-    }
-    public function files()
-    {
-        return $this->hasMany(File::class);
-    }
-     public function sdo()
-    {
-        return $this->belongsTo(SDO::class, 'sdos_id');
-    }
-
-    public function allocations()
-    {
-        return $this->hasMany(CashAdvanceAllocation::class, 'cash_advance_id');
+        return $this->belongsTo(Office::class);
     }
 
 }

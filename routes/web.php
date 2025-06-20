@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\CashAdvanceAllocationController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
@@ -42,25 +43,18 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     Route::view('/activity-logs', 'activity-logs')->name('logs');
     Route::post('/user/reset/{id}', [UserController::class, 'resetPassword']);
 
-    // sdo routes
-    Route::view('/sdo', 'sdo')->name('sdo');
-    Route::post('/sdo', [SDOController::class, 'store'])->name('sdo.store');
-    Route::get('/getSDO/index', [SDOController::class, 'index']);
-    Route::post('/sdo/update', [SDOController::class, 'update'])->name('sdo.update');
-    Route::delete('sdo/delete/{id}', [SDOController::class, 'destroy']);
-    Route::get('sdo/get-cash-advances/{id}/{year}', [SDOController::class, 'getCashAdvances']);
+    // sdo
+    require __DIR__.'/sdo.php';
 
     // cdr
     Route::view('/cdr/{id}', 'cdr')->name('cdr');
 
     // offices
-    Route::view('/offices', 'offices')->name('offices');
-    Route::get('/getOffices', [OfficeController::class, 'index']);
-    Route::post('offices', [OfficeController::class, 'store'])->name('office.store');
-    Route::post('offices/update', [OfficeController::class, 'update'])->name('office.update');
-    Route::delete('/offices/delete/{id}', [OfficeController::class, 'destroy']);
-    Route::get('/offices/dropdown', [OfficeController::class, 'getOffice']);
+    require __DIR__.'/offices.php';
 
+    // allocation
+    Route::post('allocation', [CashAdvanceAllocationController::class, 'update'])->name('allocation.store');
+    Route::get('/allocation/{id}', [CashAdvanceAllocationController::class, 'getOfficesByCashAdvance']);
 
 });
 

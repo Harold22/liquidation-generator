@@ -344,7 +344,7 @@ document.addEventListener('alpine:init', () => {
         async getOffices() {
             this.loading = true;
             try {
-                axios.get('/offices/dropdown')
+                axios.get('/offices/list')
                 .then(response => {
                     this.offices = response.data;
                 });

@@ -108,7 +108,7 @@
         </div>
 
         <!-- Submit Button -->
-        <div class="flex items-center gap-4 mt-4">
+        <div class="flex items-center justify-end gap-4 mt-4">
             <x-primary-button
                 x-bind:disabled="Object.keys(errors).length > 0"
                 x-bind:class="Object.keys(errors).length > 0 ? 'opacity-50 cursor-not-allowed' : ''"

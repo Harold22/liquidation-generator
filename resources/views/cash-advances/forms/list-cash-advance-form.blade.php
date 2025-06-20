@@ -74,7 +74,8 @@
             <div class="flex gap-2">
                 <a href="{{ route('cash-advance.add') }}" 
                     class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-green-600 rounded-lg shadow 
-                        hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        title="Add Cash Advance">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="9"></circle>
                         <path d="M12 8v8"></path>
@@ -85,7 +86,8 @@
 
                 <a href="{{ route('import-files') }}" 
                     class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg shadow 
-                        hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        title="Import Files">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 16v4h16v-4"></path>
                         <path d="M12 3v12"></path>
@@ -131,15 +133,14 @@
                         </td>
                         <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100">
                             <div class="flex space-x-2">
-                                <div x-data="{ open: false, tooltip: false }" class="relative inline-block text-left">
-                                    <!-- Main Button with Tooltip -->
+                                <!-- <div x-data="{ open: false, tooltip: false }" class="relative inline-block text-left">
+                            
                                     <div class="relative flex items-center">
                                         <button @click="open = !open" 
                                             @mouseenter="tooltip = true"
                                             @mouseleave="tooltip = false"
                                             class="p-2 text-green-500 hover:text-green-700 focus:outline-none transition duration-200 ease-in-out">
-                                            
-                                            <!-- Liquidate Icon (Clipboard with Checkmark) -->
+                                        
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <path d="M9 12l2 2 4-4"></path>
                                                 <rect x="4" y="4" width="16" height="16" rx="2"></rect>
@@ -147,7 +148,6 @@
                                             </svg>
                                         </button>
 
-                                        <!-- Tooltip -->
                                         <span x-show="tooltip"
                                             class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md"
                                             x-transition.opacity>
@@ -155,7 +155,6 @@
                                         </span>
                                     </div>
 
-                                    <!-- Dropdown Menu -->
                                     <div 
                                         x-show="open" 
                                         @mouseover="open = true" 
@@ -180,6 +179,25 @@
                                             </li>
                                         </ul>
                                     </div>
+                                </div> -->
+                                <!-- Cash Advance allocation -->
+                                <div x-data="{ tooltip: false }" class="relative flex items-center">
+                                    <button @click="allocateFund(list), loading = true"
+                                        @mouseenter="tooltip = true"
+                                        @mouseleave="tooltip = false"
+                                        class="p-2 text-gray-500 hover:text-green-600  focus:outline-none transition duration-200 ease-in-out">
+                                        
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
+                                        </svg>
+                                    </button>
+
+                                    <!-- Tooltip -->
+                                    <span x-show="tooltip"
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md"
+                                        x-transition.opacity>
+                                        Allocate Fund
+                                    </span>
                                 </div>
                                 <!-- Refund Button with Tooltip -->
                                 <div x-data="{ tooltip: false }" class="relative flex items-center">
@@ -190,9 +208,8 @@
                                         
                                         <!-- Refund Icon -->
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9.75h4.875a2.625 2.625 0 0 1 0 5.25H12M8.25 9.75 10.5 7.5M8.25 9.75 10.5 12m9-7.243V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                         </svg>
-
                                     </button>
 
                                     <!-- Tooltip -->
@@ -207,7 +224,7 @@
                                     <button @click="updateModalData(list)" 
                                         @mouseenter="tooltip = true" 
                                         @mouseleave="tooltip = false" 
-                                        class="py-2 pr-2 text-gray-500 hover:text-yellow-600">
+                                        class="p-2 text-gray-500 hover:text-yellow-600">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                         </svg>
@@ -290,8 +307,22 @@
                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">entries</span>
             </div>
         </div>
+        <!-- Fund Allocation Modal -->
+        <div x-show="allocateFundModal && loading === false" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                <header class="flex justify-between items-center">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cash Advance Allocation</h2>
+                    <button @click="allocateFundModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                            <path d="M6 18L18 6M6 6l12 12" />
+                        </svg>  
+                    </button>
+                </header>
+                 @include('cash-advances.fund-allocation.add-allocation-cash-advance')
+            </div>
+        </div>
         <!-- Refund Modal -->
-        <div x-show="refundCashAdvanceModal && loading ===false" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
+        <div x-show="refundCashAdvanceModal && loading === false" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
                 <header class="flex justify-between items-center">
                     <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cash Advance Refund</h2>

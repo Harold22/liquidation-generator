@@ -12,9 +12,8 @@
          <!-- Desktop Menu -->
             <div class="hidden sm:flex items-center space-x-8 ml-auto">
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-nav-link>
-                <x-nav-link :href="route('cash-advance.add')" :active="request()->routeIs('cash-advance.add')">Add Cash Advance</x-nav-link>
-                <x-nav-link :href="route('import-files')" :active="request()->routeIs('import-files')">Import Files</x-nav-link>
                 <x-nav-link :href="route('cash-advance.list')" :active="request()->routeIs('cash-advance.list')">List of Cash Advance</x-nav-link>
+                <x-nav-link :href="route('import-files')" :active="request()->routeIs('import-files')">Import Files</x-nav-link>
 
                 @role('Admin')
                     <!-- Admin Dropdown -->
@@ -29,6 +28,7 @@
                         </x-slot>
 
                         <x-slot name="content">
+                            <!-- <x-dropdown-link :href="route('cash-advance.add')" :active="request()->routeIs('cash-advance.add')">Add Cash Advance</x-nav-link> -->
                             <x-dropdown-link :href="route('users')" :active="request()->routeIs('users')">Users</x-dropdown-link>
                             <x-dropdown-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-dropdown-link>
                             <x-dropdown-link :href="route('sdo')" :active="request()->routeIs('sdo')" >SDOs</x-dropdown-link> <!-- Add your actual route name here -->
@@ -72,12 +72,12 @@
     <div :class="{ 'block': open, 'hidden': !open }" class="sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('cash-advance.add')" :active="request()->routeIs('cash-advance.add')">Add Cash Advance</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('import-files')" :active="request()->routeIs('import-files')">Import Files</x-responsive-nav-link>
             <x-responsive-nav-link :href="route('cash-advance.list')" :active="request()->routeIs('cash-advance.list')">List of Cash Advance</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('import-files')" :active="request()->routeIs('import-files')">Import Files</x-responsive-nav-link>
 
             @role('Admin')
                 <div class="px-4 pt-3 text-sm font-semibold text-gray-500 dark:text-gray-400">Admin</div>
+                <!-- <x-responsive-nav-link :href="route('cash-advance.add')" :active="request()->routeIs('cash-advance.add')">Add Cash Advance</x-responsive-nav-link> -->
                 <x-responsive-nav-link :href="route('users')" :active="request()->routeIs('users')">Users</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('sdo')" :active="request()->routeIs('sdo')">SDOs</x-responsive-nav-link>
@@ -109,7 +109,7 @@
             </p>
             <div class="flex justify-end space-x-3">
                 <button @click="showLogoutModal = false"
-                    class="px-4 py-2 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded">
+                    class="px-4 py-2 text-sm bg-gray-200 text-gray-800 rounded hover:bg-gray-300">
                     Cancel
                 </button>
                 <form method="POST" action="{{ route('logout') }}">

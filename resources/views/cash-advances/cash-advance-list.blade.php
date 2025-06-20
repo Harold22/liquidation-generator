@@ -194,101 +194,205 @@
                     }
                 }
             },           
+
+            form: {
+                check_number: '',
+                cash_advance_amount: '',
+                cash_advance_date: '',
+                dv_number: '',
+                ors_burs_number: '',
+                responsibility_code: '',
+                uacs_code: ''
+            },
+            errors: {},
+
+            isValidString(value, pattern) {
+                return pattern.test(value);
+            },
+
+            validateField(field) {
+                const val = this.form[field];
+                const namePattern = /^[A-Za-zÑñ\s\-.]+$/;
+                const codePattern =  /^[A-Za-z0-9\-\.\/\s]+$/;
+                const today = new Date().toISOString().split('T')[0];
+                const maxAmount = 75000000;
+
+                switch (field) {
+                    case 'check_number':
+                        if (!val) {
+                            delete this.errors[field];
+                            break;
+                        }
+                        if (!this.isValidString(val, codePattern)) {
+                            this.errors[field] = 'Invalid characters used.';
+                        } else if (val.length > 255) {
+                            this.errors[field] = 'Must not exceed 255 characters.';
+                        } else {
+                            delete this.errors[field];
+                        }
+                        break;
+
+                    case 'cash_advance_amount':
+                        if (!val) {
+                            delete this.errors.cash_advance_amount
+                            break;
+                        }
+                        if (isNaN(val)) {
+                            this.errors.cash_advance_amount = 'Must be a valid number.';
+                        } else if (+val < 0.01) {
+                            this.errors.cash_advance_amount = 'Minimum is ₱0.01.';
+                        } else if (+val > maxAmount) {
+                            this.errors.cash_advance_amount = `Maximum is ₱${maxAmount.toLocaleString()}.`;
+                        } else {
+                            delete this.errors.cash_advance_amount;
+                        }
+                        break;
+
+                    case 'cash_advance_date':
+                        if (!val) {
+                            delete this.errors.cash_advance_date;
+                            break;
+                        }
+                        if (val > today) {
+                            this.errors.cash_advance_date = 'Date cannot be in the future.';
+                        } else {
+                            delete this.errors.cash_advance_date;
+                        }
+                        break;
+
+                    case 'dv_number':
+                    case 'ors_burs_number':
+                    case 'responsibility_code':
+                    case 'uacs_code':
+                        if (!val) {
+                            delete this.errors[field];
+                            break;
+                        }
+                        if (!this.isValidString(val, codePattern)) {
+                            this.errors[field] = 'Invalid characters used.';
+                        } else if (val.length > 255) {
+                            this.errors[field] = 'Must not exceed 255 characters.';
+                        } else {
+                            delete this.errors[field];
+                        }
+                        break;
+                }
+            },
+
+            validateForm() {
+                this.errors = {};
+                for (const field in this.form) {
+                    this.validateField(field);
+                }
+                return Object.keys(this.errors).length === 0;
+            },
+            
+            offices: [],
+            async getOffices() {
+                try {
+                    const response = await axios.get('/offices/list');
+
+                    this.offices = response.data.map(office => ({
+                        id: office.id.toString(),
+                        office_name: office.office_name,
+                    }));
+                } catch (error) {
+                    console.error('Failed to load offices:', error);
+                }
+            },
+
+            
+            allocations: [],
+            async getAllocations(cashAdvanceId) {
+                try {
+                    const response = await axios.get(`/allocation/${cashAdvanceId}`);
+
+                    this.allocations = response.data.length
+                        ? response.data.map(item => {
+                            return {
+                                id: item.id,
+                                cash_advance_id: item.cash_advance_id,
+                                office_id: item.office_id.toString() || '',
+                                amount: parseFloat(item.amount) || 0,
+                                status: item.status || '',
+                            };
+                        })
+                        : [{
+                            cash_advance_id: '',
+                            office_id: '',
+                            amount: 0,
+                            status: '',
+                        }];
+                } catch (error) {
+                    console.error('Failed to load allocations:', error);
+                } finally {
+                    this.loading = false;
+                }
+                
+            },
+
+
+            allocateFundModal: false,
+            selectedAllocationList: {},
+            renderReady: false,
+
+            async allocateFund(list)
+            {
+                this.allocateFundModal = true;
+                this.selectedAllocationList = list;
+
+                await this.getOffices();
+                await this.getAllocations(list.id);
+                this.renderReady = true;
+            },
+
+            get totalAllocated() {
+                return this.allocations.reduce((sum, item) => {
+                    return sum + (parseFloat(item.amount) || 0);
+                }, 0);
+            },
+            
+            get cashAdvanceAmount() {
+                return parseFloat(this.selectedAllocationList.cash_advance_amount || 0);
+            },
+
+            get computedRemaining() {
+                return this.cashAdvanceAmount - this.totalAllocated;
+            },
+
+            get remainingAmount() {
+                return this.computedRemaining < 0 ? 0 : this.computedRemaining;
+            },
+
+            get overAllocated() {
+                return this.computedRemaining < 0;
+            },
+
+            hasRemovedAllocation: false,
+            showConfirmModal: false,
+            pendingFormSubmitEvent: null,
+
+            submitForm(event) {
+                if (this.hasRemovedAllocation) {
+                    this.pendingFormSubmitEvent = event;
+                    this.showConfirmModal = true;
+                } else {
+                    event.target.submit();
+                }
+            },
+
+            confirmSubmission() {
+                this.showConfirmModal = false;
+                if (this.pendingFormSubmitEvent) {
+                    this.pendingFormSubmitEvent.target.submit();
+                }
+            },
+
+
             init() {
                 this.getCashAdvancesList();
             },
 
-        form: {
-            check_number: '',
-            cash_advance_amount: '',
-            cash_advance_date: '',
-            dv_number: '',
-            ors_burs_number: '',
-            responsibility_code: '',
-            uacs_code: ''
-        },
-        errors: {},
-
-        isValidString(value, pattern) {
-            return pattern.test(value);
-        },
-
-        validateField(field) {
-            const val = this.form[field];
-            const namePattern = /^[A-Za-zÑñ\s\-.]+$/;
-            const codePattern =  /^[A-Za-z0-9\-\.\/\s]+$/;
-            const today = new Date().toISOString().split('T')[0];
-            const maxAmount = 75000000;
-
-            switch (field) {
-                case 'check_number':
-                    if (!val) {
-                        delete this.errors[field];
-                        break;
-                    }
-                    if (!this.isValidString(val, codePattern)) {
-                        this.errors[field] = 'Invalid characters used.';
-                    } else if (val.length > 255) {
-                        this.errors[field] = 'Must not exceed 255 characters.';
-                    } else {
-                        delete this.errors[field];
-                    }
-                    break;
-
-                case 'cash_advance_amount':
-                    if (!val) {
-                        delete this.errors.cash_advance_amount
-                        break;
-                    }
-                    if (isNaN(val)) {
-                        this.errors.cash_advance_amount = 'Must be a valid number.';
-                    } else if (+val < 0.01) {
-                        this.errors.cash_advance_amount = 'Minimum is ₱0.01.';
-                    } else if (+val > maxAmount) {
-                        this.errors.cash_advance_amount = `Maximum is ₱${maxAmount.toLocaleString()}.`;
-                    } else {
-                        delete this.errors.cash_advance_amount;
-                    }
-                    break;
-
-                case 'cash_advance_date':
-                    if (!val) {
-                        delete this.errors.cash_advance_date;
-                        break;
-                    }
-                    if (val > today) {
-                        this.errors.cash_advance_date = 'Date cannot be in the future.';
-                    } else {
-                        delete this.errors.cash_advance_date;
-                    }
-                    break;
-
-                case 'dv_number':
-                case 'ors_burs_number':
-                case 'responsibility_code':
-                case 'uacs_code':
-                    if (!val) {
-                        delete this.errors[field];
-                        break;
-                    }
-                    if (!this.isValidString(val, codePattern)) {
-                        this.errors[field] = 'Invalid characters used.';
-                    } else if (val.length > 255) {
-                        this.errors[field] = 'Must not exceed 255 characters.';
-                    } else {
-                        delete this.errors[field];
-                    }
-                    break;
-            }
-        },
-
-        validateForm() {
-            this.errors = {};
-            for (const field in this.form) {
-                this.validateField(field);
-            }
-            return Object.keys(this.errors).length === 0;
-        },
         }));
     });
         
