@@ -308,48 +308,92 @@
             </div>
         </div>
         <!-- Fund Allocation Modal -->
-        <div x-show="allocateFundModal && loading === false" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
-                <header class="flex justify-between items-center">
-                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cash Advance Allocation</h2>
-                    <button @click="allocateFundModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
-                            <path d="M6 18L18 6M6 6l12 12" />
-                        </svg>  
-                    </button>
-                </header>
-                 @include('cash-advances.fund-allocation.add-allocation-cash-advance')
-            </div>
-        </div>
-        <!-- Refund Modal -->
-        <div x-show="refundCashAdvanceModal && loading === false" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
-                <header class="flex justify-between items-center">
-                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cash Advance Refund</h2>
-                    <button @click="refundCashAdvanceModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
-                            <path d="M6 18L18 6M6 6l12 12" />
-                        </svg>  
-                    </button>
-                </header>
-                @include('cash-advances.forms.refund-cash-advance-form')
+       <div 
+            x-show="allocateFundModal && loading === false"
+            x-cloak
+            x-transition
+            class="fixed inset-0 z-[999] bg-black bg-opacity-50 overflow-y-auto"
+        >
+            <div class="min-h-screen flex flex-col justify-start items-center py-10 px-4">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                    <!-- header -->
+                    <header class="flex justify-between items-center">
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                            Cash Advance Allocation
+                        </h2>
+                        <button @click="allocateFundModal = false" class="text-gray-500 hover:text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                                <path d="M6 18L18 6M6 6l12 12" />
+                            </svg>  
+                        </button>
+                    </header>
+
+                    <!-- content -->
+                    @include('cash-advances.fund-allocation.add-allocation-cash-advance')
+
+                </div>
             </div>
         </div>
 
-        <!-- Update cash advance modal -->
-         <div x-show="updateCashAdvanceModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
-                <header class="flex justify-between items-center">
-                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update Cash Advance</h2>
-                    <button @click="updateCashAdvanceModal = false" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
-                            <path d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </header>
-                @include('cash-advances.forms.update-cash-advance-form')
+        <!-- Refund Modal -->
+        <div 
+            x-show="refundCashAdvanceModal && loading === false" 
+            x-cloak 
+            x-transition 
+            class="fixed inset-0 z-[999] overflow-y-auto bg-black bg-opacity-50"
+        >
+            <div class="min-h-screen flex flex-col items-center justify-start py-10 px-4">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                    <!-- Modal Header -->
+                    <header class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cash Advance Refund</h2>
+                        <button 
+                            @click="refundCashAdvanceModal = false" 
+                            class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                                <path d="M6 18L18 6M6 6l12 12" />
+                            </svg>  
+                        </button>
+                    </header>
+
+                    <!-- Modal Content -->
+                    @include('cash-advances.forms.refund-cash-advance-form')
+
+                </div>
             </div>
         </div>
+
+
+        <!-- Update Cash Advance Modal -->
+        <div 
+            x-show="updateCashAdvanceModal" 
+            x-cloak 
+            x-transition 
+            class="fixed inset-0 z-[999] overflow-y-auto bg-black bg-opacity-50"
+        >
+            <div class="min-h-screen flex flex-col items-center justify-start py-10 px-4">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-lg">
+                    <!-- Modal Header -->
+                    <header class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Update Cash Advance</h2>
+                        <button 
+                            @click="updateCashAdvanceModal = false" 
+                            class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5">
+                                <path d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </header>
+
+                    <!-- Modal Body -->
+                    @include('cash-advances.forms.update-cash-advance-form')
+
+                </div>
+            </div>
+        </div>
+
         <!-- Delete Cash advance modal -->
         <div x-show="deleteCashAdvanceModal" x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
