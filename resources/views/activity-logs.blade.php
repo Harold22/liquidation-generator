@@ -37,7 +37,7 @@
                                     <th class="px-4 py-2">Event</th>
                                     <th class="px-4 py-2">Model</th>
                                     <th class="px-4 py-2">Date</th>
-                                    <th class="px-4 py-2">Actions</th>
+                                    <th class="px-4 py-2"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -66,21 +66,26 @@
                                         </td>
                                         <td class="px-4 py-2" x-text="new Date(log.created_at).toLocaleString()"></td>
                                         <td class="px-4 py-2">
-                                            <div x-data="{ tooltip: false }" class="relative flex items-center">
-                                                <button @click="showModal(log)"
-                                                    @mouseenter="tooltip = true"
+                                            <div x-data="{ tooltip: false }" class="relative flex items-center justify-center">
+                                                <button 
+                                                    @click="showModal(log)"
+                                                    @mouseenter="tooltip = true" 
                                                     @mouseleave="tooltip = false"
-                                                    class="p-2 text-gray-600 hover:text-green-500 focus:outline-none transition duration-200 ease-in-out">
-                                                    <!-- Eye Icon -->
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none">
-                                                        <path d="M1.5 12C1.5 12 5.25 4.5 12 4.5C18.75 4.5 22.5 12 22.5 12C22.5 12 18.75 19.5 12 19.5C5.25 19.5 1.5 12 1.5 12Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                        <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    class="flex items-center justify-center w-8 h-8 rounded-full text-gray-600 hover:bg-green-100 hover:text-green-600 transition duration-200 ease-in-out focus:outline-none"
+                                                    aria-label="View Details"
+                                                >
+                                                    <!-- Table/List Icon -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
                                                     </svg>
                                                 </button>
+
                                                 <!-- Tooltip -->
-                                                <span x-show="tooltip"
-                                                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md"
-                                                    x-transition.opacity>
+                                                <span 
+                                                    x-show="tooltip" 
+                                                    x-transition.opacity 
+                                                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md z-50"
+                                                >
                                                     Details
                                                 </span>
                                             </div>

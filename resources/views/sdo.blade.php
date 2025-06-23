@@ -168,10 +168,17 @@
                                     <th class="px-4 py-2">Designation</th>
                                     <th class="px-4 py-2">Station</th>
                                     <th class="px-4 py-2">Status</th>
-                                    <th class="px-4 py-2">Actions</th>
+                                    <th class="px-4 py-2"></th>
                                 </tr>
                             </thead>
                             <tbody class="capitalize">
+                                 <template x-if="sdos.length === 0">
+                                    <tr>
+                                        <td colspan="999" class="text-center text-red-500 py-4">
+                                            No SDOs found.
+                                        </td>
+                                    </tr>
+                                </template>
                                 <template x-for="sdo in sdos" :key="sdo.id">
                                     <tr class="border-b">
                                         <td class="px-4 py-2" x-text="`${sdo.firstname} ${sdo.middlename ?? ''} ${sdo.lastname} ${sdo.extension_name ?? ''}`.trim()"></td>
@@ -180,60 +187,64 @@
                                         <td class="px-4 py-2" x-text="sdo.station"></td>
                                         <td class="px-4 py-2" x-text="sdo.status"></td>
                                         <td class="px-4 py-2">
-                                            <div class="flex space-x-2">
-                                                <div x-data="{ tooltipEdit: false, tooltipDelete: false, tooltipCdr: false}" class="relative inline-flex space-x-2 text-left">
-                                                    <!-- Edit Button -->
-                                                    <div class="relative">
-                                                        <button  @click="$nextTick(() => window.open('{{ route('cdr', ['id' => ':id']) }}'.replace(':id', sdo.id), '_blank'))" 
-                                                            @mouseenter="tooltipCdr = true" 
-                                                            @mouseleave="tooltipCdr = false" 
-                                                            class="py-2 pr-2 text-green-600 hover:text-green-700 focus:outline-none transition duration-200 ease-in-out">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z" />
-                                                            </svg>
-                                                        </button>
-                                                        <span x-show="tooltipCdr"
-                                                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md whitespace-nowrap"
-                                                            x-transition.opacity>
-                                                            Print CDR
-                                                        </span>
-                                                    </div>
-                                                    <div class="relative">
-                                                        <button @click="editSdo(sdo)"
-                                                            @mouseenter="tooltipEdit = true" 
-                                                            @mouseleave="tooltipEdit = false" 
-                                                            class="py-2 pr-2 text-yellow-400 hover:text-yellow-600 focus:outline-none transition duration-200 ease-in-out">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                                            </svg>
+                                            <div x-data="{ tooltipEdit: false, tooltipDelete: false, tooltipCdr: false }" class="flex items-center justify-center space-x-2">
+                                                
+                                                <!-- CDR Button -->
+                                                <div class="relative">
+                                                    <button 
+                                                        @click="$nextTick(() => window.open('{{ route('cdr', ['id' => ':id']) }}'.replace(':id', sdo.id), '_blank'))"
+                                                        @mouseenter="tooltipCdr = true" 
+                                                        @mouseleave="tooltipCdr = false"
+                                                        class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-green-100 hover:text-green-700 transition duration-200 ease-in-out focus:outline-none"
+                                                        aria-label="Print CDR"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z" />
+                                                        </svg>
+                                                    </button>
+                                                    <span x-show="tooltipCdr" x-transition.opacity class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md whitespace-nowrap z-50">
+                                                        Print CDR
+                                                    </span>
+                                                </div>
 
-                                                        </button>
-                                                        <span x-show="tooltipEdit"
-                                                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md whitespace-nowrap"
-                                                            x-transition.opacity>
-                                                            Update
-                                                        </span>
-                                                    </div>
-                                                    <!-- Delete Button -->
-                                                    <div class="relative">
-                                                        <button @click="confirmDeleteSdo(sdo)"
-                                                            @mouseenter="tooltipDelete = true" 
-                                                            @mouseleave="tooltipDelete = false" 
-                                                            class="p-2 text-gray-500 hover:text-red-600 focus:outline-none transition duration-200 ease-in-out">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                                <!-- Edit Button -->
+                                                <div class="relative">
+                                                    <button 
+                                                        @click="editSdo(sdo)"
+                                                        @mouseenter="tooltipEdit = true" 
+                                                        @mouseleave="tooltipEdit = false"
+                                                        class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-yellow-100 hover:text-yellow-600 transition duration-200 ease-in-out focus:outline-none"
+                                                        aria-label="Edit"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z" />
+                                                        </svg>
+                                                    </button>
+                                                    <span x-show="tooltipEdit" x-transition.opacity class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md whitespace-nowrap z-50">
+                                                        Edit
+                                                    </span>
+                                                </div>
+
+                                                <!-- Delete Button -->
+                                                <div class="relative">
+                                                    <button 
+                                                        @click="confirmDeleteSdo(sdo)"
+                                                        @mouseenter="tooltipDelete = true" 
+                                                        @mouseleave="tooltipDelete = false"
+                                                        class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-red-100 hover:text-red-600 transition duration-200 ease-in-out focus:outline-none"
+                                                        aria-label="Delete"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                                            </svg>
-
-                                                        </button>
-                                                        <span x-show="tooltipDelete"
-                                                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md whitespace-nowrap"
-                                                            x-transition.opacity>
-                                                            Delete
-                                                        </span>
-                                                    </div>
+                                                        </svg>
+                                                    </button>
+                                                    <span x-show="tooltipDelete" x-transition.opacity class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-md whitespace-nowrap z-50">
+                                                        Delete
+                                                    </span>
                                                 </div>
                                             </div>
                                         </td>
+
                                     </tr>
                                 </template>
                             </tbody>

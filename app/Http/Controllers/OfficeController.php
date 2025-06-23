@@ -99,6 +99,17 @@ class OfficeController extends Controller
         $offices = Office::select('id', 'office_name')->orderBy('office_name')->get();
         return response()->json($offices);
     }
+    public function getOfficeName($id)
+    {
+        $office = Office::where('id', $id)->first();
+
+        if (!$office) {
+            return response()->json(['office_name' => 'Not Found'], 404);
+        }
+
+        return response()->json(['office_name' => $office->office_name]);
+    }
+
 
 
 

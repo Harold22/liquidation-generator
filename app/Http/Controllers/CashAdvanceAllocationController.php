@@ -6,23 +6,47 @@ use App\Http\Requests\CashAdvanceAllocationUpdateRequest;
 use App\Services\CashAdvanceAllocationService;
 use Illuminate\Http\Request;
 
+
 class CashAdvanceAllocationController extends Controller
 {
-    public function update(CashAdvanceAllocationUpdateRequest $request, CashAdvanceAllocationService $service)
+    protected $allocationService;
+
+    public function __construct(CashAdvanceAllocationService $allocationService)
+    {
+        $this->allocationService = $allocationService;
+    }
+
+    public function update(CashAdvanceAllocationUpdateRequest $request)
     {
         $validated = $request->validated();
-        $updatedCashAdvance = $service->storeOrUpdate($validated);
+        $updatedCashAdvance = $this->allocationService->storeOrUpdate($validated);
 
         return redirect()
             ->back()
             ->with('success', 'Cash advance allocations have been updated successfully.');
     }
 
-    public function getOfficesByCashAdvance($cashAdvanceId, CashAdvanceAllocationService $service)
+    public function getOfficesByCashAdvance($cashAdvanceId)
     {
-        $offices = $service->getAllLocationsByCashAdvance($cashAdvanceId);
-
+        $offices = $this->allocationService->getAllLocationsByCashAdvance($cashAdvanceId);
         return response()->json($offices);
+    }
 
+    public function getAllocationByOffice(Request $request, string $office_id)
+    {
+        $allocations = $this->allocationService->getByOfficeId($request, $office_id);
+        return response()->json($allocations);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:cash_advance_allocations,id',
+            'status' => 'required|in:liquidated,unliquidated',
+        ]);
+
+        $this->allocationService->updateStatus($validated['id'], $validated['status']);
+
+        return redirect()->back()->with('success', 'Status updated successfully.');
     }
 }

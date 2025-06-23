@@ -52,9 +52,21 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     // offices
     require __DIR__.'/offices.php';
 
+    require __DIR__.'/cash_advance.php';
+    require __DIR__.'/refund.php';
+
     // allocation
     Route::post('allocation', [CashAdvanceAllocationController::class, 'update'])->name('allocation.store');
     Route::get('/allocation/{id}', [CashAdvanceAllocationController::class, 'getOfficesByCashAdvance']);
+
+});
+
+// User-only routes
+Route::middleware(['auth', 'role:User', 'active'])->group(function () {
+    Route::view('/allocation-list', 'allocation-list')->name('allocation-list');
+    Route::get('/user/officeName/{id}', [OfficeController::class, 'getOfficeName']);
+    Route::get('/allocated/cash-advance/{id}', [CashAdvanceAllocationController::class, 'getAllocationByOffice']);
+    Route::post('/allocated/update-status', [CashAdvanceAllocationController::class, 'updateStatus'])->name('allocation.updateStatus');
 
 });
 
@@ -67,9 +79,8 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/getSDOList', [SDOController::class, 'getSDOList']);
 
     // Feature route files
-    require __DIR__.'/cash_advance.php';
+ 
     require __DIR__.'/files.php';
-    require __DIR__.'/refund.php';
     require __DIR__.'/dashboard.php';
 });
 

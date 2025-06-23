@@ -82,10 +82,10 @@
         <table class="min-w-full text-sm text-left border-separate border-spacing-y-2">
             <thead class="text-gray-700 dark:text-gray-300">
                 <tr>
-                    <th class="px-4 text-left">Office</th>
-                    <th class="px-4 text-left">Amount</th>
-                    <th class="px-4 text-left">Status <span class="text-xs text-red-400">(Readonly)</span></th>
-                    <th class="px-4 w-8"></th>
+                    <th class="px-2 text-left">Office</th>
+                    <th class="px-2 text-left">Amount</th>
+                    <th class="px-2 text-left">Status <span class="text-xs text-red-400">(Readonly)</span></th>
+                    <th class="px-2 w-8"></th>
                 </tr>
             </thead>
             <tbody>
@@ -96,7 +96,7 @@
                         <input type="hidden" :name="`allocations[${index}][cash_advance_id]`" :value="allocation.cash_advance_id || ''">
 
                         <!-- Office -->
-                        <td class="px-4">
+                        <td class="px-2">
                             <select
                                 :name="`allocations[${index}][office_id]`"
                                 @change="allocation.office_id = $event.target.value"
@@ -115,7 +115,7 @@
                         </td>
 
                         <!-- Amount -->
-                        <td class="px-4 py-2">
+                        <td class="px-2 py-2">
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-2 flex items-center text-gray-500">₱</span>
                                 <input 
@@ -132,13 +132,15 @@
                         </td>
 
                         <!-- Status -->
-                        <td class="px-4 py-2">
-                            <input
-                                readonly
-                                :name="`allocations[${index}][status]`" 
-                                x-model="allocation.status" 
+                        <td class="px-2 py-2">
+                            <select
+                                :name="`allocations[${index}][status]`"
+                                x-model="allocation.status"
                                 class="w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            />
+                            >
+                                <option value="unliquidated">Unliquidated</option>
+                                <option value="liquidated">Liquidated</option>
+                            </select>
                         </td>
 
                         <!-- Remove Button -->
