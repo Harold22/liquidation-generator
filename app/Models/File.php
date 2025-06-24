@@ -27,16 +27,16 @@ class File extends Model
     }
     protected $fillable = [
         'file_name', 
-        'cash_advance_id',
+        'cash_advance_allocation_id',
         'total_amount',
         'total_beneficiary',
         'location'
     ];
 
 
-    public function cashAdvance()
+    public function cashAdvanceAllocation()
     {
-        return $this->belongsTo(CashAdvance::class, 'cash_advance_id');
+        return $this->belongsTo(CashAdvanceAllocation::class, 'cash_advance_allocation_id');
     }
 
     public function getActivitylogOptions(): LogOptions

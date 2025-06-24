@@ -113,6 +113,37 @@ class CashAdvanceAllocationService
         return $allocation->save();
     }
 
+    public function getAllocationByOfficeNoPagination(string $officeId)
+    {
+        $allocations = CashAdvanceAllocation::with(['cash_advance.sdo'])
+            ->where('office_id', $officeId)
+            ->where('status', 'unliquidated')
+            ->get()
+            ->map(function ($allocation) {
+                $cashAdvance = $allocation->cash_advance;
+                $sdo = $cashAdvance->sdo ?? null;
+
+                return [
+                    'id' => $allocation->id,
+                    'cash_advance_id' => $allocation->cash_advance_id,
+                    'office_id' => $allocation->office_id,
+                    'amount' => $allocation->amount,
+                    'status' => $allocation->status,
+
+                    // Flattened cash advance
+                    'check_number' => $cashAdvance->check_number ?? null,
+                    'cash_advance_amount' => $cashAdvance->cash_advance_amount ?? null,
+                    'cash_advance_date' => $cashAdvance->cash_advance_date ?? null,
+
+                    // Flattened SDO
+                    'sdo_id' => $sdo->id ?? null,
+                    'sdo_name' => $sdo ? trim("{$sdo->firstname} {$sdo->middlename} {$sdo->lastname} {$sdo->extension_name}") : null,
+                ];
+            });
+
+        return $allocations;
+    }
+
 
 
 

@@ -128,20 +128,6 @@ class CashAdvanceController extends Controller
         return response()->json($cash_advances);
     }
 
-
-    public function showSdo()
-    {
-        $cash_advance = CashAdvance::with('sdo')->where('status', 'Unliquidated')->get();
-        /** @var \App\Models\CashAdvance $item */
-        foreach ($cash_advance as $item) {
-            $item->special_disbursing_officer = $item->sdo
-                ? trim("{$item->sdo->firstname} {$item->sdo->middlename} {$item->sdo->lastname} {$item->sdo->extension_name}")
-                : null;
-            $item->makeHidden('sdo');
-        }
-        return response()->json($cash_advance);
-    }
-
     public function getDetails($id)
     {
         $details = CashAdvance::with('sdo')->where('id', $id)

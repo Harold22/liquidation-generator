@@ -20,11 +20,11 @@
 
 
 <script>
-    const officeId = "{{ Auth::user()->office_id }}";
+   
     document.addEventListener('alpine:init', () => {
         Alpine.data('allocation', () => ({
             officeName: null,
-            officeId: officeId,
+            officeId: "{{ Auth::user()->office_id }}",
             allocations: [],
             loading: false,
             updateStatusModal: false,

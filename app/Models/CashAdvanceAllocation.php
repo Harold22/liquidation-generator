@@ -47,4 +47,9 @@ class CashAdvanceAllocation extends Model
         return $this->belongsTo(Office::class);
     }
 
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
+
 }

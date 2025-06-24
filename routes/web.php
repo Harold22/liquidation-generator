@@ -25,15 +25,12 @@ Route::get('/', fn () => view('auth.login'))->name('login.view');
 // Authenticated and Verified Users
 Route::middleware(['auth', 'verified', 'active'])->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
-    Route::view('/cash-advances/add', 'cash-advances.cash-advance')->name('cash-advance.add');
-    Route::view('/cash-advances/list', 'cash-advances.cash-advance-list')->name('cash-advance.list');
-    Route::view('/import-files', 'import-files.import-files')->name('import-files');
-    Route::view('/rcd/{id}', 'rcd')->name('rcd');
-    Route::view('/liquidation-report/{id}', 'liquidation-report')->name('liquidation-report');
 });
 
 // Admin-only routes
 Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
+    Route::view('/cash-advances/add', 'cash-advances.cash-advance')->name('cash-advance.add');
+    Route::view('/cash-advances/list', 'cash-advances.cash-advance-list')->name('cash-advance.list');
     Route::view('/users', 'users')->name('users');
     Route::get('/getUsers', [UserController::class, 'index']);
     Route::post('user', [UserController::class, 'store'])->name('register.store');
@@ -65,8 +62,13 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
 Route::middleware(['auth', 'role:User', 'active'])->group(function () {
     Route::view('/allocation-list', 'allocation-list')->name('allocation-list');
     Route::get('/user/officeName/{id}', [OfficeController::class, 'getOfficeName']);
-    Route::get('/allocated/cash-advance/{id}', [CashAdvanceAllocationController::class, 'getAllocationByOffice']);
+    Route::get('/allocated/cash-advance/{id}', [CashAdvanceAllocationController::class, 'getAllLocationByOffice']);
     Route::post('/allocated/update-status', [CashAdvanceAllocationController::class, 'updateStatus'])->name('allocation.updateStatus');
+    Route::view('/import-files', 'import-files.import-files')->name('import-files');
+    Route::view('/rcd/{id}', 'rcd')->name('rcd');
+    Route::view('/liquidation-report/{id}', 'liquidation-report')->name('liquidation-report');
+    Route::get('/allocated/sdo/{office_id}', [CashAdvanceAllocationController::class, 'getAllocationBySDO']);
+
 
 });
 

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->ulid('cash_advance_id'); 
-            $table->foreign('cash_advance_id')->references('id')->on('cash_advances')->onDelete('cascade');
+            $table->ulid('cash_advance_allocation_id'); 
+            $table->foreign('cash_advance_allocation_id')->references('id')->on('cash_advance_allocations')->onDelete('cascade');
             $table->string('file_name'); 
             $table->bigInteger('total_amount');
             $table->bigInteger('total_beneficiary');

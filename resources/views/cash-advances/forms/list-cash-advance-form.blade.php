@@ -83,18 +83,6 @@
                     </svg>
                     {{ __('Add') }}
                 </a>
-
-                <a href="{{ route('import-files') }}" 
-                    class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg shadow 
-                        hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                        title="Import Files">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 16v4h16v-4"></path>
-                        <path d="M12 3v12"></path>
-                        <path d="M8 7l4-4 4 4"></path>
-                    </svg>
-                    {{ __('Import') }}
-                </a>
             </div>
         </div>
     </div>

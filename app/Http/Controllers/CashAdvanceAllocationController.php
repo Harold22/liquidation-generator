@@ -32,7 +32,7 @@ class CashAdvanceAllocationController extends Controller
         return response()->json($offices);
     }
 
-    public function getAllocationByOffice(Request $request, string $office_id)
+    public function getAllLocationByOffice(Request $request, string $office_id)
     {
         $allocations = $this->allocationService->getByOfficeId($request, $office_id);
         return response()->json($allocations);
@@ -48,5 +48,11 @@ class CashAdvanceAllocationController extends Controller
         $this->allocationService->updateStatus($validated['id'], $validated['status']);
 
         return redirect()->back()->with('success', 'Status updated successfully.');
+    }
+
+    public function getAllocationBySDO(string $office_id)
+    {
+        $allocations = $this->allocationService->getAllocationByOfficeNoPagination( $office_id);
+        return response()->json($allocations);
     }
 }

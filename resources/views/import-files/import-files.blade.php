@@ -31,15 +31,15 @@
                                     {{ __('Special Disbursing Officer') }}<span class="text-red-500">*</span>
                                 </x-input-label>
                                 <select 
-                                    id="cash_advance" 
-                                    name="cash_advance" 
+                                    id="cash_advance_allocation_id" 
+                                    name="cash_advance_allocation_id" 
                                     x-model="selectedSdo" 
                                     @change="handleSdoChange()"
                                     class="uppercase block w-full mt-1 text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 focus:border-indigo-500"
                                     required>
                                     <option value="">{{ __('Select SDO') }}</option>
                                     <template x-for="sdo in sdo_list" :key="sdo.id">
-                                        <option :value="sdo.id" x-text="sdo.special_disbursing_officer"></option>
+                                        <option :value="sdo.id" x-text="sdo.sdo_name"></option>
                                     </template>
                                 </select>
                             </div>
@@ -51,7 +51,7 @@
                                     <p class="text-lg text-green-600" x-text="cashAdvanceDetails ? formatDate(cashAdvanceDetails.date) : 'mm/dd/yyyy'"></p>
                                 </div>
                                 <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow">
-                                    <p class="text-sm font-semibold">{{ __('Cash Advance Amount:') }}</p>
+                                    <p class="text-sm font-semibold">{{ __('Allocated Amount:') }}</p>
                                     <p class="text-lg text-green-600" 
                                         x-text="cashAdvanceDetails ? '₱' + parseFloat(cashAdvanceDetails.amount).toLocaleString() : '₱0'">
                                     </p>
@@ -165,6 +165,7 @@
 <script>
          document.addEventListener('alpine:init', () => {
             Alpine.data('importFiles', () => ({
+                officeId: "{{ Auth::user()->office_id }}",
                 importedFilesTable: true, beneficiaryListTable: false, deleteFileModal: false,
                 deleteBeneficiaryModal: false, updateFileModal: false,
                 sdo_list: [],
@@ -184,6 +185,10 @@
                 perPage: 5,
                 perPageBene: 5,
                 file_name: null,
+
+                init() {
+                    this.getSdoList();
+                },
 
                 async handleSdoChange() {
                     if (!this.selectedSdo) {
@@ -219,6 +224,17 @@
                     ]);
 
                     this.loading = false;
+                },
+                async getSdoList() {
+                    try {
+                        const response = await axios.get(`/allocated/sdo/${this.officeId}`);
+                        this.sdo_list = response.data;
+                        this.loading = false;
+                    } catch (error) {
+                        console.error('Error fetching SDO list:', error);
+                    } finally {
+                        this.loading = false; 
+                    }
                 },
 
                 async getFileDataPerFile(fileId, page_bene = 1, perPageBene = this.perPageBene) {
@@ -286,24 +302,11 @@
                         this.cashAdvanceDetails = selected
                             ? {
                                 date: selected.cash_advance_date,
-                                amount: selected.cash_advance_amount,
+                                amount: selected.amount,
                             }
                             : null;
                     } else {
                         this.cashAdvanceDetails = null;
-                    }
-                },
-
-                async getSdoList() {
-                    try {
-                        const response = await axios.get('/cash-advance/sdo');
-                        this.sdo_list = response.data;
-                        console.log(this.sdo_list);
-                        this.loading = false;
-                    } catch (error) {
-                        console.error('Error fetching SDO list:', error);
-                    } finally {
-                        this.loading = false; 
                     }
                 },
 
@@ -511,9 +514,6 @@
                     return Object.keys(this.errors).length === 0;
                 },
                 
-                init() {
-                    this.getSdoList();
-                },
             }));
         });
 

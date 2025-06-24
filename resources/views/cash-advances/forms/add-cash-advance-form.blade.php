@@ -48,10 +48,18 @@
 
     <!-- Form Section -->
     <div class="w-full lg:w-2/3 p-2">
-        <header class="mb-6 ml-4">
+        <header class="mb-6 flex items-center justify-between px-4">
             <h2 class="text-lg font-medium text-blue-500">
                 {{ __('Add Cash Advance Details') }}
             </h2>
+            <a href="{{ route('cash-advance.list') }}"
+            class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg shadow 
+                        hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                    </svg>
+                View List
+            </a>
         </header>
         @include('error-messages.messages')
         <form method="POST" action="{{ route('cash_advance.store') }}" class="space-y-6 px-4">

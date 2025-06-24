@@ -50,10 +50,6 @@ class CashAdvance extends Model
     {
         return $this->hasOne(Refund::class);
     }
-    public function files()
-    {
-        return $this->hasMany(File::class);
-    }
      public function sdo()
     {
         return $this->belongsTo(SDO::class, 'sdos_id');

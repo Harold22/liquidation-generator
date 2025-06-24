@@ -29,10 +29,9 @@ class FileController extends Controller
         try {
             $request->validate([
                 'file' => 'required|mimetypes:text/csv,text/plain',
-                'cash_advance' => 'required|exists:cash_advances,id',
+                'cash_advance_allocation_id' => 'required|exists:cash_advance_allocations,id',
                 'location' => 'required|in:onsite,offsite',
             ]);
-
             $failedRecords = [];
 
             DB::beginTransaction(); 
@@ -53,7 +52,7 @@ class FileController extends Controller
 
             $storedFile = File::create([
                 'file_name' => $fileName,
-                'cash_advance_id' => $request->input('cash_advance'),
+                'cash_advance_allocation_id' => $request->input('cash_advance_allocation_id'),
                 'total_amount' => 0,
                 'total_beneficiary' => 0,
                 'location' => $request->input('location'),
@@ -204,7 +203,7 @@ class FileController extends Controller
     {
         $perPage = $request->input('perPage', 5);
     
-        $query = File::where('cash_advance_id', $sdo);
+        $query = File::where('cash_advance_allocation_id', $sdo);
     
         if ($request->filled('search')) {
             $searchTerm = trim($request->search);
@@ -246,7 +245,7 @@ class FileController extends Controller
      */
     public function getIdToRCD($id)
     {
-        $file_ids = File::where('cash_advance_id', $id)->pluck('id');
+        $file_ids = File::where('cash_advance_allocation_id', $id)->pluck('id');
         return $file_ids->toArray();
     }
 
@@ -255,7 +254,7 @@ class FileController extends Controller
      */
     public function getSdoTotal($sdo)
     {
-        $files = File::where('cash_advance_id', $sdo)->get();
+        $files = File::where('cash_advance_allocation_id', $sdo)->get();
 
         $totalAmount = $files->sum('total_amount');
         $totalBeneficiaries = $files->sum('total_beneficiary');
