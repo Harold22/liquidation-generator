@@ -15,9 +15,10 @@
                 @role('Admin')
                     <x-nav-link :href="route('cash-advance.list')" :active="request()->routeIs('cash-advance.list')">Cash Advance</x-nav-link>
                     <x-nav-link :href="route('users')" :active="request()->routeIs('users')">Users</x-nav-link>
-                    <x-nav-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-nav-link>
                     <x-nav-link :href="route('sdo')" :active="request()->routeIs('sdo')" >SDOs</x-nav-link>
                     <x-nav-link :href="route('offices')" :active="request()->routeIs('offices')" >Offices</x-nav-link>
+                    <x-nav-link :href="route('offices')" :active="request()->routeIs('offices')" >Programs</x-nav-link>
+                    <x-nav-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-nav-link>
                 @endrole
                 @role('User')
                     <x-nav-link :href="route('allocation-list')" :active="request()->routeIs('allocation-list')">Cash Advance</x-nav-link>
@@ -68,9 +69,10 @@
                     Cash Advance
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('users')" :active="request()->routeIs('users')">Users</x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('sdo')" :active="request()->routeIs('sdo')">SDOs</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('offices')" :active="request()->routeIs('offices')">Offices</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('offices')" :active="request()->routeIs('offices')">Offices</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('logs')" :active="request()->routeIs('logs')">Logs</x-responsive-nav-link>
             @endrole
 
             @role('User')
