@@ -84,7 +84,7 @@
                 <tr>
                     <th class="px-2 text-left">Office</th>
                     <th class="px-2 text-left">Amount</th>
-                    <th class="px-2 text-left">Status <span class="text-xs text-red-400">(Readonly)</span></th>
+                    <th class="px-2 text-left">Status</th>
                     <th class="px-2 w-8"></th>
                 </tr>
             </thead>

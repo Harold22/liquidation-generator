@@ -128,14 +128,6 @@ class CashAdvanceController extends Controller
         return response()->json($cash_advances);
     }
 
-    public function getDetails($id)
-    {
-        $details = CashAdvance::with('sdo')->where('id', $id)
-            ->get();
-        return response()->json($details);
-    }
-
-
 
     
 }

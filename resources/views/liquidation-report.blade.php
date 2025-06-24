@@ -66,7 +66,7 @@
                             <div class="px-4 pb-5">Responsibility Code:</div>
                             <div class="px-4 pb-4">
                                 <div class="border-b border-black w-full flex justify-center">
-                                    <span x-text="mapped_cash_advance_details.responsibility_code"></span>
+                                    <span x-text="cash_advance_details.responsibility_code"></span>
                                 </div>
                             </div>
                         </div>
@@ -119,12 +119,12 @@
                     <div class="flex items-stretch border border-black">
                         <div class="w-3/4 px-6 py-2 border-r border-black flex flex-col">
                             <p><strong>TOTAL AMOUNT OF CASH ADVANCE PER</strong></p>
-                            <p><strong>DV NO#: </strong><span x-text="mapped_cash_advance_details.dv_number"></span></p>
-                            <p><strong>CHECK #: </strong><span x-text="mapped_cash_advance_details.check_number"></span></p>
-                            <p><strong>DATED: </strong><span x-text="new Date(mapped_cash_advance_details.cash_advance_date).toLocaleDateString('en-US')"></span></p>
+                            <p><strong>DV NO#: </strong><span x-text="cash_advance_details.dv_number"></span></p>
+                            <p><strong>CHECK #: </strong><span x-text="cash_advance_details.check_number"></span></p>
+                            <p><strong>DATED: </strong><span x-text="new Date(cash_advance_details.cash_advance_date).toLocaleDateString('en-US')"></span></p>
                         </div>
                         <div class="w-1/4 px-6 py-2 flex items-start justify-center">
-                            <h3 class="font-semibold text-center" x-text="'₱ '+ Number(mapped_cash_advance_details.cash_advance_amount).toLocaleString() + '.00'"></h3>
+                            <h3 class="font-semibold text-center" x-text="'₱ '+ Number(cash_advance_details.cash_advance_amount).toLocaleString() + '.00'"></h3>
                         </div>
                     </div>
 
@@ -135,19 +135,24 @@
                                 AMOUNT REFUNDED PER OR NO.:
                                 <span 
                                     class="uppercase font-semibold border-b border-black inline-block min-w-[120px]" 
-                                    x-text="official_receipt ? official_receipt : '\u00A0'">
+                                    x-text="liquidationType === 'Full' ? (official_receipt ? official_receipt : '\u00A0') : ''">
                                 </span> 
                                 DTD:
                                 <span 
                                     class="uppercase font-semibold border-b border-black inline-block min-w-[120px]" 
-                                    x-text="date_refunded ? date_refunded : '\u00A0'">
+                                    x-text="liquidationType === 'Full' ? (date_refunded ? date_refunded : '\u00A0') : ''">
                                 </span>
                             </h3>
 
 
                         </div>
                         <div class="w-1/4 border-black p-1">
-                            <h3 class="font-semibold text-center" x-text="amount_refunded != 0 ?  '₱ ' + Number(amount_refunded).toLocaleString() + '.00' : '' "></h3>
+                            <h3 
+                                class="font-semibold text-center text-sm"
+                                x-text="liquidationType === 'Full' && amount_refunded != 0 
+                                        ? '₱ ' + Number(amount_refunded).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
+                                        : '\u00A0'">
+                            </h3>
                         </div>
                     </div>
                     <div class="flex border-x border-black">
@@ -173,7 +178,7 @@
 
                     <div class="flex w-full border-x border-black">
                         <div class="flex-1 border-r border-black px-6 p-2">
-                            <p class=" border-black text-center font-semibold uppercase" x-text="mapped_cash_advance_details.special_disbursing_officer"></p>
+                            <p class=" border-black text-center font-semibold uppercase" x-text="cash_advance_details.sdo_name"></p>
                         </div>
                         <div class="flex-1 border-r border-black px-6 p-2">
                             <p class=" border-black text-center font-semibold">GEMMA D. DELA CRUZ</p>
@@ -223,8 +228,9 @@
 <script>
   document.addEventListener('alpine:init', () => {
     Alpine.data('report', () => ({
+        cash_advance_allocation_id: null,
         cash_advance_id: null,
-        mapped_cash_advance_details: {},
+        cash_advance_details: {},
         loading: true,
         file_data: [],
         liquidationType: 'Full',
@@ -240,7 +246,7 @@
             const id = pathSegments[pathSegments.length - 1];
 
             if (id) {
-                this.cash_advance_id = id;
+                this.cash_advance_allocation_id = id;
                 this.loading = false;
             } else {
                 console.log('ID not found in the URL path');
@@ -248,33 +254,17 @@
         },
 
         async getCashAdvanceDetails() {
-            if (!this.cash_advance_id) return console.log('No cash advance ID');
+            if (!this.cash_advance_allocation_id) {
+                return console.log('No cash advance allocation ID');
+            }
 
             try {
-                const response = await axios.get(`/cash-advance/details/${this.cash_advance_id}`);
-                const details = response.data[0];
+                const response = await axios.get(`/cash-advance/details/${this.cash_advance_allocation_id}`);
+                const details = response.data;
 
                 if (details) {
-                    const middlename = details.sdo.middlename;
-                    const middleInitial = middlename ? middlename.charAt(0) + '.' : '';
-
-                    this.mapped_cash_advance_details = {
-                        special_disbursing_officer: [
-                            details.sdo.firstname,
-                            middleInitial,
-                            details.sdo.lastname,
-                            details.sdo.extension_name
-                        ].filter(Boolean).join(' '),
-                        position: details.sdo.position,
-                        cash_advance_amount: parseFloat(details.cash_advance_amount).toFixed(2),
-                        cash_advance_date: details.cash_advance_date,
-                        check_number:details.check_number,
-                        dv_number: details.dv_number,
-                        ors_burs_number: details.ors_burs_number,
-                        responsibility_code: details.responsibility_code,
-                        uacs_code: details.uacs_code,
-                        status: details.status,
-                    };
+                    this.cash_advance_details = details;
+                    this.getRefundList();
                 } else {
                     console.log('No cash advance details found.');
                 }
@@ -283,12 +273,13 @@
             }
         },
 
+
         async getRefundList() {
-            if (!this.cash_advance_id) {
+            if (!this.cash_advance_allocation_id) {
                 this.resetRefundDetails();
                 return;
             }
-
+            this.cash_advance_id = this.cash_advance_details.cash_advance_id;
             try {
                 const response = await axios.get(`/refund/show/${this.cash_advance_id}`);
 
@@ -314,10 +305,10 @@
         },
 
         async getFileList() {
-            if (!this.cash_advance_id) return console.log('No cash advance ID');
+            if (!this.cash_advance_allocation_id) return console.log('No cash advance ID');
 
             try {
-                const response = await axios.get(`/files/rcd/${this.cash_advance_id}`);
+                const response = await axios.get(`/files/rcd/${this.cash_advance_allocation_id}`);
                 this.file_list = response.data;
                 
                 if (this.file_list.length > 0) {
@@ -394,7 +385,6 @@
         init() {
             this.getUrlId();
             this.getCashAdvanceDetails();
-            this.getRefundList();
             this.getFileList();
         }
     }));

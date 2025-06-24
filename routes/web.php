@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CashAdvanceAllocationController;
+use App\Http\Controllers\CashAdvanceController;
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RefundController;
 use App\Http\Controllers\SDOController;
 use Illuminate\Support\Facades\Route;
 
@@ -68,6 +70,8 @@ Route::middleware(['auth', 'role:User', 'active'])->group(function () {
     Route::view('/rcd/{id}', 'rcd')->name('rcd');
     Route::view('/liquidation-report/{id}', 'liquidation-report')->name('liquidation-report');
     Route::get('/allocated/sdo/{office_id}', [CashAdvanceAllocationController::class, 'getAllocationBySDO']);
+    Route::get('/cash-advance/details/{id}', [CashAdvanceAllocationController::class, 'getDetails'])->name('cash_advance.details');
+    Route::get('/refund/show/{id}', [RefundController::class, 'show']);
 
 
 });

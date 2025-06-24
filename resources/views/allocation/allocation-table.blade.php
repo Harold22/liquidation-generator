@@ -1,15 +1,20 @@
 <section>
     <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
         <!-- Header -->
-        <h2 class="text-xl font-semibold text-blue-500 dark:text-gray-200">
-            {{ __('Office: ') }}<span x-text="officeName"></span>
-        </h2>
+        <div>
+            <h2 class="text-xl font-semibold text-blue-500 dark:text-gray-200">
+                {{ __('Office: ') }}<span x-text="officeName"></span>
+            </h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Note: The amounts reflected in the tables are those allocated to your office.
+            </p>
+        </div>
 
         <div class="flex items-center gap-3 flex-wrap">
             <!-- Search Input -->
             <input 
                 type="text" 
-                 placeholder="Search..."
+                placeholder="Search..."
                 x-model="searchQuery"
                 @input.debounce.500ms="search"
                 class="px-4 py-1.5 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 
@@ -17,6 +22,7 @@
             />
         </div>
     </div>
+
 
     @include('error-messages.messages')
 
@@ -66,7 +72,7 @@
                                 <!-- Liquidation Report Button -->
                                 <div x-data="{ tooltip: false }" class="relative">
                                     <a 
-                                        x-bind:href="'{{ route('liquidation-report', ['id' => '__ID__']) }}'.replace('__ID__', list.id)" 
+                                        :href="'{{ route('liquidation-report', ['id' => '__ID__']) }}'.replace('__ID__', allocation.id)" 
                                         target="_blank"
                                         @mouseenter="tooltip = true" 
                                         @mouseleave="tooltip = false"
@@ -86,7 +92,7 @@
                                 <!-- RCD Button -->
                                 <div x-data="{ tooltip: false }" class="relative">
                                     <a 
-                                        x-bind:href="'{{ route('rcd', ['id' => '__ID__']) }}'.replace('__ID__', list.id)" 
+                                        x-bind:href="'{{ route('rcd', ['id' => '__ID__']) }}'.replace('__ID__', allocation.id)" 
                                         target="_blank"
                                         @mouseenter="tooltip = true" 
                                         @mouseleave="tooltip = false"

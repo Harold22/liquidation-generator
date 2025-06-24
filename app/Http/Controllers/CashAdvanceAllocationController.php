@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CashAdvanceAllocationUpdateRequest;
+use App\Models\CashAdvanceAllocation;
 use App\Services\CashAdvanceAllocationService;
 use Illuminate\Http\Request;
 
@@ -54,5 +55,16 @@ class CashAdvanceAllocationController extends Controller
     {
         $allocations = $this->allocationService->getAllocationByOfficeNoPagination( $office_id);
         return response()->json($allocations);
+    }
+
+    public function getDetails($id)
+    {
+        $details = $this->allocationService->getDetailsById($id);
+
+        if (!$details) {
+            return response()->json(['message' => 'Allocation not found.'], 404);
+        }
+
+        return response()->json($details);
     }
 }

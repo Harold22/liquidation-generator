@@ -97,7 +97,7 @@ class CashAdvanceAllocationService
 
                 // Flattened SDO
                 'sdo_id' => $sdo->id ?? null,
-                'sdo_name' => $sdo ? trim("{$sdo->firstname} {$sdo->middlename} {$sdo->lastname} {$sdo->extension_name}") : null,
+                'sdo_name' => $sdo ? trim("{$sdo->firstname} " . ($sdo->middlename ? strtoupper(substr($sdo->middlename, 0, 1)) . '. ' : '') . "{$sdo->lastname} {$sdo->extension_name}") : null,
                 'sdo_position' => $sdo->position ?? null,
                 'sdo_designation' => $sdo->designation ?? null,
                 'sdo_station' => $sdo->station ?? null,
@@ -137,7 +137,8 @@ class CashAdvanceAllocationService
 
                     // Flattened SDO
                     'sdo_id' => $sdo->id ?? null,
-                    'sdo_name' => $sdo ? trim("{$sdo->firstname} {$sdo->middlename} {$sdo->lastname} {$sdo->extension_name}") : null,
+                    'sdo_name' => $sdo ? trim("{$sdo->firstname} " . ($sdo->middlename ? strtoupper(substr($sdo->middlename, 0, 1)) . '. ' : '') . "{$sdo->lastname} {$sdo->extension_name}") : null,
+
                 ];
             });
 
@@ -145,6 +146,42 @@ class CashAdvanceAllocationService
     }
 
 
+    public function getDetailsById($id): ?array
+        {
+            $allocation = CashAdvanceAllocation::with(['cash_advance.sdo'])
+                ->where('id', $id)
+                ->first();
 
+            if (!$allocation) {
+                return null;
+            }
+
+            $sdo = optional($allocation->cash_advance->sdo);
+
+            return [
+                'id' => $allocation->id,
+                'cash_advance_id' => $allocation->cash_advance_id,
+                'office_id' => $allocation->office_id,
+                'amount' => $allocation->amount,
+                'status' => $allocation->status,
+
+                // Cash Advance Details
+                'check_number' => $allocation->cash_advance->check_number ?? null,
+                'cash_advance_amount' => $allocation->cash_advance->cash_advance_amount ?? null,
+                'cash_advance_date' => $allocation->cash_advance->cash_advance_date ?? null,
+                'dv_number' => $allocation->cash_advance->dv_number ?? null,
+                'ors_burs_number' => $allocation->cash_advance->ors_burs_number ?? null,
+                'responsibility_code' => $allocation->cash_advance->responsibility_code ?? null,
+                'uacs_code' => $allocation->cash_advance->uacs_code ?? null,
+
+                // SDO Details
+                'sdo_id' => $sdo->id,
+                'sdo_name' => $sdo ? trim("{$sdo->firstname} " . ($sdo->middlename ? strtoupper(substr($sdo->middlename, 0, 1)) . '. ' : '') . "{$sdo->lastname} {$sdo->extension_name}") : null,
+                'sdo_position' => $sdo->position,
+                'sdo_designation' => $sdo->designation,
+                'sdo_station' => $sdo->station,
+                'sdo_status' => $sdo->status,
+            ];
+        }
 
 }
