@@ -44,6 +44,8 @@
         <!-- reCAPTCHA -->
         <div class="flex mt-6 item-center justify-center">
             {!! NoCaptcha::display() !!}
+        </div>
+        <div class="flex mt-4 item-center justify-center">
             @error('g-recaptcha-response')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
