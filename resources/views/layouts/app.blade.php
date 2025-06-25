@@ -40,23 +40,34 @@
             }
         </style>
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+    <body x-data="{ sidebarOpen: JSON.parse(localStorage.getItem('sidebarOpen') || 'true') }"
+        x-init="$watch('sidebarOpen', val => localStorage.setItem('sidebarOpen', val))"
+        class="font-sans antialiased bg-gray-100 dark:bg-gray-900">
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
+        <div class="flex h-screen overflow-hidden">
+            <!-- Sidebar -->
+            <x-layouts.sidebar />
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+            <!-- Main Content Area -->
+            <div class="flex-1 flex flex-col transition-all duration-300"
+                :class="sidebarOpen ? 'ml-64' : 'ml-20'">
+                
+                <!-- Top Navigation (pass pageTitle here) -->
+                <x-layouts.navigation>
+                      {{ $header }}
+                </x-layouts.navigation>
+
+                <!-- Page Content -->
+                <main class="flex-1 mt-12 p-4 overflow-y-auto">
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
     </body>
+
+
 </html>
+
+
+
+  

@@ -10,7 +10,7 @@
         <div x-show="loading">
             <x-spinner />
         </div>
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
              <!-- Title and Year Filter -->
              <div class="flex justify-between items-center bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-4">
                 <h3 class="text-xl font-bold text-blue-500">Dashboard Overview</h3>

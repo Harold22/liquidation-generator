@@ -6,7 +6,7 @@
     </x-slot>
 
     <div x-data="importFiles()" class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
             <!-- Card Container -->
             <div class="dark:bg-gray-800  sm:rounded-lg">
                 <!-- Loading Indicator -->
