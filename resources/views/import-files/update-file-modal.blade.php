@@ -33,7 +33,7 @@
         </div>
 
         <!-- Submit Button -->
-        <div class="flex items-center gap-4">
+        <div class="flex items-center justify-end gap-4">
             <x-primary-button class="text-sm px-4 py-2">
                 {{ __('Save') }}
             </x-primary-button>
