@@ -30,7 +30,7 @@
     <div x-show="loading">
         <x-spinner />
     </div>
-    <div class="mt-4">
+    <div class="w-full overflow-x-auto py-2 mt-4">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 border">
             <thead class="bg-gray-100 dark:bg-gray-900">
                 <tr>
