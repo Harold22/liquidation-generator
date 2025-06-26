@@ -74,7 +74,6 @@ Route::middleware(['auth', 'role:User', 'active'])->group(function () {
     Route::view('/liquidation-report/{id}', 'liquidation-report')->name('liquidation-report');
     Route::get('/allocated/sdo/{office_id}', [CashAdvanceAllocationController::class, 'getAllocationBySDO']);
     Route::get('/cash-advance/details/{id}', [CashAdvanceAllocationController::class, 'getDetails'])->name('cash_advance.details');
-    Route::get('/refund/show/{id}', [RefundController::class, 'show']);
 
 
 });
@@ -86,6 +85,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/getSDOList', [SDOController::class, 'getSDOList']);
+    Route::get('/refund/show/{id}', [RefundController::class, 'show']);
 
     // Feature route files
  

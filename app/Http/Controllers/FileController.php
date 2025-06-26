@@ -104,7 +104,7 @@ class FileController extends Controller
             $this->updateFileTotals($storedFile);
             DB::commit(); 
 
-            return redirect()->back()->with('message', 'File uploaded and data saved successfully.');
+            return redirect()->back()->with('success', 'File uploaded and data saved successfully.');
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'An error occurred. Please try again. ' . $e->getMessage());
