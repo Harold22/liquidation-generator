@@ -31,6 +31,7 @@ class CashAdvanceRequest extends FormRequest
                     return $query->where('status', 'Unliquidated');
                 }),
         ],
+            'program_id' => ['required','exists:programs,id'],
             'check_number' => 'required|string|max:255|regex:/^[A-Za-z0-9\-\.\/\s]+$/',
             'cash_advance_amount' => [
                 'required',

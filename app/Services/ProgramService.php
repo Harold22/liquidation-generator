@@ -51,5 +51,10 @@ class ProgramService
         return $program;
     }
 
+    public function getProgramsWithoutPagination()
+    {
+          return Program::select('id', 'program_name', 'program_abbreviation')->where('status', 'Active')->get();
+    }
+
    
 }

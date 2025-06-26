@@ -229,6 +229,7 @@
                     try {
                         const response = await axios.get(`/allocated/sdo/${this.officeId}`);
                         this.sdo_list = response.data;
+                        console.log('snakdhkad:',this.sdo_list);
                         this.loading = false;
                     } catch (error) {
                         console.error('Error fetching SDO list:', error);

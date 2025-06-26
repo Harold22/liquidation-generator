@@ -8,5 +8,6 @@ use Illuminate\Support\Facades\Route;
     Route::get('program/index', [ProgramController::class, 'index']);
     Route::post('program/update', [ProgramController::class, 'update'])->name('program.update');
     Route::delete('program/delete/{id}', [ProgramController::class, 'destroy'])->name('program.destroy');
+    Route::get('program/getPrograms', [ProgramController::class, 'getPrograms']);
 
   

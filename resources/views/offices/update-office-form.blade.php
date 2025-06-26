@@ -15,7 +15,7 @@
         <!-- Office Location -->
         <div class="mt-4">
             <div class="flex">
-                <x-input-label for="office_location" :value="__('Office Location')" />
+                <x-input-label for="office_location" :value="__('Office Location (Municipality/City only)')" />
                 <span class="text-red-500">*</span>
             </div>
             <x-text-input x-model="selectedOffice.office_location" id="office_location" class="block mt-1 w-full" type="text" name="office_location"  required />

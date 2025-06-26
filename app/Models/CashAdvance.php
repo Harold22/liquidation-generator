@@ -28,6 +28,7 @@ class CashAdvance extends Model
 
     protected $fillable = [
         'sdos_id',
+        'program_id',
         'check_number',
         'cash_advance_amount',
         'cash_advance_date',
@@ -58,6 +59,11 @@ class CashAdvance extends Model
     public function allocations()
     {
         return $this->hasMany(CashAdvanceAllocation::class, 'cash_advance_id');
+    }
+
+      public function program()
+    {
+        return $this->belongsTo(Program::class, 'program_id');
     }
 
 }

@@ -16,6 +16,13 @@
                 </span>
             </div>
             <div class="flex justify-between items-center border-b pb-2">
+                <strong class="text-gray-700 dark:text-gray-300">Program:</strong>
+                <span 
+                    class="font-medium text-green-600 dark:text-gray-100 break-words max-w-[60%]" 
+                    x-text="programs.find(p => p.id == form.program_id)?.program_name || '-'">
+                </span>
+            </div>
+            <div class="flex justify-between items-center border-b pb-2">
                 <strong class="text-gray-700 dark:text-gray-300">Check Number:</strong>
                 <span class="font-medium text-green-600 dark:text-gray-100 break-words max-w-[60%]" x-text="form.check_number || '-'"></span>
             </div>
@@ -83,6 +90,21 @@
                     <option value="" disabled selected>Select an officer</option>
                     <template x-for="sdo in sdoList" :key="sdo.id">
                         <option :value="sdo.id" x-text="sdo.name"></option>
+                    </template>
+                </select>
+            </div>
+            <!-- Program -->
+           <div>
+                <x-input-label for="sdos_id">
+                    {{ __('Program') }} <span class="text-red-500">*</span>
+                </x-input-label>
+                
+                <select id="program_id" name="program_id" required
+                        class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        x-model="form.program_id">
+                    <option value="" disabled selected>Select a Program</option>
+                    <template x-for="program in programs" :key="program.id">
+                        <option :value="program.id" x-text="program.program_abbreviation"></option>
                     </template>
                 </select>
             </div>
@@ -193,8 +215,23 @@
 <script>
 document.addEventListener('alpine:init', () => {
     Alpine.data('cashAdvanceForm', () => ({
+
+        programs: [],
+        async getPrograms() {
+            this.loading = true;
+            try {
+                const response = await axios.get('/program/getPrograms');
+                this.programs = response.data.data; 
+            } catch (error) {
+                console.error('Error fetching programs:', error);
+            } finally {
+                this.loading = false;
+            }
+        },
+
         form: {
             sdos_id: '',
+            program_id: '',
             check_number: '',
             cash_amount: '',
             cash_date: '',
@@ -308,6 +345,7 @@ document.addEventListener('alpine:init', () => {
 
         init() {
             this.getSDOList();
+            this.getPrograms();
         },
 
         getSDOList() {

@@ -41,4 +41,9 @@ class Program extends Model
     {
         return LogOptions::defaults()->logFillable();
     }
+    
+    public function cash_advance()
+    {
+        return $this->hasMany(CashAdvance::class, 'program_id');
+    }
 }

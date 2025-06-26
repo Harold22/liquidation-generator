@@ -10,9 +10,27 @@
         <!-- Special Disbursing Officer (Full Width) -->
         <div>
             <x-input-label for="special_disbursing_officer" class="text-sm">
-                {{ __('Special Disbursing Officer') }} <span class="text-red-500">*</span>
+                {{ __('Special Disbursing Officer') }} 
             </x-input-label>
             <x-text-input readonly type="text" class="mt-1 block w-full text-sm" x-bind:value="selectedList.special_disbursing_officer" />
+        </div>
+
+        <!-- Special Disbursing Officer (Full Width) -->
+        <div>
+            <x-input-label for="program_id" class="text-sm">
+                {{ __('Program') }} <span class="text-red-500">*</span>
+            </x-input-label>
+            <select 
+                id="program_id" 
+                name="program_id" 
+                x-model="selectedList.program_id"
+                class="mt-1 block w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+            >
+                <option value="" disabled>Select a program</option>
+                <template x-for="program in programs" :key="program.id">
+                    <option :value="program.id" x-text="program.program_abbreviation"></option>
+                </template>
+            </select>
         </div>
 
         <!-- Left and Right Column Layout -->
@@ -100,7 +118,10 @@
                 <x-input-label for="status" class="text-sm">
                     {{ __('Status') }} <span class="text-red-500">*</span>
                 </x-input-label>
-                <select id="status" name="status" class="mt-1 block w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" x-model="selectedList.status">
+                <select id="status" 
+                    name="status" 
+                    class="mt-1 block w-full text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" 
+                    x-model="selectedList.status">
                     <option value="Liquidated" x-bind:selected="selectedList.status === 'Liquidated'">Liquidated</option>
                     <option value="Unliquidated" x-bind:selected="selectedList.status === 'Unliquidated'">Unliquidated</option>
                 </select>

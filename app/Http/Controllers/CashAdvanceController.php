@@ -79,7 +79,7 @@ class CashAdvanceController extends Controller
         $sortOrder = $request->input('sortOrder', 'ASC');
         $filterBy = $request->input('filterBy');
 
-        $query = CashAdvance::with('sdo');
+        $query = CashAdvance::with('sdo', 'program');
 
         if (auth()->user()->getRoleNames()->first() === 'User') {
             $query->where('status', 'Unliquidated');
@@ -122,7 +122,11 @@ class CashAdvanceController extends Controller
             $item->special_disbursing_officer = $item->sdo
                 ? trim("{$item->sdo->firstname} {$item->sdo->middlename} {$item->sdo->lastname} {$item->sdo->extension_name}")
                 : null;
-            $item->makeHidden('sdo');
+
+            $item->program_name = $item->program->program_name ?? null;
+            $item->program_abbreviation = $item->program->program_abbreviation ?? null;
+
+            $item->makeHidden(['sdo', 'program']);
         }
 
         return response()->json($cash_advances);

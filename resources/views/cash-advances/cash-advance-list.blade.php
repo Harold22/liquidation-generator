@@ -388,8 +388,22 @@
                 }
             },
 
+            programs: [],
+            async getPrograms() {
+                try {
+                    const response = await axios.get('/program/getPrograms');
+                    this.programs = response.data.data;
+                    console.log(); 
+                } catch (error) {
+                    console.error('Error fetching programs:', error);
+                } finally {
+                    this.loading = false;
+                }
+            },
+
 
             init() {
+                this.getPrograms();
                 this.getCashAdvancesList();
             },
 

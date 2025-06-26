@@ -24,7 +24,7 @@ class CashAdvanceAllocationController extends Controller
 
         return redirect()
             ->back()
-            ->with('success', 'Cash advance allocations have been updated successfully.');
+            ->with('success', 'Cash advance allocations have been saved successfully.');
     }
 
     public function getOfficesByCashAdvance($cashAdvanceId)

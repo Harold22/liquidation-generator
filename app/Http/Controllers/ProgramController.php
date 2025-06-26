@@ -78,6 +78,21 @@ class ProgramController extends Controller
         }
     }
 
+     public function getPrograms()
+    {
+        try {
+            $programs = $this->programService->getProgramsWithoutPagination();
+
+            return response()->json([
+                'data' => $programs,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch program data.',
+            ], 500);
+        }
+    }
 
 
 
