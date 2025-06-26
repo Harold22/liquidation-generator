@@ -15,6 +15,8 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->ulid('sdos_id'); 
             $table->foreign('sdos_id')->references('id')->on('s_d_o_s')->onDelete('cascade');
+            $table->ulid('program_id'); 
+            $table->foreign('program_id')->references('id')->on('programs')->onDelete('cascade');
             $table->string('check_number');
             $table->decimal('cash_advance_amount', 10 ,2);
             $table->string('cash_advance_date');

@@ -7,14 +7,30 @@
         <!-- Toggle Button -->
         <button @click="sidebarOpen = !sidebarOpen"
                 class="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-            <svg x-show="!sidebarOpen" x-cloak class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16"/>
+            <svg x-show="!sidebarOpen" x-cloak class="h-6 w-6" fill="none" stroke="currentColor"    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                <path
+                    d="M12 6H20M12 12H20M4 18H20M4 6L8 9L4 12"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
             </svg>
-            <svg x-show="sidebarOpen" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"/>
+            <svg x-show="sidebarOpen" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                stroke="currentColor"
+                fill="none" xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    d="M12 6H20M12 12H20M4 18H20M8 6L4 9L8 12"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
             </svg>
+
         </button>
 
         <!-- Page Title -->

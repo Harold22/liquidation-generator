@@ -4,13 +4,12 @@
             {{ __('Activity Logs') }}
         </h2>
     </x-slot>
-
+    @include('error-messages.messages')
     <div x-data="logs()" class="py-8">
         <div x-show="loading">
             <x-spinner />
         </div> 
          <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
-        @include('error-messages.messages')
             <div class="flex flex-col lg:flex-row lg:items-start gap-6">
                 <!-- User List -->
                 <div class="w-full bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">

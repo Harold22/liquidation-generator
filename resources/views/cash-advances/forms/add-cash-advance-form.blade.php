@@ -48,10 +48,15 @@
 
     <!-- Form Section -->
     <div class="w-full lg:w-2/3 p-2">
-        <header class="mb-6 flex items-center justify-between px-4">
-            <h2 class="text-lg font-medium text-blue-500">
-                {{ __('Add Cash Advance Details') }}
-            </h2>
+        <header class="mb-2 flex items-center justify-between px-2">
+            <div>
+                <h2 class="text-lg font-medium text-blue-500">
+                    {{ __('Cash Advance Details') }}
+                </h2>
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                    Fill out the form below to register a new cash advance in the system.
+                </p>
+            </div>
             <a href="{{ route('cash-advance.list') }}"
             class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 rounded-lg shadow 
                         hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">

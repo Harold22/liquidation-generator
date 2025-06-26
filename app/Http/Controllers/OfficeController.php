@@ -61,7 +61,7 @@ class OfficeController extends Controller
                 $this->service->create($request->validated());
             });
 
-            return redirect()->back()->with('message', 'Added Successfully');
+            return redirect()->back()->with('success', 'Added Successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error! Please try again.');
         }

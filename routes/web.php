@@ -45,6 +45,9 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     // sdo
     require __DIR__.'/sdo.php';
 
+    //program
+    require __DIR__.'/program.php';
+
     // cdr
     Route::view('/cdr/{id}', 'cdr')->name('cdr');
 

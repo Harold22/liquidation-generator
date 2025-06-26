@@ -4,17 +4,19 @@
             {{ __('Special Disbursing Officers') }}
         </h2>
     </x-slot>
-
+    @include('error-messages.messages') 
     <div x-data="sdo()" class="py-8">
         <div x-show="loading">
             <x-spinner />
         </div> 
         <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6">
-            @include('error-messages.messages')
             <div class="flex flex-col lg:flex-row lg:items-start gap-6">
                 <!-- User Registration Form -->
                 <div class="w-full lg:w-1/3 bg-white dark:bg-gray-700 p-6 rounded-lg shadow self-start">
-                    <h3 class="text-lg font-semibold mb-4 text-blue-500">Register New Special Disbursing Officer</h3>
+                    <h3 class="text-lg font-semibold mb-2 text-blue-500">Register New Special Disbursing Officer</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-6">
+                        Fill out the form below to register a new sdo in the system.
+                    </p>
                     <form method="POST" action="{{ route('sdo.store') }}">
                         @csrf
                         <!-- Firstname -->
