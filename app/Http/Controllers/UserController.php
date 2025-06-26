@@ -108,7 +108,7 @@ class UserController extends Controller
 
             if ($updated) {
                 $user->save();
-                return back()->with('message', 'User updated successfully.');
+                return back()->with('success', 'User updated successfully.');
             }
 
             return back()->with('message', 'No changes detected.');
@@ -127,7 +127,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return response()->json(['message' => 'User deleted successfully.']);
+        return response()->json(['success' => 'User deleted successfully.']);
     }
 
     public function resetPassword($id)

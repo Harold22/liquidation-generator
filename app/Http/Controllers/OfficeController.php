@@ -75,7 +75,7 @@ class OfficeController extends Controller
                 $this->service->update($office, $request->validated());
             });
 
-            return redirect()->back()->with('message', 'Updated Successfully');
+            return redirect()->back()->with('success', 'Updated Successfully');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error! Please try again.');
         }
@@ -88,7 +88,7 @@ class OfficeController extends Controller
             $office = Office::findOrFail($id);
             $this->service->delete($office);
 
-            return response()->json(['message' => 'Office deleted successfully.']);
+            return response()->json(['success' => 'Office deleted successfully.']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error! Please try again.'], 500);
         }

@@ -44,7 +44,7 @@ class CashAdvanceController extends Controller
                 $this->cashAdvanceService->updateCashAdvance($id, $request->validated());
             });
 
-            return redirect()->back()->with('message', 'Updated Successfully');
+            return redirect()->back()->with('success', 'Updated Successfully');
         } catch (\Exception $e) {
             return back()->with('error', 'An error occurred. Please try again.');
         }

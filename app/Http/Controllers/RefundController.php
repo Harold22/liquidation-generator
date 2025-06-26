@@ -85,7 +85,7 @@ class RefundController extends Controller
     {
         $this->refundService->delete($refund_id);
     
-        return redirect()->back()->with('info', 'Refund deleted successfully.');
+        return redirect()->back()->with('success', 'Refund deleted successfully.');
     }
 
    

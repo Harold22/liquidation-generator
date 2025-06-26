@@ -234,7 +234,7 @@ class FileController extends Controller
         if ($file) {
             $file->delete(); 
 
-            return response()->json(['message' => 'File deleted successfully']);
+            return response()->json(['success' => 'File deleted successfully']);
         }
 
         return response()->json(['message' => 'File not found'], 404);

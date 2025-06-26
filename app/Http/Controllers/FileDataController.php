@@ -110,7 +110,7 @@ class FileDataController extends Controller
         if ($beneficiary) {
             $beneficiary->delete(); 
 
-            return response()->json(['message' => 'Beneficiary Deleted successfully']);
+            return response()->json(['success' => 'Beneficiary Deleted successfully']);
         }
 
         return response()->json(['message' => 'File not found'], 404);
