@@ -86,7 +86,7 @@
                     <div class="flex items-stretch border border-black h-96">
                         <div class="w-3/4 p-6 border-r border-black flex flex-col">
                             <p class="mt-2">
-                                <span x-text="liquidationType"></span> Liquidation for Assistance to Individual in Crisis Situation (AICS) in Davao City, 
+                                <span x-text="liquidationType"></span> Liquidation for <span x-text="cash_advance_details.program_name + '(' + cash_advance_details.program_abbreviation + ')' + ' in ' + cash_advance_details.office_location"></span> , 
                                 as per supporting documents attached hereinto the amount of
                             </p>
                             <p class="font-bold" x-text="numberToWords(
@@ -264,6 +264,7 @@
 
                 if (details) {
                     this.cash_advance_details = details;
+                    console.log('yawaa',this.cash_advance_details);
                     this.getRefundList();
                 } else {
                     console.log('No cash advance details found.');
