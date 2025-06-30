@@ -12,22 +12,6 @@
             </x-input-label>
             <x-text-input readonly id="special_disbursing_officer" name="special_disbursing_officer" type="text" class="mt-1 block w-full text-sm" x-bind:value="refundList.special_disbursing_officer" />
         </div>
-        <!-- Cash Advance Amount and Date -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-                <x-input-label for="cash_advance_amount" class="text-sm">
-                    {{ __('Cash Advance Amount') }} <span class="text-red-500">*</span>
-                </x-input-label>
-                <x-text-input readonly id="cash_advance_amount" name="cash_advance_amount" type="number" class="mt-1 block w-full text-sm" x-bind:value="refundList.cash_advance_amount"/>
-            </div>
-
-            <div>
-                <x-input-label for="cash_advance_date" class="text-sm">
-                    {{ __('Cash Advance Date') }} <span class="text-red-500">*</span>
-                </x-input-label>
-                <x-text-input readonly id="cash_advance_date" name="cash_advance_date" type="date" class="mt-1 block w-full text-sm" x-bind:value="refundList.cash_advance_date"/>
-            </div>
-        </div>
         <!-- refund -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="hidden">        

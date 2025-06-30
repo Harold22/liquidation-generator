@@ -64,6 +64,9 @@
                     this.cashAdvancesList = data.data;
                     this.currentPage = data.current_page;
                     this.totalPages = data.last_page;
+
+                    console.log('HAHAHHAHAHHAHAHH', this.cashAdvancesList);
+
                 } catch (error) {
                     console.error("Error fetching cash advances:", error);
                 } finally {
@@ -158,7 +161,6 @@
                     return;
                 }
 
-                // Show confirmation dialog
                 const result = await Swal.fire({
                     title: "Are you sure?",
                     text: "This action cannot be undone.",
@@ -169,7 +171,6 @@
                     reverseButtons: true
                 });
 
-                // If user confirms, proceed with deletion
                 if (result.isConfirmed) {
                     try {
                         const response = await axios.post(`/refund/delete/${this.refund_id}`);
@@ -399,6 +400,24 @@
                 } finally {
                     this.loading = false;
                 }
+            },
+
+            aggregatedData: [],
+            viewDataList: {},
+            viewDataModal: false,
+            async viewData(list) {
+                this.viewDataList = list;
+                this.aggregatedData = [];
+                const cashAdvanceId = list.id;
+                 try {
+                    const response = await axios.get(`/allocation/aggregated-data/${cashAdvanceId}`);
+                    this.aggregatedData = response.data.data;
+                } catch (error) {
+                    console.error('Error fetching allocation:', error);
+                } finally {
+                    this.loading = false;
+                }
+                this.viewDataModal = true;
             },
 
 

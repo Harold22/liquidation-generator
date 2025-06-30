@@ -67,4 +67,12 @@ class CashAdvanceAllocationController extends Controller
 
         return response()->json($details);
     }
+
+    public function getAggregatedData($cash_advance_id)
+    {
+        $data = $this->allocationService->getCashAdvanceAggregates($cash_advance_id);
+        return response()->json($data);
+    }
+
+    
 }

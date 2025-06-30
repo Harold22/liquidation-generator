@@ -195,6 +195,50 @@ class CashAdvanceAllocationService
             'sdo_station' => $sdo->station,
         ];
     }
+    public function getCashAdvanceAggregates($cash_advance_id)
+    {
+        $allocations = CashAdvanceAllocation::with(['files', 'office'])
+            ->where('cash_advance_id', $cash_advance_id)
+            ->get();
+
+        $cashAdvanceTotalAmount = 0;
+        $cashAdvanceTotalBeneficiaries = 0;
+        $allocationSummaries = [];
+
+        foreach ($allocations as $allocation) {
+            $allocationAmount = 0;
+            $allocationBeneficiaries = 0;
+
+            foreach ($allocation->files as $file) {
+                $allocationAmount += (float) $file->total_amount;
+                $allocationBeneficiaries += (int) $file->total_beneficiary;
+            }
+
+            $allocationSummaries[] = [
+                'allocation_id' => $allocation->id,
+                'allocation_amount' => $allocation->amount,
+                'allocation_status' => $allocation->status,
+                'office_id' => $allocation->office?->id,
+                'office_name' => $allocation->office?->office_name,
+                'total_imported_amount' => $allocationAmount,
+                'total_imported_beneficiaries' => $allocationBeneficiaries,
+            ];
+
+            $cashAdvanceTotalAmount += $allocationAmount;
+            $cashAdvanceTotalBeneficiaries += $allocationBeneficiaries;
+        }
+
+        return [
+            'data' => [
+                'cash_advance_id' => $cash_advance_id,
+                'total_imported_amount' => $cashAdvanceTotalAmount,
+                'total_imported_beneficiaries' => $cashAdvanceTotalBeneficiaries,
+                'allocations_summary' => $allocationSummaries,
+            ]
+        ];
+    }
+
+
 
 
 }

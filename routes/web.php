@@ -60,6 +60,7 @@ Route::middleware(['auth', 'role:Admin', 'active'])->group(function () {
     // allocation
     Route::post('allocation', [CashAdvanceAllocationController::class, 'update'])->name('allocation.store');
     Route::get('/allocation/{id}', [CashAdvanceAllocationController::class, 'getOfficesByCashAdvance']);
+    Route::get('/allocation/aggregated-data/{cash_advance_id}', [CashAdvanceAllocationController::class, 'getAggregatedData']);
 
 });
 

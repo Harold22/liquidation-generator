@@ -57,7 +57,6 @@
                         <td class="px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-100" x-text="'₱' +(parseFloat(allocation.cash_advance_amount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })"></td>
                         <td class="px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-100" x-text="allocation.cash_advance_date"></td>
                         <td class="px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-100" x-text="'₱' +(parseFloat(allocation.amount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })"></td>
-                        <!-- <td class="px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-100" x-text="'₱' +(parseFloat(allocation.amount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })"></td> -->
                         <td class="px-6 py-4 text-sm font-medium">
                             <span 
                                 :class="{
