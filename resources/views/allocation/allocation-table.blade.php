@@ -92,7 +92,7 @@
                                 <!-- RCD Button -->
                                 <div x-data="{ tooltip: false }" class="relative">
                                     <a 
-                                        x-bind:href="'{{ route('rcd', ['id' => '__ID__']) }}'.replace('__ID__', allocation.id)" 
+                                        :href="'{{ route('rcd', ['id' => '__ID__']) }}'.replace('__ID__', allocation.id)" 
                                         target="_blank"
                                         @mouseenter="tooltip = true" 
                                         @mouseleave="tooltip = false"

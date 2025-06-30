@@ -264,7 +264,6 @@
 
                 if (details) {
                     this.cash_advance_details = details;
-                    console.log('yawaa',this.cash_advance_details);
                     this.getRefundList();
                 } else {
                     console.log('No cash advance details found.');

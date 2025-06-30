@@ -220,14 +220,14 @@
                                     <template x-for="file in filtered_file_data" :key="file.id">
                                         <tr class="text-xs leading-tight">
                                             <td class="border border-black px-1 py-[2px] text-center" x-text="new Date(file.date_time_claimed).toLocaleDateString('en-US')"></td>
-                                            <td class="border border-black px-1 py-[2px] text-center" x-text="file.sequence_number || mapped_cash_advance_details.dv_number"></td>
-                                            <td class="border border-black px-1 py-[2px] text-center" x-text="mapped_cash_advance_details.ors_burs_number"></td>
-                                            <td class="border border-black px-1 py-[2px] text-center" x-text="mapped_cash_advance_details.responsibility_code"></td>
+                                            <td class="border border-black px-1 py-[2px] text-center uppercase" x-text="file.sequence_number || cash_advance_details.dv_number"></td>
+                                            <td class="border border-black px-1 py-[2px] text-center uppercase" x-text="cash_advance_details.ors_burs_number"></td>
+                                            <td class="border border-black px-1 py-[2px] text-center uppercase" x-text="cash_advance_details.responsibility_code"></td>
                                             <td class="border border-black px-1 py-[2px] text-center uppercase truncate payee-column">
                                                 <span x-text="`${file.lastname || ''}, ${file.firstname || ''} ${file.middlename || ''} ${file.extension_name || ''}`.trim().replace(/\s+/g, ' ').replace(/\?/g, 'Ñ')"></span>
                                             </td>
-                                            <td class="border border-black px-1 py-[2px] text-center" x-text="mapped_cash_advance_details.uacs_code"></td>
-                                            <td class="border border-black px-1 py-[2px] text-center" x-text="file.assistance_type"></td>
+                                            <td class="border border-black px-1 py-[2px] text-center uppercase" x-text="cash_advance_details.uacs_code"></td>
+                                            <td class="border border-black px-1 py-[2px] text-center uppercase" x-text="file.assistance_type"></td>
                                             <td class="border border-black px-1 py-[2px] text-center" x-text="file.amount.toLocaleString()"></td>   
                                         </tr> 
                                     </template>
@@ -269,20 +269,23 @@
                         <div class="mt-8 text-center px-20">
                             <p class="text-[14px] font-bold">CERTIFICATION</p>
                             <p class="mt-4 text-[12px]">
-                                I hereby certify on my official oath that this Report of Cash Disbursements in ___sheet(s)
-                                is a <span x-text="liquidationType"></span>, true and correct statement of all cash disbursements during the period stated
+                                I hereby certify on my official oath that this Report of Cash Disbursements in 
+                                <input type="text" 
+                                    class="text-xs w-12 text-center align-baseline border-0 focus:outline-none" 
+                                    placeholder="___" />
+                                sheet(s) is a <span x-text="liquidationType"></span>, true and correct statement of all cash disbursements during the period stated
                                 above actually made by me in payment for obligations shown in pertinent disbursement
                                 vouchers/payroll.
                             </p>
                         </div>
                         <div class="mt-10 text-center px-5">
-                            <span class="uppercase font-semibold text-[12px]" x-text="mapped_cash_advance_details.special_disbursing_officer"></span>
+                            <span class="uppercase font-semibold text-[12px]" x-text="cash_advance_details.sdo_name"></span>
                             <div class="mt-2 border-t border-black w-1/2 mx-auto"></div> 
                             <p>Name and Signature of Disbursing Officer/Cashier</p>
                         </div>
                         <div class="flex mt-10 justify-between text-center px-18 mx-40">
                             <div class="w-1/3">
-                                <span class="uppercase font-semibold text-[12px]" x-text="mapped_cash_advance_details.position"></span>
+                                <span class="uppercase font-semibold text-[12px]" x-text="cash_advance_details.sdo_position"></span>
                                 <div class="mt-2 border-t border-black w-full mx-auto"></div>
                                 <p>Official Designation</p>
                             </div>
@@ -313,51 +316,34 @@
             liquidationMode: 'Overall',
             nameFrom: '',
             nameTo: '',
-            cash_advance_id: null,
+            cash_advance_allocation_id: null,
             file_list: [],
             file_data: [],
-            mapped_cash_advance_details: {},
+            cash_advance_details: {},
             loading: true,
 
             getUrlId() {
                 const pathSegments = window.location.pathname.split('/');
                 const id = pathSegments[pathSegments.length - 1];
                 if (id) {
-                    this.cash_advance_id = id;
+                    this.cash_advance_allocation_id = id;
                 } else {
                     console.log('ID not found in the URL path');
                 }       
             },
 
             async getCashAdvanceDetails() {
-                if (!this.cash_advance_id) {
-                    console.log('No cash advance id');
-                    return;
+                 if (!this.cash_advance_allocation_id) {
+                    return console.log('No cash advance allocation ID');
                 }
-                try {
-                    const response = await axios.get(`/cash-advance/details/${this.cash_advance_id}`);
-                    const details = response.data[0]; 
-                    if (details) {
-                        const middlename = details.sdo.middlename;
-                        const middleInitial = middlename ? middlename.charAt(0) + '.' : '';
 
-                        this.mapped_cash_advance_details = {
-                            special_disbursing_officer: [
-                                details.sdo.firstname,
-                                middleInitial,
-                                details.sdo.lastname,
-                                details.sdo.extension_name
-                            ].filter(Boolean).join(' '),
-                            position: details.sdo.position,
-                            cash_advance_amount: parseFloat(details.cash_advance_amount).toFixed(2),
-                            cash_advance_date: details.cash_advance_date,
-                            check_number:details.check_number,
-                            dv_number: details.dv_number,
-                            ors_burs_number: details.ors_burs_number,
-                            responsibility_code: details.responsibility_code,
-                            uacs_code: details.uacs_code,
-                            status: details.status,
-                        };
+                try {
+                    const response = await axios.get(`/cash-advance/details/${this.cash_advance_allocation_id}`);
+                    const details = response.data;
+
+                    if (details) {
+                        this.cash_advance_details = details;
+                        this.getRefundList();
                     } else {
                         console.log('No cash advance details found.');
                     }
@@ -367,12 +353,12 @@
             },
            
             async getFileList() {
-                if (!this.cash_advance_id) {
+                if (!this.cash_advance_allocation_id) {
                     console.log('No cash advance id');
                     return;
                 }
                 try {
-                    const response = await axios.get(`/files/rcd/${this.cash_advance_id}`);
+                    const response = await axios.get(`/files/rcd/${this.cash_advance_allocation_id}`);
                     this.file_list = response.data; 
                     
                     await this.getFileData(this.file_list);
