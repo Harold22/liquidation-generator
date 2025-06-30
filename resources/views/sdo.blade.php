@@ -182,7 +182,7 @@
                                         </tr>
                                     </template>
                                     <template x-for="sdo in sdos" :key="sdo.id">
-                                        <tr class="border-b">
+                                        <tr class="hover:bg-gray-50 border-b">
                                             <td class="px-4 py-2" x-text="`${sdo.firstname} ${sdo.middlename ?? ''} ${sdo.lastname} ${sdo.extension_name ?? ''}`.trim()"></td>
                                             <td class="px-4 py-2" x-text="sdo.position"></td>
                                             <td class="px-4 py-2" x-text="sdo.designation"></td>

@@ -110,7 +110,7 @@
                                         </tr>
                                     </template>
                                     <template x-for="program in programs" :key="program.id">
-                                        <tr class="border-b">
+                                        <tr class="hover:bg-gray-50 border-b">
                                             <td class="px-4 py-2 capitalize" x-text="program.program_name"></td>
                                             <td class="px-4 py-2" x-text="program.program_abbreviation"></td>
                                             <td class="px-4 py-2" x-text="program.origin_office"></td>

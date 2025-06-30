@@ -52,7 +52,7 @@
                     </tr>
                 </template>
                 <template x-for="allocation in allocations" :key="allocation.id">
-                    <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
+                    <tr class="hover:bg-gray-50 border-b">
                         <td class="px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-100 capitalize" x-text="allocation.sdo_name"></td>
                         <td class="px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-100" x-text="'₱' +(parseFloat(allocation.cash_advance_amount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })"></td>
                         <td class="px-6 py-4 text-sm font-medium text-gray-500 dark:text-gray-100" x-text="allocation.cash_advance_date"></td>

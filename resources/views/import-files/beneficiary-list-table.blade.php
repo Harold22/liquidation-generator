@@ -10,7 +10,7 @@
         </thead>
         <tbody x-show="loading === false">
             <template x-for="beneficiary in beneficiaryList" :key="beneficiary.id">
-                <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
+                <tr class="hover:bg-gray-50 border-b">
                     <td class="px-4 py-3 uppercase" 
                         x-text="(beneficiary.lastname) + ', ' + 
                                 (beneficiary.firstname) + ' ' + 

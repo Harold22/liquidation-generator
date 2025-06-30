@@ -82,7 +82,7 @@
                                         </tr>
                                     </template>
                                     <template x-for="office in offices" :key="office.id">
-                                        <tr class="border-b capitalize">
+                                        <tr class="hover:bg-gray-50 border-b capitalize">
                                             <td class="px-4 py-2 capitalize" x-text="office.office_name"></td>
                                             <td class="px-4 py-2" x-text="office.office_location"></td>
                                             <td class="px-4 py-2" x-text="office.swado"></td>

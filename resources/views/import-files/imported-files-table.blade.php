@@ -19,7 +19,7 @@
                 </tr>
             </template>
             <template x-for="file in file_list" :key="file.id">
-                <tr class="hover:bg-gray-100 dark:hover:bg-gray-700 border-b">
+                <tr class="hover:bg-gray-50 border-b">
                     <td class="px-2 py-3" x-text="file.file_name"></td>
                     <td class="px-2 py-3" x-text="formatDate(file.created_at)"></td>
                     <td class="px-2 py-3 capitalize" x-text="file.location"></td>

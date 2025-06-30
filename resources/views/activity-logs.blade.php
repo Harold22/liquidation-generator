@@ -51,7 +51,7 @@
 
                                 <!-- When activity logs exist -->
                                 <template x-for="log in activity_logs" :key="log.id">
-                                    <tr class="border-b">
+                                    <tr class="hover:bg-gray-50 border-b">
                                         <td class="px-4 py-2" x-text="log.causer?.name ?? 'System'"></td>
                                         <td class="px-4 py-2" x-text="log.causer?.email ?? 'System'"></td>
                                         <td class="px-4 py-2" x-text="log.event"></td>

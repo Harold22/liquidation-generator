@@ -166,7 +166,7 @@
                                         </tr>
                                     </template>
                                     <template x-for="user in users" :key="user.id">
-                                        <tr class="border-b">
+                                        <tr class="hover:bg-gray-50 border-b">
                                             <td class="px-4 py-2 capitalize" x-text="user.name"></td>
                                             <td class="px-4 py-2" x-text="user.email"></td>
                                             <td class="px-4 py-2">
