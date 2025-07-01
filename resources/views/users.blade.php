@@ -344,12 +344,12 @@ document.addEventListener('alpine:init', () => {
         searchUser: '',
 
         init() {
+            this.loading = true;
             this.getUsers();
             this.getOffices();
         },
 
         async getOffices() {
-            this.loading = true;
             try {
                 axios.get('/offices/list')
                 .then(response => {
@@ -363,7 +363,6 @@ document.addEventListener('alpine:init', () => {
         },
 
         async getUsers() {
-            this.loading = true;
             try {
                 const response = await axios.get('/getUsers', {
                     params: {
