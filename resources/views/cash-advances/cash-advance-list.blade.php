@@ -402,24 +402,36 @@
                 }
             },
 
-            aggregatedData: [],
+            aggregatedData: {},
             viewDataList: {},
             viewDataModal: false,
+
             async viewData(list) {
                 this.viewDataList = list;
-                this.aggregatedData = [];
+                this.aggregatedData = {}; 
+                this.loading = true;
                 const cashAdvanceId = list.id;
-                 try {
+
+                try {
                     const response = await axios.get(`/allocation/aggregated-data/${cashAdvanceId}`);
-                    this.aggregatedData = response.data.data;
+                    
+                    if (response.data && response.data.data) {
+                        this.aggregatedData = response.data.data;
+                    } else {
+                        console.warn("Unexpected response structure", response.data);
+                    }
                 } catch (error) {
                     console.error('Error fetching allocation:', error);
+                    this.aggregatedData = {
+                        total_imported_amount: 0,
+                        total_imported_beneficiaries: 0,
+                        allocations_summary: [],
+                    };
                 } finally {
                     this.loading = false;
+                    this.viewDataModal = true;
                 }
-                this.viewDataModal = true;
             },
-
 
             init() {
                 this.getPrograms();

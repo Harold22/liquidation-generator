@@ -1,32 +1,35 @@
-<div class="space-y-4">
-    <div class="space-y-4 text-sm">
-        <template x-if="log_properties?.attributes">
-            <div>
-                <h3 class="font-medium text-green-700 mb-1">Attributes:</h3>
+<div class="space-y-6 text-sm text-gray-800 dark:text-gray-200">
+    <!-- Attributes Section -->
+    <template x-if="log_properties?.attributes">
+        <div class="border rounded-md p-4">
+            <h3 class="font-semibold mb-2">New Attributes</h3>
+            <div class="space-y-1">
                 <template x-for="(value, key) in log_properties.attributes" :key="key">
                     <template x-if="key !== 'password'">
-                        <div>
-                            <strong x-text="key"></strong>:
-                            <span class="text-green-600" x-text="value"></span>
+                        <div class="flex justify-between">
+                            <span class="font-medium capitalize" x-text="key"></span>
+                            <span x-text="value"></span>
                         </div>
                     </template>
                 </template>
             </div>
-        </template>
+        </div>
+    </template>
 
-        <!-- Old Values -->
-        <template x-if="log_properties?.old">
-            <div>
-                <h3 class="font-medium text-red-700 mb-1">Old Values:</h3>
+    <!-- Old Values Section -->
+    <template x-if="log_properties?.old">
+        <div class="border rounded-md p-4">
+            <h3 class="font-semibold mb-2">Old Values</h3>
+            <div class="space-y-1">
                 <template x-for="(value, key) in log_properties.old" :key="key">
                     <template x-if="key !== 'password'">
-                        <div>
-                            <strong x-text="key"></strong>:
-                            <span class="text-red-600" x-text="value"></span>
+                        <div class="flex justify-between">
+                            <span class="font-medium capitalize" x-text="key"></span>
+                            <span x-text="value"></span>
                         </div>
                     </template>
                 </template>
             </div>
-        </template>
-    </div>
+        </div>
+    </template>
 </div>

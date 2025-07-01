@@ -94,34 +94,63 @@
                             </tbody>
 
                             <!-- Modal Overlay -->
-                            <div x-show="properties_modal"
-                                x-cloak x-transition class="fixed inset-0 w-screen h-full z-[999] flex items-center justify-center bg-black bg-opacity-50">
-
-                                <div @click.away="properties_modal = false"
-                                    class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
-
+                            <div 
+                                x-show="properties_modal"
+                                x-cloak 
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0"
+                                x-transition:enter-end="opacity-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0"
+                                class="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50"
+                                role="dialog" 
+                                aria-modal="true"
+                                aria-labelledby="modal-title"
+                            >
+                                <!-- Modal Box -->
+                                <div 
+                                    @click.away="properties_modal = false"
+                                    class="bg-white dark:bg-gray-900 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden"
+                                >
                                     <!-- Sticky Header -->
-                                    <header class="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10">
-                                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Activity Log Properties</h2>
-                                        <button @click="properties_modal = false"
-                                                class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                                    <header 
+                                        class="flex justify-between items-center px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky top-0 z-10"
+                                    >
+                                        <h2 id="modal-title" class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                                            Activity Log Properties
+                                        </h2>
+                                        <button 
+                                            @click="properties_modal = false"
+                                            class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition"
+                                            aria-label="Close Modal"
+                                        >
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                             </svg>
                                         </button>
                                     </header>
 
                                     <!-- Scrollable Content -->
-                                    <div class="px-6 overflow-y-auto">
+                                    <div class="px-6 py-4 overflow-y-auto flex-1">
                                         @include('activity-log.activity-log-modal')
                                     </div>
 
                                     <!-- Sticky Footer -->
-                                    <footer class="px-6 py-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky bottom-0 z-10">
-                                        <button @click="properties_modal = false" class="btn btn-primary">Close</button>
+                                    <footer 
+                                        class="px-6 py-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky bottom-0 z-10"
+                                    >
+                                        <div class="flex justify-end">
+                                            <x-secondary-button
+                                                @click="properties_modal = false" 
+                                            >
+                                                Close
+                                            </x-secondary-button>
+                                        </div>
                                     </footer>
                                 </div>
                             </div>
+
                         </table>
 
                         <!-- Pagination -->
