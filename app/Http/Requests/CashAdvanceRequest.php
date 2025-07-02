@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\CashAdvanceAllocation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class CashAdvanceRequest extends FormRequest
 {
@@ -106,5 +108,23 @@ class CashAdvanceRequest extends FormRequest
             'status.string' => 'The Status must be a string.',
             'status.in' => 'The Status must be either Liquidated or Unliquidated.',
         ];
+    }
+
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function ($validator) {
+            if ($this->input('status') === 'Liquidated') {
+                $cashAdvanceId = $this->input('id');
+
+                // Check if any allocation under this Cash Advance is still not liquidated
+                $hasUnliquidatedAllocations = CashAdvanceAllocation::where('cash_advance_id', $cashAdvanceId)
+                    ->where('status', '!=', 'liquidated')
+                    ->exists();
+
+                if ($hasUnliquidatedAllocations) {
+                    $validator->errors()->add('status', 'Cannot mark as Liquidated while there are allocations that are not yet liquidated.');
+                }
+            }
+        });
     }
 }   

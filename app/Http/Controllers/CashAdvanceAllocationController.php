@@ -46,6 +46,25 @@ class CashAdvanceAllocationController extends Controller
             'status' => 'required|in:liquidated,unliquidated',
         ]);
 
+        $allocation = CashAdvanceAllocation::with('files')->findOrFail($validated['id']);
+
+        if ($validated['status'] === 'liquidated') {
+            $files = $allocation->files;
+
+            if ($files->isEmpty()) {
+                return redirect()->back()->withErrors(['status' => 'Cannot mark as liquidated: no files are attached to this allocation.']);
+            }
+
+            $totalFilesAmount = $files->sum('total_amount');
+            $expectedAmount = round($allocation->amount, 2);
+
+            if (round($totalFilesAmount, 2) !== $expectedAmount) {
+                return redirect()->back()->withErrors([
+                    'status' => "Disbursement total (₱" . number_format($totalFilesAmount, 2) . ") does not match the allocation amount (₱" . number_format($expectedAmount, 2) . ")."
+                ]);
+            }
+        }
+
         $this->allocationService->updateStatus($validated['id'], $validated['status']);
 
         return redirect()->back()->with('success', 'Status updated successfully.');

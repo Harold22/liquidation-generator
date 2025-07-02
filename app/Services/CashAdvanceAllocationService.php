@@ -7,6 +7,7 @@ use App\Models\CashAdvance;
 use App\Models\CashAdvanceAllocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class CashAdvanceAllocationService
 {
@@ -19,20 +20,41 @@ class CashAdvanceAllocationService
                 ->pluck('id')
                 ->filter()
                 ->all(); 
+
             $cashAdvance->allocations()
                 ->whereNotIn('id', $incomingIds)
                 ->delete();
 
             foreach ($data['allocations'] as $alloc) {
                 if (!empty($alloc['id'])) {
-        
-                    $allocation = CashAdvanceAllocation::findOrFail($alloc['id']);
+                    $allocation = CashAdvanceAllocation::with('files')->findOrFail($alloc['id']);
+
+                    if (($alloc['status'] ?? null) === 'liquidated') {
+                        $files = $allocation->files;
+
+                        if ($files->isEmpty()) {
+                            throw ValidationException::withMessages([
+                                "allocations.{$alloc['id']}.status" => 'Cannot mark as liquidated: no files are attached to this allocation.',
+                            ]);
+                        }
+
+                        $fileTotal = $files->sum('total_amount');
+                        $expected = round($alloc['amount'], 2);
+
+                        if (round($fileTotal, 2) !== $expected) {
+                            throw ValidationException::withMessages([
+                                "allocations.{$alloc['id']}.amount" => 'Disbursement total (₱' . number_format($fileTotal, 2) . ') does not match the allocation amount (₱' . number_format($expected, 2) . ').',
+                            ]);
+                        }
+                    }
+
                     $allocation->update([
                         'office_id' => $alloc['office_id'],
                         'amount'    => $alloc['amount'],
                         'status'    => $alloc['status'],
                     ]);
                 } else {
+
                     $cashAdvance->allocations()->create([
                         'office_id' => $alloc['office_id'],
                         'amount'    => $alloc['amount'],
@@ -44,6 +66,7 @@ class CashAdvanceAllocationService
             return $cashAdvance->load('allocations');
         });
     }
+
 
     public function getAllLocationsByCashAdvance($cashAdvanceId)
     {
