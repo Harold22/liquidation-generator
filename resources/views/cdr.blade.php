@@ -78,20 +78,17 @@
                                     </template>
 
                                 </div>
-                                
                                 <!-- Month Selector -->
-                                <!-- <div class="flex flex-col md:flex-row items-start md:items-center gap-2 w-full md:w-auto">
-                                    <label for="month" class="text-sm font-medium text-gray-700">
-                                        Select Month:
-                                    </label>
-                                    <select id="month" name="month" x-model="selectedMonth" 
-                                        class="capitalize text-sm border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 w-full md:w-64">
-                                        <option value="">Select Month</option>
-                                        <template x-for="month in months">
-                                            <option x-text="month" ></option>
+                                 <div class="flex flex-col md:flex-row items-start md:items-center gap-2 w-full md:w-auto">
+                                    <label for="month" class="text-sm font-medium text-gray-700">Select Month:</label>
+                                    <select id="month" x-model="selectedMonth" @change="filterByMonth"
+                                            class="text-sm border px-3 py-2 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-48">
+                                        <template x-for="month in availableMonths" :key="month.key">
+                                            <option :value="month.key" x-text="month.label"></option>
                                         </template>
                                     </select>
-                                </div> -->
+                                </div>
+
                             </div>
 
                             <!-- Print Button on Right -->
@@ -120,7 +117,7 @@
                     </div>
                     <div class="flex justify-center">
                         <h1 class="text-md font-bold">
-                            Period Covered: <span class="uppercase" x-text="selectedMonth"></span>
+                            Period Covered: <span class="uppercase" x-text="selectedMonthLabelOnly"></span>
                         </h1>
                     </div>
                     <div class="mt-7">
@@ -163,50 +160,74 @@
                                     <th class="border border-black" colspan="1">Disbursements</th>
                                     <th class="border border-black" colspan="1">Cash Advance Balance    </th>
                                 </tr>
-                                <tr>
-                                    <th class="border border-black py-2" colspan="1"
-                                        x-text="(new Date(cash_advances[0].cash_advance_date)).toLocaleDateString('default', { day: 'numeric', month: 'long', year: 'numeric' })">
-                                    </th>
-
-                                    <th class="border border-black py-2" colspan="1" x-text="cash_advances[0].ors_burs_number"></th>
-                                    <th class="border border-black py-2 uppercase" colspan="1" x-text="sdo_info.special_disbursing_officer"></th>
-                                    <th class="border border-black py-2" colspan="1" x-text="cash_advances[0].uacs_code"></th>
-                                    <th class="border border-black py-2" colspan="1">CASH ADVANCE RE-AICS GRANT</th>
-                                    <th class="border border-black py-2" colspan="1" x-text="Number(cash_advances[0].cash_advance_amount).toLocaleString()"></th>
-                                    <th class="border border-black py-2" colspan="1"></th>
-                                    <th class="border border-black py-2" colspan="1" x-text="Number(cash_advances[0].cash_advance_remaining ?? cash_advances[0].cash_advance_amount).toLocaleString()"></th>
-                                </tr>
                             </thead>
-                            <!-- <tbody>
-                                <template x-if="filtered_file_data.length != 0">
-                                    <template x-for="(file, index) in filtered_file_data" :key="index">
-                                        <tr>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="new Date(file.date_time_claimed).toLocaleDateString('en-US')"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.dv_number"></td>
-                                            <td class="border border-black px-2 py-2 text-center uppercase w-[250px] break-words">
-                                                <span x-text="`${file.lastname || ''}, ${file.firstname || ''} ${file.middlename || ''} ${file.extension_name || ''}`.trim().replace(/\s+/g, ' ').replace(/\?/g, 'Ñ')"></span>
+                            <tbody class="uppercase text-xs">
+                                <template x-if="filteredList.length > 0">
+                                    <template x-for="(row, index) in filteredList" :key="index">
+                                        <tr :class="{ 'font-bold': row.isAdvance }">
+                                            <!-- Date -->
+                                            <td class="border border-black px-2 py-2 text-center"
+                                                x-text="row.isAdvance && row.nature === 'BALANCE FORWARDED'
+                                                    ? new Date(row.monthKey + '-01').toLocaleDateString('en-US')
+                                                    : (row.isAdvance 
+                                                        ? new Date(row.cash_advance_date).toLocaleDateString('en-US') 
+                                                        : new Date(row.date_time_claimed).toLocaleDateString('en-US'))">
                                             </td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="mapped_cash_advance_details.uacs_code"></td>
-                                            <td class="border border-black px-2 py-2 text-center uppercase" x-text="file.assistance_type"></td>
-                                            <td class="border border-black px-2 py-2 text-center"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="file.amount.toLocaleString()"></td>
-                                            <td class="border border-black px-2 py-2 text-center" x-text="calculateBalance(index)"></td>
+                                            <!-- DV/ADA/etc -->
+                                            <td class="border border-black px-2 py-2 text-center" x-text="row.dv_number"></td>
+
+                                            <!-- Payee -->
+                                            <td class="border border-black px-2 py-2 text-center uppercase w-[250px] break-words">
+                                                <template x-if="row.isAdvance && row.nature === 'BALANCE FORWARDED'">
+                                                    <span>BALANCE FORWARDED</span>
+                                                </template>
+                                                <template x-if="row.isAdvance && row.nature !== 'BALANCE FORWARDED'">
+                                                    <span x-text="row.payee"></span>
+                                                </template>
+                                                <template x-if="!row.isAdvance">
+                                                    <span x-text="`${row.lastname || ''}, ${row.firstname || ''} ${row.middlename || ''} ${row.extension_name || ''}`.trim().replace(/\s+/g, ' ').replace(/\?/g, 'Ñ')"></span>
+                                                </template>
+                                            </td>
+
+                                            <!-- UACS -->
+                                            <td class="border border-black px-2 py-2 text-center" x-text="(row.isAdvance && row.nature === 'BALANCE FORWARDED') ? '' : row.uacs_code"></td>
+
+                                            <!-- Nature -->
+                                            <td class="border border-black px-2 py-2 text-center uppercase" x-text="(row.isAdvance && row.nature === 'BALANCE FORWARDED') ? '' : (row.isAdvance ? row.nature : row.assistance_type)"></td>
+
+                                            <!-- Cash Advance Received -->
+                                            <td class="border border-black px-2 py-2 text-center" x-text="(row.ca_amount && row.nature !== 'BALANCE FORWARDED') ? row.ca_amount.toLocaleString() : ''"></td>
+
+                                            <!-- Disbursement -->
+                                            <td class="border border-black px-2 py-2 text-center" x-text="(row.disbursed && row.nature !== 'BALANCE FORWARDED') ? row.disbursed.toLocaleString() : ''"></td>
+
+                                            <!-- Balance -->
+                                            <td class="border border-black px-2 py-2 text-center" x-text="row.balance.toLocaleString()"></td>
                                         </tr>
                                     </template>
                                 </template>
-                                <template x-if="filtered_file_data.length === 0">
+
+                                <!-- No transaction in this month -->
+                                <template x-if="filteredList.length === 0 && lists.length > 0">
                                     <tr>
-                                        <td class="border border-black px-2 py-2 text-center"></td>
-                                        <td class="border border-black px-2 py-2 text-center"></td>
-                                        <td class="border border-black px-2 py-2 text-center uppercase w-[250px] break-words font-bold text-red-500">Select Month to show data</td>
-                                        <td class="border border-black px-2 py-2 text-center"></td>
-                                        <td class="border border-black px-2 py-2 text-center"></td>
-                                        <td class="border border-black px-2 py-2 text-center"></td>
-                                        <td class="border border-black px-2 py-2 text-center"></td>
-                                        <td class="border border-black px-2 py-2 text-center"></td>
+                                        <td colspan="8" class="border border-black px-2 py-2 text-center text-red-500 font-semibold">
+                                            No transaction this month.
+                                        </td>
                                     </tr>
                                 </template>
-                            </tbody> -->
+
+                                <!-- No records at all -->
+                                <template x-if="lists.length === 0">
+                                    <tr>
+                                        <td colspan="8" class="border border-black px-2 py-2 text-center text-red-500 font-semibold">
+                                            No records found for the selected year.
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+
+
+
                         </table>
                     </div>
                     <div class="mt-8 text-center px-20">
@@ -249,146 +270,179 @@
     </body>
 </html>
 <script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('cdr', () => ({
-            sdos_id: null,
-            file_list: [],
-            file_data: [],
-            cash_advances: [],
-            sdo_info: [],
-            loading: false,
-            year: null,
+document.addEventListener('alpine:init', () => {
+    Alpine.data('cdr', () => ({
+        sdos_id: null,
+        lists: [],
+        filteredList: [],
+        cash_advances: [],
+        sdo_info: [],
+        loading: false,
+        year: null,
+        errorMessage: '',
+        selectedMonth: '',
+        selectedMonthLabel: '',
+        availableMonths: [],
 
-            //KUHA SA ID SA URL
-            getUrlId() {
-                const pathSegments = window.location.pathname.split('/');
-                const id = pathSegments[pathSegments.length - 1];
-                if (id) {
-                    this.sdos_id = id;
-                } else {
-                    console.log('ID not found in the URL path');
-                }
-            },
+        get selectedMonthLabelOnly() {
+            if (!this.selectedMonthLabel) return '';
+            return this.selectedMonthLabel.split(' ')[0];
+        },
 
-            errorMessage: '',
+        getUrlId() {
+            const pathSegments = window.location.pathname.split('/');
+            this.sdos_id = pathSegments[pathSegments.length - 1];
+        },
 
-            validateAndFetchYear() {
-                const yearStr = this.year.toString().trim();
-                const isValidYear = /^\d{4}$/.test(yearStr);
+        validateAndFetchYear() {
+            const yearStr = this.year.toString().trim();
+            if (!/^\d{4}$/.test(yearStr)) {
+                this.errorMessage = 'Invalid Year.';
+                return;
+            }
+            this.errorMessage = '';
+            this.getAllCashAdvanceDetails(Number(yearStr));
+        },
 
-                if (!isValidYear) {
-                    this.errorMessage = 'Invalid Year.';
-                    return;
-                }
+        async getAllCashAdvanceDetails(year) {
+            this.loading = true;
+            this.cash_advances = [];
+            this.lists = [];
+            if (!this.sdos_id) return;
 
-                this.errorMessage = '';
-                this.getAllCashAdvanceDetails(Number(yearStr));
-            },
+            try {
+                const response = await axios.get(`/sdo/get-cash-advances/${this.sdos_id}/${year}`);
+                const sdo = response.data;
+                const middleInitial = sdo.middlename ? sdo.middlename.charAt(0) + '.' : '';
 
-            // KUHA SA DETAILS SA CASH ADVANCE
-            async getAllCashAdvanceDetails(year) {
-                this.loading = true;
-                this.cash_advances = [];
+                this.sdo_info = {
+                    special_disbursing_officer: [sdo.firstname, middleInitial, sdo.lastname, sdo.extension_name].filter(Boolean).join(' '),
+                    position: sdo.position,
+                    station: sdo.station
+                };
 
-                if (!this.sdos_id) {
-                    console.log('No sdo id');
-                    this.loading = false;
-                    return;
-                }
+                let allMonths = {};
 
-                try {
-                    const response = await axios.get(`/sdo/get-cash-advances/${this.sdos_id}/${year}`);
-                    const sdo =  response.data;
+                sdo.cash_advances.forEach((ca) => {
+                    let caAmount = parseFloat(ca.cash_advance_amount);
+                    let balance = caAmount;
+                    let disbursements = [];
 
-                    if (sdo) {
-                        const middlename = sdo.middlename;
-                        const middleInitial = middlename ? middlename.charAt(0) + '.' : '';
+                    ca.sorted_file_data.forEach(file => {
+                        const claimDate = new Date(file.date_time_claimed);
+                        const monthKey = `${claimDate.getFullYear()}-${String(claimDate.getMonth() + 1).padStart(2, '0')}`;
 
-                        this.sdo_info = {
-                            special_disbursing_officer: [
-                                sdo.firstname,
-                                middleInitial,
-                                sdo.lastname,
-                                sdo.extension_name
-                            ].filter(Boolean).join(' '),
-                            position: sdo.position,
-                            designation: sdo.designation,
-                            station: sdo.station,
-                        };
-                                           
-                        if (Array.isArray(sdo.cash_advances)) {
-                            this.cash_advances = sdo.cash_advances.map(ca => {
-                                const files = Array.isArray(ca.files)
-                                    ? ca.files.map(file => ({
-                                        file_id: file.id,
-                                        file_name: file.file_name,
-                                        file_data: file.file_data ?? [],
-                                    }))
-                                    : [];
+                        disbursements.push({
+                            isAdvance: false,
+                            date_time_claimed: file.date_time_claimed,
+                            dv_number: ca.dv_number,
+                            lastname: file.lastname,
+                            firstname: file.firstname,
+                            middlename: file.middlename,
+                            extension_name: file.extension_name,
+                            uacs_code: ca.uacs_code,
+                            assistance_type: file.assistance_type,
+                            ca_amount: 0,
+                            disbursed: file.amount,
+                            balance: null,
+                            ca_id: ca.id,
+                            monthKey
+                        });
+                    });
 
-                                return {
-                                    id: ca.id,
-                                    check_number: ca.check_number,
-                                    cash_advance_amount: parseFloat(ca.cash_advance_amount).toFixed(2),
-                                    cash_advance_date: ca.cash_advance_date,
-                                    dv_number: ca.dv_number,
-                                    ors_burs_number: ca.ors_burs_number,
-                                    responsibility_code: ca.responsibility_code,
-                                    uacs_code: ca.uacs_code,
-                                    status: ca.status,
-                                    files: files, 
-                                };
+                    disbursements.sort((a, b) => new Date(a.date_time_claimed) - new Date(b.date_time_claimed));
+
+                    let monthUsed = new Set();
+
+                    disbursements.forEach(d => {
+                        const mKey = d.monthKey;
+                        if (!monthUsed.has(mKey)) {
+                            monthUsed.add(mKey);
+                            if (!allMonths[mKey]) allMonths[mKey] = [];
+                            const isFirstMonth = monthUsed.size === 1;
+                            allMonths[mKey].unshift({
+                                isAdvance: true,
+                                cash_advance_date: ca.cash_advance_date,
+                                dv_number: ca.ors_burs_number,
+                                payee: this.sdo_info.special_disbursing_officer,
+                                uacs_code: ca.uacs_code,
+                                nature: isFirstMonth ? 'CASH ADVANCE RE-AICS GRANT' : 'BALANCE FORWARDED',
+                                ca_amount: isFirstMonth ? caAmount : 0,
+                                disbursed: 0,
+                                balance: isFirstMonth ? caAmount : balance,
+                                monthKey: mKey
                             });
-                            this.file_data = this.cash_advances;
-                        } else {
-                            this.cash_advances = [];
-                            this.file_data = [];
-                            console.log('No cash advances array found.');
                         }
 
-                    } else {
-                        console.log('No SDO data found.');
-                        this.cash_advances = [];
-                    }
+                        balance -= d.disbursed;
+                        d.balance = balance;
+                        allMonths[mKey].push(d);
+                    });
+                });
 
-                } catch (error) {
-                    console.error('Error fetching cash advance details:', error);
-                    this.cash_advances = [];
-                } finally {
-                    this.loading = false;
+                const sortedKeys = Object.keys(allMonths).sort();
+                let finalList = [];
+                let runningBalance = 0;
+
+                sortedKeys.forEach(monthKey => {
+                    allMonths[monthKey].forEach(entry => {
+                        if (entry.isAdvance && entry.nature === 'CASH ADVANCE RE-AICS GRANT') {
+                            runningBalance += entry.ca_amount;
+                        } else if (!entry.isAdvance) {
+                            runningBalance -= entry.disbursed;
+                        }
+                        entry.balance = runningBalance;
+                        finalList.push(entry);
+                    });
+                });
+
+                this.lists = finalList;
+
+                // Always show 12 months
+                const fullMonthList = Array.from({ length: 12 }, (_, i) => {
+                    const date = new Date(this.year, i);
+                    const key = `${date.getFullYear()}-${String(i + 1).padStart(2, '0')}`;
+                    const label = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+                    return { key, label };
+                });
+
+                this.availableMonths = fullMonthList;
+
+                if (this.availableMonths.length > 0) {
+                    this.selectedMonth = this.availableMonths[0].key;
                 }
-            },
 
-            filtered_file_data: [],
+                this.filterByMonth();
 
-            // filterData() {
-            //     console.log(this.file_data);
-            //     if (!this.file_data || this.file_data.length === 0) {
-            //         console.log("No file data available for filtering.");
-            //         return;
-            //     }
-
-            //     if (!this.selectedMonth) {
-            //         console.log("No month selected.");
-            //         this.filtered_file_data = [];
-            //         return;
-            //     }
-
-            //     // Filter data based on selected month
-            //     this.filtered_file_data = this.file_data.filter(item => {
-            //         let date = new Date(item.date_time_claimed);
-            //         let monthYear = date.toLocaleString("default", { month: "long" });
-            //         return monthYear === this.selectedMonth;
-            //     });
-            //     console.log("Filtered Data:", this.filtered_file_data);
-            // },
-            init() {
-                this.getUrlId();  
-                this.year = new Date().getFullYear(); 
-                this.getAllCashAdvanceDetails(this.year);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.loading = false;
             }
-        }));
-    });
+        },
+
+        filterByMonth() {
+            if (!this.selectedMonth) {
+                this.filteredList = [];
+                this.selectedMonthLabel = '';
+                return;
+            }
+
+            this.filteredList = this.lists.filter(item => item.monthKey === this.selectedMonth);
+
+            const match = this.availableMonths.find(m => m.key === this.selectedMonth);
+            this.selectedMonthLabel = match ? match.label : '';
+        },
+
+        init() {
+            this.getUrlId();
+            this.year = new Date().getFullYear();
+            this.getAllCashAdvanceDetails(this.year);
+        }
+
+    }));
+});
 </script>
+
 
 

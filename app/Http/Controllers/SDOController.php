@@ -64,17 +64,42 @@ class SDOController extends Controller
         return response()->json(['message' => 'SDO deleted successfully.']);
     }
 
-    public function getCashAdvances($id, $year)
+    public function getCashAdvances($sdo_id, $year)
     {
         $sdo = SDO::with([
             'cashAdvances' => function ($query) use ($year) {
                 $query->whereYear('cash_advance_date', $year)
-                     ->with(['files.file_data']);
+                    ->where('status', 'Liquidated')
+                    ->with(['allocations.files.file_data']);
             }
-        ])->find($id);
+        ])->find($sdo_id);
+
+        if ($sdo) {
+            foreach ($sdo->cashAdvances as $cashAdvance) {
+                $allFileData = collect();
+
+                foreach ($cashAdvance->allocations as $allocation) {
+                    foreach ($allocation->files as $file) {
+                        if ($file->file_data) {
+                            $allFileData = $allFileData->merge($file->file_data);
+                        }
+                    }
+                }
+
+                $sortedFileData = $allFileData->sortBy(function ($data) {
+                    return \Carbon\Carbon::parse($data->date_time_claimed)->toDateString();
+                })->values();
+
+                $cashAdvance->sorted_file_data = $sortedFileData;
+                unset($cashAdvance->allocations);
+            }
+        }
 
         return response()->json($sdo);
     }
+
+
+
 
    
 }
