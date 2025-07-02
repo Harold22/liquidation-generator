@@ -296,7 +296,6 @@ document.addEventListener('alpine:init', () => {
                 origin_office: program.origin_office,
                 status: program.status,
             };
-            console.log('yawas',this.selectedProgram);
             this.updateProgramModal = true;
         },
 

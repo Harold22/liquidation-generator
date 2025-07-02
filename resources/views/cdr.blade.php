@@ -207,16 +207,23 @@
                                     </template>
                                 </template>
 
-                                <!-- No transaction in this month -->
                                 <template x-if="filteredList.length === 0 && lists.length > 0">
-                                    <tr>
-                                        <td colspan="8" class="border border-black px-2 py-2 text-center text-red-500 font-semibold">
-                                            No transaction this month.
-                                        </td>
-                                    </tr>
+                                    <template x-for="n in 7" :key="n">
+                                        <tr>
+                                            <template x-if="n === 4">
+                                                <td colspan="8" class="border border-black px-2 py-2 text-center text-red-500 font-semibold">
+                                                    No transaction this month.
+                                                </td>
+                                            </template>
+                                            <template x-if="n !== 4">
+                                                <template x-for="i in 8" :key="i">
+                                                    <td class="border border-black px-2 py-2 text-center text-gray-300">—</td>
+                                                </template>
+                                            </template>
+                                        </tr>
+                                    </template>
                                 </template>
 
-                                <!-- No records at all -->
                                 <template x-if="lists.length === 0">
                                     <tr>
                                         <td colspan="8" class="border border-black px-2 py-2 text-center text-red-500 font-semibold">
@@ -225,9 +232,6 @@
                                     </tr>
                                 </template>
                             </tbody>
-
-
-
                         </table>
                     </div>
                     <div class="mt-8 text-center px-20">
